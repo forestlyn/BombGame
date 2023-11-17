@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapState
 {
-    public int length, height;
+    public int length, width;
     public BaseMapObjectState[,] map;
 }
 
