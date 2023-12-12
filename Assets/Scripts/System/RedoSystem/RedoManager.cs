@@ -8,12 +8,6 @@ public class RedoManager : MonoBehaviour
 {
     private RedoCommandList redo;
 
-    //private int registerRedoObjects = 0;
-    //private bool isRegisterObject(RedoObjectType type)
-    //{
-    //    return ((int)type & registerRedoObjects) != 0;
-    //}
-
     private static RedoManager instance;
     public static RedoManager Instance { get { return instance; } }
     private void Awake()
