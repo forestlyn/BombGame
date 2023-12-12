@@ -11,7 +11,7 @@ namespace MyInputSystem
         private void Awake()
         {
             pcInputActions = new PCInputActions();
-            playerAction = new PlayerAction();
+            playerAction = new PlayerAction(Player.Instance);
         }
         void Start()
         {

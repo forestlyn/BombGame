@@ -3,36 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.InputSystem;
+using MyTools.MyCoroutines;
+using System;
 
 namespace MyInputSystem
 {
     public class PlayerAction
     {
+        Player player;
+        MyCoroutine move;
+
+        public PlayerAction(Player player)
+        { 
+            this.player = player; 
+        }
+
         internal void Move(Vector2 dir, InputAction.CallbackContext cbContext)
         {
-            //Debug.Log("move" + cbContext.ReadValue<float>() + " " + cbContext.interaction);
             if (cbContext.interaction is HoldInteraction)
             {
-                //Debug.Log("长按");
-                Player.Instance.Move(dir, true);
+                StopMove();
+                MyCoroutines.StartCoroutine(StartContinuousMove(dir));
             }
             if (cbContext.interaction is TapInteraction)
             {
-                //Debug.Log("点按");
-                Player.Instance.Move(dir, false);
+                StopMove();
+                Move(dir);
             }
         }
+
+
         internal void StopMove(Vector2 dir, InputAction.CallbackContext cbContext)
         {
             if (cbContext.interaction is HoldInteraction)
             {
-                Player.Instance.StopMove(dir);
+                StopMove();
             }
         }
 
-        internal void Bomb()
+        public void Bomb()
         {
-            Player.Instance.Bomb();
+            Command cmd = new PlayerBomb(player);
+            cmd.Execute();
+            RedoManager.Instance.AddCommand(cmd);
+        }
+
+        private void Move(Vector2 dir)
+        {
+            Command cmd = new PlayerMove(player, dir);
+            cmd.Execute();
+            RedoManager.Instance.AddCommand(cmd);
+        }
+
+        private IEnumerator StartContinuousMove(Vector2 dir)
+        {
+            Move(dir);
+            yield return new YieldWaitForSeconds(player.moveTimeInterval);
+        }
+        private void StopMove()
+        {
+            MyCoroutines.StopCoroutine(move);
         }
     }
 }

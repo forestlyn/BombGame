@@ -1,71 +1,66 @@
+using MyInputSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct RedoState
+public class RedoManager : MonoBehaviour
 {
+    private RedoCommandList redo;
 
-}
-public enum RedoObjectType
-{
-    Player=1,
-}
-public class RedoManager : MonoBehaviour,ICanRedo
-{
-    private BaseRedoObject<RedoState> redo;
-
-    private int registerRedoObjects = 0;
-    private bool isRegisterObject(RedoObjectType type)
-    {
-        return ((int)type & registerRedoObjects) != 0;
-    }
+    //private int registerRedoObjects = 0;
+    //private bool isRegisterObject(RedoObjectType type)
+    //{
+    //    return ((int)type & registerRedoObjects) != 0;
+    //}
 
     private static RedoManager instance;
     public static RedoManager Instance { get { return instance; } }
     private void Awake()
     {
         instance = this;
-        redo = new BaseRedoObject<RedoState>();
+        redo = new RedoCommandList();
     }
 
-    public void RegisterRedo(RedoObjectType type)
+    public void AddCommand(Command command)
     {
-        registerRedoObjects |= (int)type;
-    }
-    public void AddActionObjectType(RedoObjectType type)
-    {
-        ObjectAction<RedoState> action;
-        action.type = (int)type;
-        redo.AppendRedoAction(action, true);
+        redo.AppendRedoCommand(command, true);
     }
 
+    /// <summary>
+    /// ÖØ×ö
+    /// </summary>
     public void Redo()
     {
-        bool flag;
-        ObjectAction<RedoState> action = redo.GetUndoAction(out flag);
+        Command command = redo.GetUndoCommand(out bool flag);
         if (!flag) return;
-        if (!isRegisterObject((RedoObjectType)action.type)) return;
-        switch (action.type)
-        {
-            case (int)RedoObjectType.Player:
-                Player.Instance.Redo();
-                break;
-        }
-        redo.RedoHelp(action);
+
+        command.Execute();
+
+        redo.RedoHelp(command);
     }
 
+    /// <summary>
+    /// ³·Ïú
+    /// </summary>
     public void Undo()
     {
-        bool flag;
-        ObjectAction<RedoState> action = redo.GetRedoAction(out flag);
+        Command command = redo.GetRedoCommand(out bool flag);
         if (!flag) return;
-        if (!isRegisterObject((RedoObjectType)action.type)) return;
-        switch (action.type)
-        {
-            case (int)RedoObjectType.Player:
-                Player.Instance.Undo();
-                break;
-        }
-        redo.UndoHelp(action);
+
+        undo(command);
+
+        redo.UndoHelp(command);
     }
+
+    private void undo(Command cmd)
+    {
+        foreach (Command command in cmd.Next)
+        {
+            undo(command);
+        }
+        cmd.Undo();
+    }
+
+
 }

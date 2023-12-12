@@ -12,6 +12,8 @@ public class MapManager : MonoBehaviour
     private static MapManager instance;
     public static MapManager Instance { get { return instance; } }
 
+    private static int offset_x;
+    private static int offset_y;
     private MapState GetMapState()
     {
         return mapState;
@@ -20,21 +22,6 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        //mapState = new MapState();
-        //mapState.map = new BaseMapObjectState[10, 10];
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    for (int j = 0; j < 10; j++)
-        //    {
-        //        mapState.map[i, j] = new BaseMapObjectState(MapObjectType.Ground, 0);
-        //    }
-        //}
-        //mapState.map[0, 0] = new BaseMapObjectState(MapObjectType.Wall, 1);
-        //mapState.length = 10;
-        //mapState.width = 10;
-        ////File.Create("F:\\GameProject\\BombGame\\Assets\\Scripts\\Map\\map.json");
-        //File.WriteAllText("F:\\GameProject\\BombGame\\Assets\\Scripts\\Map\\map.json",
-        //    JsonConvert.SerializeObject(mapState));
     }
     private void Start()
     {
@@ -43,7 +30,8 @@ public class MapManager : MonoBehaviour
     }
     internal bool CanMove(Vector2 playerPos, int height)
     {
-        if (mapState.map[(int)playerPos.x, (int)playerPos.y].height == height)
+        var pos = CalMapPos(playerPos);
+        if (mapState.map[(int)pos.x, (int)pos.y].height == height)
             return true;
         return false;
     }
@@ -64,6 +52,8 @@ public class MapManager : MonoBehaviour
         int l, w;
         l = mapState.length;
         w = mapState.width;
+        offset_x = -l / 2;
+        offset_y = -w / 2;
         Debug.Log("l:" + l + "w:" + w);
 
         for (int i = 0; i < l; i++)
@@ -74,7 +64,7 @@ public class MapManager : MonoBehaviour
                 GameObject obj = MyGameObjectPool.Instance.GetByMapObjectType(gb.type);
                 if(obj != null)
                 {
-                    obj.transform.position = new Vector2(i, j);
+                    obj.transform.position = new Vector2(i + offset_x, j + offset_y);
                 }
                 else
                 {
@@ -82,5 +72,22 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public static Vector2 CalMapPos(int x,int y)
+    {
+        return new Vector2(x - offset_x, y - offset_y);
+    }
+    public static Vector2 CalMapPos(Vector2 pos)
+    {
+        return new Vector2(pos.x - offset_x, pos.y - offset_y);
+    }
+    public static Vector2 CalWorldPos(int x, int y)
+    {
+        return new Vector2(x + offset_x, y + offset_y);
+    }
+    public static Vector2 CalWorldPos(Vector2 pos)
+    {
+        return new Vector2(pos.x + offset_x, pos.y + offset_y);
     }
 }

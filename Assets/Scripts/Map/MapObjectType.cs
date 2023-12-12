@@ -6,5 +6,6 @@ public enum MapObjectType
     Door,
     SpecialDoor,
     Gear,
+    Bomb,
     Box,
 }

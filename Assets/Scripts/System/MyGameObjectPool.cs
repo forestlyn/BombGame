@@ -97,7 +97,10 @@ public class MyGameObjectPool : MonoBehaviour
                 obj = Instantiate(obj);
                 return obj;
             }
-            else { return null; }
+            else {
+                Debug.LogError($"No gameobejct has {typeof(T)} component");
+                return null;
+            }
         }
     }
     /// <summary>
