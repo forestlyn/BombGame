@@ -14,8 +14,8 @@ namespace MyInputSystem
         MyCoroutine move;
 
         public PlayerAction(Player player)
-        { 
-            this.player = player; 
+        {
+            this.player = player;
         }
 
         internal void Move(Vector2 dir, InputAction.CallbackContext cbContext)
@@ -23,7 +23,7 @@ namespace MyInputSystem
             if (cbContext.interaction is HoldInteraction)
             {
                 StopMove();
-                MyCoroutines.StartCoroutine(StartContinuousMove(dir));
+                move = MyCoroutines.StartCoroutine(StartContinuousMove(dir));
             }
             if (cbContext.interaction is TapInteraction)
             {
@@ -50,15 +50,21 @@ namespace MyInputSystem
 
         private void Move(Vector2 dir)
         {
+            if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir, player.Height))
+                return;
             Command cmd = new PlayerMove(player, dir);
+            MyEventSystem.Instance.InvokeEvent(2, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }
 
         private IEnumerator StartContinuousMove(Vector2 dir)
         {
-            Move(dir);
-            yield return new YieldWaitForSeconds(player.moveTimeInterval);
+            while (true)
+            {
+                Move(dir);
+                yield return new YieldWaitForSeconds(player.moveTimeInterval);
+            }
         }
         private void StopMove()
         {

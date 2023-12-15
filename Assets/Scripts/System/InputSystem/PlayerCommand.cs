@@ -61,7 +61,7 @@ namespace MyInputSystem
         }
         public override void Execute()
         {
-           player.PutBomb(player.worldPos);
+           player.PutBomb(player.WorldPos);
         }
 
         public override void Undo()
@@ -79,7 +79,7 @@ namespace MyInputSystem
 
         public override void Execute()
         {
-           bombPos = player.InvokeBomb();
+           bombPos = player.InvokeBomb(this);
         }
 
         public override void Undo()

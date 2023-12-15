@@ -52,7 +52,7 @@ public class MyGameObjectPool : MonoBehaviour
 
                 if (res != null)
                 {
-                    Debug.Log($"create {name} poll");
+                    Debug.Log($"create {type} poll");
                     m_pool.Add(name, new Queue<GameObject>());
                     res = Instantiate(res);
                     return res;

@@ -56,5 +56,4 @@ public class RedoManager : MonoBehaviour
         cmd.Undo();
     }
 
-
 }

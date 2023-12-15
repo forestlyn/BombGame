@@ -5,14 +5,14 @@ using UnityEngine;
 public class MapState
 {
     public int length, width;
-    public BaseMapObjectState[,] map;
+    public BaseMapObjectState[,] Map;
 }
 
 public class BaseMapObjectState
 {
     public MapObjectType type;
     public int height;
-
+    public MapObject mapObject;
     public BaseMapObjectState(MapObjectType type,int height)
     {
         this.type = type;

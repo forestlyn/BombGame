@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IMapObjectPosition
 {
     private static Player instance;
     public static Player Instance { get { return instance; } }
@@ -14,15 +14,14 @@ public class Player : MonoBehaviour
     public int HoldBombMaxNum;
     public float moveTimeInterval;
 
-    public Vector2 worldPos
+    public Vector2 WorldPos
     {
         get => transform.position;
     } 
-    public Vector2 mapPos
+    public Vector2 ArrayPos
     {
         get => MapManager.CalMapPos(transform.position);
     }
-    public GameObject bomb;
 
     private List<Bomb> bombs;
 
@@ -48,13 +47,13 @@ public class Player : MonoBehaviour
         HoldBombNum--;
         bombs.Add(b.GetComponent<Bomb>());
     }
-    public List<Vector2> InvokeBomb()
+    public List<Vector2> InvokeBomb(Command command)
     {
         var bombPos = new List<Vector2>();
         foreach (var b in bombs)
         {
             bombPos.Add(b.transform.position);
-            b.Explosion();
+            b.Explosion(command);
             MyGameObjectPool.Instance.Return<Bomb>(b.gameObject);
         }
         bombs.Clear();
@@ -67,10 +66,7 @@ public class Player : MonoBehaviour
 
     public void Move(Vector2 dir)
     {
-        if (MapManager.Instance.CanMove(new Vector2(transform.position.x, transform.position.y) + dir,Height))
-        {
-            transform.Translate(dir);
-        }
+        transform.Translate(dir);
     }
     #endregion
 
