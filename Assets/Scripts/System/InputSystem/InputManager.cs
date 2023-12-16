@@ -11,7 +11,7 @@ namespace MyInputSystem
         private void Awake()
         {
             pcInputActions = new PCInputActions();
-            playerAction = new PlayerAction();
+            playerAction = new PlayerAction(Player.Instance);
         }
         void Start()
         {
@@ -35,12 +35,10 @@ namespace MyInputSystem
             pcInputActions.Game.Redo.performed += cbContext =>
             {
                 RedoManager.Instance.Redo();
-                //Player.Instance.Redo();
             };
             pcInputActions.Game.Undo.performed += cbContext =>
             {
                 RedoManager.Instance.Undo();
-                //Player.Instance.Undo();
             };
         }
         private void BindPlayerInput()

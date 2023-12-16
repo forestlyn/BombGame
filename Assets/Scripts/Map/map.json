@@ -1,0 +1,216 @@
+{
+    "length": 5,
+    "width": 5,
+    "map": [
+        [
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            }
+        ],
+        [
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            }
+        ],
+        [
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Box",
+                "type": 2,
+                "height": 1,
+                "number": 0,
+                "name": "Box",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            }
+        ],
+        [
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Wall",
+                "type": 1,
+                "height": 1,
+                "number": 0,
+                "name": "Wall",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            }
+        ],
+        [
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Wall",
+                "type": 1,
+                "height": 1,
+                "number": 0,
+                "name": "Wall",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Wall",
+                "type": 1,
+                "height": 1,
+                "number": 0,
+                "name": "Wall",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            },
+            {
+                "Name": "Ground",
+                "type": 0,
+                "height": 0,
+                "number": 0,
+                "name": "Ground",
+                "hideFlags": 0
+            }
+        ]
+    ]
+}
