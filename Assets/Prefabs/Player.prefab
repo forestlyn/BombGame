@@ -98,4 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Height: 0
+  HoldBombNum: 0
+  HoldBombMaxNum: 0
   moveTimeInterval: 0.2
+  bomb: {fileID: 0}
