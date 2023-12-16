@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53db245b52343f344beb184b6a8d51c2, type: 3}
-  m_Name: PrefabList
+  m_Script: {fileID: 11500000, guid: 7d0f9eb982bf4c54081474593cb04156, type: 3}
+  m_Name: Bomb
   m_EditorClassIdentifier: 
-  prefabs:
-  - {fileID: 11400000, guid: 7dde3f0de00e31e44920641d2d981887, type: 2}
-  - {fileID: 11400000, guid: c778f98842d295542b253491726db6c0, type: 2}
+  type: 6
+  prefab: {fileID: 911123323772480182, guid: 651aae02cefe5c743a539e1417e14411, type: 3}

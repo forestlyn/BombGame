@@ -24,7 +24,7 @@ public class PrefabList : ScriptableObject
     {
         foreach (var prefab in prefabs)
         {
-            if (prefab.GetComponent<T>() != null)
+            if (prefab.prefab.GetComponent<T>() != null)
             {
                 return prefab.prefab;
             }

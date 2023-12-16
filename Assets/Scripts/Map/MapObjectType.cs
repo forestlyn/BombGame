@@ -1,10 +1,11 @@
 
-public enum MapObjectType 
+public enum MapObjectType
 {
     Ground,
-    Wall,
-    Door,
-    SpecialDoor,
-    Gear,
+    Wall, 
     Box,
+    Bomb,
+    Door,
+    PressBoard,
+    Flag
 }

@@ -229,6 +229,7 @@ GameObject:
   - component: {fileID: 1697066335}
   - component: {fileID: 1697066336}
   - component: {fileID: 1697066337}
+  - component: {fileID: 1697066338}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -312,6 +313,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6e64f7863fe62468c4853a1da570f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1697066338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697066331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e5c086f3ddbe94abac5827d7029c65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6260599867063664251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -331,6 +344,10 @@ PrefabInstance:
     - target: {fileID: 3879399959836392240, guid: ed3ec3cc081dece4597ea54202eee6c8, type: 3}
       propertyPath: m_SortingLayerID
       value: 1440796275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5301266566549928387, guid: ed3ec3cc081dece4597ea54202eee6c8, type: 3}
+      propertyPath: HoldBombMaxNum
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6023348306267200368, guid: ed3ec3cc081dece4597ea54202eee6c8, type: 3}
       propertyPath: m_LocalPosition.x
