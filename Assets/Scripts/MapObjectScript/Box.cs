@@ -6,27 +6,24 @@ using UnityEngine;
 
 public class Box : MapObject
 {
-
-
     private void Move(Vector2 pos, Command command)
     {
         Debug.Log("recieved bomb in pos:" + pos);
         Vector2 moveDir = WorldPos - pos;
         Vector2 movePos = WorldPos + moveDir;
-        if (MapManager.InRange(pos, WorldPos, 4)
-            && MapManager.Instance.BoxCanMove(movePos))
+        if (MapManager.Instance.BoxCanMove(movePos))
         {
-            MapManager.Instance.SwapMapObjByWorldPos(WorldPos, movePos);
-            Debug.Log("in range 4 worldpos:" + WorldPos);
+            Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new BoxMove(this, moveDir);
-            move.Execute();
             command.Next.Add(move);
+            move.Execute();
         }
     }
 
     public void Move(Vector2 dir)
     {
         Debug.Log("move dir :" + dir);
+        MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
     }
 
@@ -60,6 +57,7 @@ public class BoxMove : Command
 
     public override void Undo()
     {
+        Debug.Log("undo box dir:" + dir);
         box.Move(-dir);
     }
 }

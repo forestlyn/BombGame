@@ -28,32 +28,6 @@ namespace MyInputSystem
         }
     }
 
-    public class PlayerBomb : PlayerCommand
-    {
-        PlayerCommand executeCommand;
-        public PlayerBomb(Player player):base(player)
-        {
-            if (player.HoldBombNum > 0)
-            {
-                executeCommand = new PlayerPutBomb(player);
-            }
-            else
-            {
-                executeCommand = new PlayerInvokeBomb(player);
-            }
-        }
-
-        public override void Execute()
-        {
-            executeCommand.Execute();
-        }
-
-        public override void Undo()
-        {
-            executeCommand.Undo();
-        }
-    }
-
     public class PlayerPutBomb : PlayerCommand
     {
         public PlayerPutBomb(Player player) : base(player)
@@ -61,7 +35,7 @@ namespace MyInputSystem
         }
         public override void Execute()
         {
-           player.PutBomb(player.WorldPos);
+            player.PutBomb(player.WorldPos);
         }
 
         public override void Undo()

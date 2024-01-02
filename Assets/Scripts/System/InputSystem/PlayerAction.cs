@@ -43,7 +43,11 @@ namespace MyInputSystem
 
         public void Bomb()
         {
-            Command cmd = new PlayerBomb(player);
+            Command cmd;
+            if (player.HoldBombNum > 0)
+                cmd = new PlayerPutBomb(player);
+            else 
+                cmd = new PlayerInvokeBomb(player);
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }
@@ -53,7 +57,7 @@ namespace MyInputSystem
             if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir, player.Height))
                 return;
             Command cmd = new PlayerMove(player, dir);
-            MyEventSystem.Instance.InvokeEvent(2, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }

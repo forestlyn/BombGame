@@ -49,6 +49,7 @@ public class RedoManager : MonoBehaviour
 
     private void undo(Command cmd)
     {
+        Debug.Log(cmd);
         foreach (Command command in cmd.Next)
         {
             undo(command);

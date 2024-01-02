@@ -1,35 +1,54 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapState
 {
     public int length, width;
-    public BaseMapObjectState[,] Map;
+    public List<BaseMapObjectState>[,] Map;
+    public List<BaseMapObjectState> this[int x, int y]
+    {
+        get
+        {
+            return Map[x, y];
+        }
+    }
+    public List<BaseMapObjectState> this[Vector2 v]
+    {
+        get
+        {
+            return Map[(int)v.x, (int)v.y];
+        }
+    }
+    public BaseMapObjectState RemoveLast(int x, int y, MapObject mapObject)
+    {
+        if (Map[x, y].Count == 0) return null;
+        var obj = Map[x, y].Find(obj => obj.objectId == mapObject.objectId);
+        Map[x, y].Remove(obj);
+        return obj;
+    }
+    public BaseMapObjectState RemoveLast(Vector2 v, MapObject mapObject)
+    {
+        return RemoveLast((int)v.x, (int)v.y, mapObject);
+    }
 }
 
 public class BaseMapObjectState
 {
     public MapObjectType type;
     public int height;
+    public int id;
+    [JsonIgnore]
+    public int objectId;
+    public bool open;
+    [JsonIgnore]
     public MapObject mapObject;
-    public BaseMapObjectState(MapObjectType type,int height)
+    public BaseMapObjectState(MapObjectType type, int height)
     {
         this.type = type;
         this.height = height;
-    }
-}
-
-public class DoorState : BaseMapObjectState
-{
-    public DoorState(MapObjectType type, int height) : base(type, height)
-    {
-    }
-}
-
-public class SpecialDoorState : BaseMapObjectState
-{
-    public SpecialDoorState(MapObjectType type, int height) : base(type, height)
-    {
     }
 }

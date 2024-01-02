@@ -4,13 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class MapManager : MonoBehaviour
 {
     private MapState mapState;
-
+    private int ObjectIdx;
     private bool InMap(Vector2 arrayPos)
     {
         if (mapState == null)
@@ -18,10 +18,10 @@ public class MapManager : MonoBehaviour
         return arrayPos.x >= 0 && arrayPos.y >= 0 &&
             arrayPos.x < mapState.length && arrayPos.y < mapState.width;
     }
-    private BaseMapObjectState MapObj(Vector2 arrayPos)
+    public List<BaseMapObjectState> MapObj(Vector2 arrayPos)
     {
         if (InMap(arrayPos))
-            return mapState.Map[(int)arrayPos.x, (int)arrayPos.y];
+            return mapState[(int)arrayPos.x, (int)arrayPos.y];
         return null;
     }
 
@@ -42,52 +42,56 @@ public class MapManager : MonoBehaviour
     }
     private void Start()
     {
-        LoadMapFromFile("F:\\GameProject\\BombGame\\Assets\\Scripts\\Map\\Map.json");
+        //LoadMapFromFile("F:\\GameProject\\BombGame\\Assets\\Scripts\\Map\\Map3.json");
         //CreateMap(mapState);
     }
-    internal bool PlayerCanMove(Vector2 playerPos,Vector2 dir, int height)
+    internal bool PlayerCanMove(Vector2 playerPos, Vector2 dir, int height)
     {
         var pos = CalMapPos(playerPos + dir);
         if (!InMap(pos))
             return false;
-        var obj = MapObj(pos);
-        if (obj != null)
+        foreach (var obj in MapObj(pos))
         {
+            Debug.Log(pos);
             switch (obj.type)
             {
                 case MapObjectType.Box:
-                    return BoxCanMove(playerPos + dir + dir);
-                case MapObjectType.Ground: 
-                    return true;
-
+                    if (BoxCanMove(playerPos + dir + dir))
+                        continue;
+                    else
+                        return false;
+                case MapObjectType.Ground:
+                    continue;
+                case MapObjectType.PressBoard:
+                    continue;
+                case MapObjectType.Flag:
+                    continue;
+                case MapObjectType.Door:
+                    if (obj.mapObject.open)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                case MapObjectType.Player:
+                    continue;
+                default: return false;
             }
-            
         }
-        return false;
+        return true;
     }
 
     public bool BoxCanMove(Vector2 boxPos)
     {
         var pos = CalMapPos(boxPos);
-        if (InMap(pos) && MapObj(pos).height == 0)
+        if (InMap(pos) && MapObj(pos).TrueForAll(obj => obj.height == 0))
             return true;
         return false;
     }
 
-    public void SwapMapObjByWorldPos(Vector2 worldPos1, Vector2 worldpos2)
-    {
-        //Debug.Log($"{worldPos1} {worldpos2}");
-        var arrayPos1 = CalMapPos(worldPos1);
-        var arrayPos2 = CalMapPos(worldpos2);
-        //Debug.Log($"{arrayPos1} {arrayPos2}");
-        var obj1 = MapObj(arrayPos1);
-        var obj2 = MapObj(arrayPos2);
-        mapState.Map[(int)arrayPos1.x, (int)arrayPos1.y] = obj2;
-        mapState.Map[(int)arrayPos2.x, (int)arrayPos2.y] = obj1;
-        //Debug.Log("swap!");
-    }
-
-    private void LoadMapFromFile(string path)
+    public void LoadMapFromFile(string path)
     {
         Debug.Log(path);
 
@@ -100,31 +104,47 @@ public class MapManager : MonoBehaviour
     }
     private void CreateMap(MapState mapState)
     {
+        ObjectIdx = 0;
         int l, w;
         l = mapState.length;
         w = mapState.width;
         offset_x = -l / 2;
         offset_y = -w / 2;
-        //Debug.Log("l:" + l + "w:" + w);
 
         for (int i = 0; i < l; i++)
         {
             for (int j = 0; j < w; j++)
             {
-                var gb = mapState.Map[i, j];
-                if (gb.type != MapObjectType.Ground)
+                foreach (BaseMapObjectState gb in mapState[i, j])
                 {
-                    MyGameObjectPool.Instance.GetByMapObjectType(MapObjectType.Ground).transform.position = new Vector2(i + offset_x, j + offset_y);
-                }
-                GameObject obj = MyGameObjectPool.Instance.GetByMapObjectType(gb.type);
-                if (obj != null)
-                {
-                    obj.transform.position = new Vector2(i + offset_x, j + offset_y);
-                    mapState.Map[i, j].mapObject = obj.GetComponent<MapObject>();
-                }
-                else
-                {
-                    Debug.LogError("no GameObject type is " + gb.type);
+                    GameObject obj;
+                    if (gb.type == MapObjectType.Player)
+                    {
+                        obj = Player.Instance.gameObject;
+                        if (obj == null) Debug.LogError("no player");
+                    }
+                    else
+                    {
+                        obj = MyGameObjectPool.Instance.GetByMapObjectType(gb.type);
+                    }
+                    if (gb == null) Debug.Log("11");
+                    if (obj != null)
+                    {
+                        obj.transform.position = new Vector2(i + offset_x, j + offset_y);
+                        gb.mapObject = obj.GetComponent<MapObject>();
+                        if (gb.mapObject != null)
+                        {
+                            gb.mapObject.id = gb.id;
+                            gb.mapObject.objectId = gb.objectId = ObjectIdx;
+                            gb.mapObject.open = gb.open;
+                            //Debug.Log("type:" + gb.type + "id:" + gb.mapObject.id);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("no GameObject type is " + gb.type);
+                    }
+                    ObjectIdx++;
                 }
             }
         }
@@ -187,7 +207,53 @@ public class MapManager : MonoBehaviour
     /// <param name="command"></param>
     public void InvokeEvent(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command)
     {
-        BaseMapObjectState obj = MapObj(arrayPos);
-        obj?.mapObject?.HandleEvent(mapEvent, worldPos, command);
+        List<BaseMapObjectState> list = MapObj(arrayPos);
+        Debug.Log(arrayPos);
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            BaseMapObjectState obj = list[i];
+            if (obj == null)
+            {
+                Debug.Log(i + "err");
+            }
+            else
+                Debug.Log(i + " " + obj.type);
+            obj.mapObject?.HandleEvent(mapEvent, worldPos, command);
+        }
     }
+    public void InvokeEventId(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command,int id)
+    {
+        List<BaseMapObjectState> list = MapObj(arrayPos);
+        for (int i = 0; i < list.Count; i++)
+        {
+            BaseMapObjectState obj = list[i];
+            if (obj.mapObject.id != id) continue;
+            obj.mapObject?.HandleEvent(mapEvent, worldPos, command);
+        }
+    }
+    public void InvokeEventAllId(MapEventType mapEvent, Vector2 worldPos, Command command,int id)
+    {
+        int l = mapState.length;
+        int w = mapState.width;
+        for (int i = 0; i < l; i++)
+        {
+            for (int j = 0; j < w; j++)
+            {
+                InvokeEventId(mapEvent, new Vector2(i, j), worldPos, command, id);
+            }
+        }
+    }
+
+    public void MoveMapObj(Vector2 pre, Vector2 after, MapObject mapObject)
+    {
+        var preArray = CalMapPos(pre);
+        var afterArray = CalMapPos(after);
+        BaseMapObjectState obj = mapState.RemoveLast(preArray, mapObject);
+        mapState[afterArray].Add(obj);
+        InvokeEvent(MapEventType.Leave, preArray, pre, null);
+        InvokeEvent(MapEventType.Arrive, afterArray, after, null);
+    }
+
+
 }

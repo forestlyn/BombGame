@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IMapObjectPosition
+public class Player : MapObject
 {
     private static Player instance;
     public static Player Instance { get { return instance; } }
@@ -14,17 +14,11 @@ public class Player : MonoBehaviour, IMapObjectPosition
     public int HoldBombMaxNum;
     public float moveTimeInterval;
 
-    public Vector2 WorldPos
-    {
-        get => transform.position;
-    } 
-    public Vector2 ArrayPos
-    {
-        get => MapManager.CalMapPos(transform.position);
-    }
-
     private List<Bomb> bombs;
 
+    public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
+    {
+    }
     private void Awake()
     {
         instance = this;
@@ -66,6 +60,7 @@ public class Player : MonoBehaviour, IMapObjectPosition
 
     public void Move(Vector2 dir)
     {
+        MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
     }
     #endregion

@@ -10,7 +10,6 @@ public class MyGameObjectPool : MonoBehaviour
 
     private static MyGameObjectPool instance;
     public static MyGameObjectPool Instance { get { return instance; } }
-
     private void Awake()
     {
         instance = this;

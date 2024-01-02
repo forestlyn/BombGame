@@ -5,6 +5,11 @@ public enum MapEventType
 {
     Bomb,
     PlayerMove,
+    BoxMove,
+    PressBoardUp,
+    PressBoardDown,
+    Leave,
+    Arrive
 }
 
 public interface IMapObjectEvent

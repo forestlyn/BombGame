@@ -7,5 +7,6 @@ public enum MapObjectType
     Bomb,
     Door,
     PressBoard,
-    Flag
+    Flag,
+    Player,
 }
