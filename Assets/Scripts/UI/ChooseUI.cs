@@ -2,31 +2,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ChooseUI : MonoBehaviour
 {
-    private string path;
     private List<string> mapFiles = new List<string>();
 
     public GameObject levelPrefab;
+    private void Awake()
+    {
+        mapFiles = GameManager.Instance.MapFiles;
+    }
     void Start()
     {
-        path = Application.streamingAssetsPath;
-        GetAllLevels();
         DrawAllLevels();
     }
 
-    private void DrawAllLevels()
+    public void DrawAllLevels()
     {
         foreach (string file in mapFiles)
         {
-            Debug.Log(file);
+            //Debug.Log(file);
             GameObject gb = Instantiate(levelPrefab, transform);
             Button b = gb.GetComponent<Button>();
             b.onClick.AddListener(delegate { ChooseLevel(file); });
@@ -50,15 +47,5 @@ public class ChooseUI : MonoBehaviour
         GameManager.Instance.LoadMap(levelPath);
     }
 
-    private void GetAllLevels()
-    {
-        string[] files = Directory.GetFiles(path);
-        foreach (string file in files)
-        {
-            if (file.EndsWith("json"))
-            {
-                mapFiles.Add(file);
-            }
-        }
-    }
+
 }

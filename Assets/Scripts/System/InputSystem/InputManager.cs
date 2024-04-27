@@ -8,13 +8,15 @@ namespace MyInputSystem
     {
         private PCInputActions pcInputActions;
         private PlayerAction playerAction;
+        private GameAction gameAction;
         private void Awake()
         {
             pcInputActions = new PCInputActions();
-            playerAction = new PlayerAction(Player.Instance);
         }
         void Start()
         {
+            playerAction = new PlayerAction(Player.Instance);
+            gameAction = new GameAction();
             BindActionFunc();
         }
         private void OnEnable()
@@ -39,6 +41,10 @@ namespace MyInputSystem
             pcInputActions.Game.Undo.performed += cbContext =>
             {
                 RedoManager.Instance.Undo();
+            };
+            pcInputActions.Game.ReStart.performed += cbContext =>
+            {
+                gameAction.Restart();
             };
         }
         private void BindPlayerInput()

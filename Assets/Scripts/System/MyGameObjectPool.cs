@@ -41,7 +41,7 @@ public class MyGameObjectPool : MonoBehaviour
                 }
                 else
                 {
-                    GameObject res = Instantiate(obj);
+                    GameObject res = Instantiate(obj, transform);
                     return res;
                 }
             }
@@ -53,7 +53,7 @@ public class MyGameObjectPool : MonoBehaviour
                 {
                     Debug.Log($"create {type} poll");
                     m_pool.Add(name, new Queue<GameObject>());
-                    res = Instantiate(res);
+                    res = Instantiate(res, transform);
                     return res;
                 }
                 else { return null; }
@@ -102,6 +102,24 @@ public class MyGameObjectPool : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// 归还物体
+    /// </summary>
+    /// <param name="obj"></param>
+    public void Return(GameObject obj)
+    {
+        if (obj != null)
+        {
+            Type t = obj.GetType();
+            string name = t.Name;
+            if (m_pool.ContainsKey(name))
+            {
+                obj.SetActive(false);
+                m_pool[name].Enqueue(obj);
+            }
+        }
+    }
+
     /// <summary>
     /// 归还物体
     /// </summary>

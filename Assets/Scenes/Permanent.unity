@@ -414,10 +414,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2223109749080369488, guid: ecb90660eccfe0e4e9e96c03398d8dfb, type: 3}
-      propertyPath: fadeDuration
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2223109749080369488, guid: ecb90660eccfe0e4e9e96c03398d8dfb, type: 3}
       propertyPath: fadeCanvasGroup
       value: 
       objectReference: {fileID: 1069020551}
@@ -461,17 +457,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5344243425593597945, guid: ecb90660eccfe0e4e9e96c03398d8dfb, type: 3}
-      propertyPath: StartSceneName
-      value: Start
-      objectReference: {fileID: 0}
     - target: {fileID: 8410096907120626041, guid: ecb90660eccfe0e4e9e96c03398d8dfb, type: 3}
       propertyPath: m_Name
       value: GameObject
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5789248143565312881, guid: ecb90660eccfe0e4e9e96c03398d8dfb, type: 3}
-    - {fileID: 5179921468496236635, guid: ecb90660eccfe0e4e9e96c03398d8dfb, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

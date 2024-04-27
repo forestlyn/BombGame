@@ -16,6 +16,11 @@ public class RedoManager : MonoBehaviour
         redo = new RedoCommandList();
     }
 
+    public void ClearCommandLists()
+    {
+        redo.ClearLists();
+    }
+
     public void AddCommand(Command command)
     {
         redo.AppendRedoCommand(command, true);

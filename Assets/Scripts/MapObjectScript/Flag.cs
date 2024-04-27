@@ -11,6 +11,7 @@ public class Flag : MapObject
         {
             case MapEventType.PlayerMove:
                 Debug.Log("Player arrive flag!");
+                GameManager.Instance.WinGame();
                 break;
         }
     }

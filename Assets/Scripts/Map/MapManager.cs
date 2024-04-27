@@ -5,12 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
     private MapState mapState;
+    private string mapFilePath;
     private int ObjectIdx;
+
+    public GameObject WinGamePanel;
     private bool InMap(Vector2 arrayPos)
     {
         if (mapState == null)
@@ -18,7 +22,7 @@ public class MapManager : MonoBehaviour
         return arrayPos.x >= 0 && arrayPos.y >= 0 &&
             arrayPos.x < mapState.length && arrayPos.y < mapState.width;
     }
-    public List<BaseMapObjectState> MapObj(Vector2 arrayPos)
+    public List<BaseMapObjectState> MapObjs(Vector2 arrayPos)
     {
         if (InMap(arrayPos))
             return mapState[(int)arrayPos.x, (int)arrayPos.y];
@@ -30,9 +34,15 @@ public class MapManager : MonoBehaviour
 
     private static int offset_x;
     private static int offset_y;
-    private MapState GetMapState()
+    public MapState GetMapState()
     {
         return mapState;
+    }
+    public void SetMapState(MapState state)
+    {
+        Debug.Log("set mapstate" + (state == mapState));
+        mapState = state;
+        RefreshMap(mapState);
     }
 
     private void Awake()
@@ -40,19 +50,14 @@ public class MapManager : MonoBehaviour
         if (instance == null)
             instance = this;
     }
-    private void Start()
-    {
-        //LoadMapFromFile("F:\\GameProject\\BombGame\\Assets\\Scripts\\Map\\Map3.json");
-        //CreateMap(mapState);
-    }
     internal bool PlayerCanMove(Vector2 playerPos, Vector2 dir, int height)
     {
         var pos = CalMapPos(playerPos + dir);
         if (!InMap(pos))
             return false;
-        foreach (var obj in MapObj(pos))
+        foreach (var obj in MapObjs(pos))
         {
-            Debug.Log(pos);
+            //Debug.Log(pos);
             switch (obj.type)
             {
                 case MapObjectType.Box:
@@ -86,21 +91,42 @@ public class MapManager : MonoBehaviour
     public bool BoxCanMove(Vector2 boxPos)
     {
         var pos = CalMapPos(boxPos);
-        if (InMap(pos) && MapObj(pos).TrueForAll(obj => obj.height == 0))
+        if (InMap(pos) && MapObjs(pos).TrueForAll(obj => obj.height == 0))
             return true;
         return false;
     }
-
+    public void ReStart()
+    {
+        LoadMapFromFile(mapFilePath);
+    }
     public void LoadMapFromFile(string path)
     {
-        Debug.Log(path);
-
+        DeleteMap();
+        //Debug.Log(path);
+        mapFilePath = path;
         mapState = JsonConvert.DeserializeObject<MapState>(File.ReadAllText(path));
 
         //Debug.Log("l:" + mapState.length + "w:" + mapState.width);
 
         CreateMap(mapState);
+    }
 
+    private void DeleteMap()
+    {
+        var objs = transform.GetComponentsInChildren<Transform>();
+        foreach(var obj in objs)
+        {
+            if (obj == transform)
+            {
+                continue;
+            }
+            MyGameObjectPool.Instance.Return(obj.gameObject);
+        }
+    }
+
+    private void RefreshMap(MapState mapState)
+    {
+        //CreateMap(mapState);
     }
     private void CreateMap(MapState mapState)
     {
@@ -207,24 +233,25 @@ public class MapManager : MonoBehaviour
     /// <param name="command"></param>
     public void InvokeEvent(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command)
     {
-        List<BaseMapObjectState> list = MapObj(arrayPos);
-        Debug.Log(arrayPos);
+        List<BaseMapObjectState> list = MapObjs(arrayPos);
+        if (list == null) return;
+        //Debug.Log(arrayPos);
 
         for (int i = 0; i < list.Count; i++)
         {
             BaseMapObjectState obj = list[i];
-            if (obj == null)
-            {
-                Debug.Log(i + "err");
-            }
-            else
-                Debug.Log(i + " " + obj.type);
+            //if (obj == null)
+            //{
+            //    Debug.Log(arrayPos + " " + i + "err");
+            //}
+            //else
+            //    Debug.Log(arrayPos + " " + i + " " + obj.type);
             obj.mapObject?.HandleEvent(mapEvent, worldPos, command);
         }
     }
     public void InvokeEventId(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command,int id)
     {
-        List<BaseMapObjectState> list = MapObj(arrayPos);
+        List<BaseMapObjectState> list = MapObjs(arrayPos);
         for (int i = 0; i < list.Count; i++)
         {
             BaseMapObjectState obj = list[i];
@@ -255,5 +282,13 @@ public class MapManager : MonoBehaviour
         InvokeEvent(MapEventType.Arrive, afterArray, after, null);
     }
 
+    public void WinGame()
+    {
+        WinGamePanel.SetActive(true);
+    }
 
+    public void NextLevel()
+    {
+        
+    }
 }

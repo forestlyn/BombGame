@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Door : MapObject
 {
+    //记录当前对应压力板打开的数目
+    private int pressOpen = 0;
     private SpriteRenderer spriteRenderer;
     public Sprite[] doorSprite;
     public bool Open
@@ -13,10 +15,10 @@ public class Door : MapObject
         get => open;
         set
         {
-            if (open != value)
-            {
-                //Debug.Log("door is open?" + value);
-            }
+            //if (open != value)
+            //{
+            //    //Debug.Log("door is open?" + value);
+            //}
             open = value;
             spriteRenderer.sprite = doorSprite[open ? 0 : 1];
         }
@@ -39,10 +41,26 @@ public class Door : MapObject
     }
     private void Check(bool open, int id)
     {
-        Debug.Log("id id" + id + " " + id);
+        //Debug.Log("id id" + id + " " + id);
+
         if(this.id == id)
         {
-            OpenDoor(!this.open);
+            if (open)
+            {
+                if (pressOpen == 0)
+                {
+                    OpenDoor(!this.open);
+                }
+                pressOpen++;
+            }
+            else
+            {
+                pressOpen--;
+                if(pressOpen == 0)
+                {
+                    OpenDoor(!this.open);
+                }
+            }
         }
     }
 

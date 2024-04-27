@@ -40,10 +40,26 @@ public class BaseMapObjectState
 {
     public MapObjectType type;
     public int height;
+    /// <summary>
+    /// 配对id id相同代表一对 如压力板对应的门
+    /// </summary>
     public int id;
+    /// <summary>
+    /// global map obj unique id
+    /// </summary>
     [JsonIgnore]
     public int objectId;
     public bool open;
+
+    //box
+    public BoxMaterialType boxMaterialType;
+    public KEDeliverType boxkEType;
+    public int boxDir;
+    public int boxRotateAngle;
+    public int boxAdd;
+    public int boxMulti;
+
+
     [JsonIgnore]
     public MapObject mapObject;
     public BaseMapObjectState(MapObjectType type, int height)

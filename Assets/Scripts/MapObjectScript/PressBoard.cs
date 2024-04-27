@@ -15,10 +15,11 @@ public class PressBoard : MapObject
             open = value;
         }
     }
-    private void Start()
+    private void OnEnable()
     {
         Check(ArrayPos);
     }
+
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
     {
         switch (mapEvent)
@@ -32,8 +33,8 @@ public class PressBoard : MapObject
 
     private void Check(Vector2 arrayPos)
     {
-        Debug.Log("check");
-        var list = MapManager.Instance.MapObj(arrayPos);
+        //Debug.Log("check");
+        var list = MapManager.Instance.MapObjs(arrayPos);
         foreach (var item in list)
         {
             switch (item.type)

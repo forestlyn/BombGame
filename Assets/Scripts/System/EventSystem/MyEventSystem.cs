@@ -27,8 +27,14 @@ public class MyEventSystem : MonoBehaviour
     {
         switch(v)
         {
+            case InvokeEventType.One:
+                InvokeEvent(mapEvent, MapManager.CalMapPos(worldPos), worldPos, command);
+                break;
             case InvokeEventType.Two:
                 InvokeEventInTwo(mapEvent, worldPos, dir, command);
+                break;
+            case InvokeEventType.Three:
+                InvokeEventInThree(mapEvent, worldPos, dir, command);
                 break;
             case InvokeEventType.Four:
                 InvokeEventInFour(mapEvent, worldPos, command);
@@ -37,6 +43,19 @@ public class MyEventSystem : MonoBehaviour
                 InvokeEventInAllId(mapEvent, worldPos, command, id);
                 break;
         }
+    }
+
+    private void InvokeEventInThree(MapEventType mapEvent, Vector2 worldPos, Vector2 dir, Command command)
+    {
+        var arrayPos = MapManager.CalMapPos(worldPos);
+        if (dir != Vector2.down)
+            InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y - 1), worldPos, command);
+        if (dir != Vector2.up)
+            InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y + 1), worldPos, command);
+        if (dir != Vector2.left) 
+            InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
+        if (dir != Vector2.right)
+            InvokeEvent(mapEvent, new Vector2(arrayPos.x + 1, arrayPos.y), worldPos, command);
     }
 
     private void InvokeEventInAllId(MapEventType mapEvent, Vector2 worldPos, Command command,int id)
@@ -58,7 +77,13 @@ public class MyEventSystem : MonoBehaviour
         InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x + 1, arrayPos.y), worldPos, command);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="mapEvent">事件类型</param>
+    /// <param name="arrayPos">事件发送给当前地图哪一格子的物体</param>
+    /// <param name="worldPos">事件发生的地点</param>
+    /// <param name="command">指令</param>
     private void InvokeEvent(MapEventType mapEvent,Vector2 arrayPos,Vector2 worldPos, Command command)
     {
         MapManager.Instance.InvokeEvent(mapEvent, arrayPos, worldPos, command);
