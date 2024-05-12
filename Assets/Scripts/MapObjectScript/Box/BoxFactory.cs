@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoxFactory : MonoBehaviour
@@ -19,7 +20,7 @@ public class BoxFactory : MonoBehaviour
             Debug.Log("÷ÿ∏¥BoxFactory");
         }
     }
-    public Box GenerateBox(BaseMapObjectState baseMapObject)
+    public GameObject GenerateBox(BaseMapObjectState baseMapObject)
     {
         Box box = MyGameObjectPool.Instance.GetByMapObjectType(MapObjectType.Box).GetComponent<Box>();
         box.boxMaterial = (BoxMaterialType)baseMapObject.boxMaterialType;
@@ -30,9 +31,10 @@ public class BoxFactory : MonoBehaviour
                 new KECalculateSimu(keType, new KEMathematics(rotateAngle: baseMapObject.boxRotateAngle)),
             KEDeliverType.Calculate =>
                 new KECalculateSimu(keType, new KEMathematics(add: baseMapObject.boxAdd, multi: baseMapObject.boxMulti)),
+            KEDeliverType.WildCard => new WildCardKESimu(keType),
             _ => new BaseKESimu(keType, GetDir(baseMapObject.boxDir))
-        };
-        return box;
+        }; ;
+        return box.gameObject;
     }
 
     private Vector2 GetDir(int dir)

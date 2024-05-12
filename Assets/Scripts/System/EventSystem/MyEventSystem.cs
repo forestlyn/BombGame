@@ -45,17 +45,17 @@ public class MyEventSystem : MonoBehaviour
         }
     }
 
-    private void InvokeEventInThree(MapEventType mapEvent, Vector2 worldPos, Vector2 dir, Command command)
+    public void InvokeEventInThree(MapEventType mapEvent, Vector2 worldPos, Vector2 dir, Command command)
     {
         var arrayPos = MapManager.CalMapPos(worldPos);
         if (dir != Vector2.down)
-            InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y - 1), worldPos, command);
-        if (dir != Vector2.up)
             InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y + 1), worldPos, command);
+        if (dir != Vector2.up)
+            InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y - 1), worldPos, command);
         if (dir != Vector2.left) 
-            InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
-        if (dir != Vector2.right)
             InvokeEvent(mapEvent, new Vector2(arrayPos.x + 1, arrayPos.y), worldPos, command);
+        if (dir != Vector2.right)
+            InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
     }
 
     private void InvokeEventInAllId(MapEventType mapEvent, Vector2 worldPos, Command command,int id)

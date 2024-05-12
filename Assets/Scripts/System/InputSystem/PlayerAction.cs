@@ -54,7 +54,7 @@ namespace MyInputSystem
 
         private void Move(Vector2 dir)
         {
-            if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir, player.Height))
+            if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir))
                 return;
             Command cmd = new PlayerMove(player, dir);
             MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, player.WorldPos, cmd, dir);

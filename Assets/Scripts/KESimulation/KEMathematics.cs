@@ -29,6 +29,7 @@ public class KEMathematics
 
     private int CalOperation(int energe, int add, int multi)
     {
+        //Debug.Log("CalOperation:" + energe + " " + add + " " + multi);
         if (add == 0 && multi == 0)
         {
             return energe;
@@ -41,7 +42,7 @@ public class KEMathematics
         {
             return energe * multi;
         }
-        return energe;
+        return energe * multi + add;
     }
 
     private Vector2 CalRotate(Vector2 dir, int angleRotate)

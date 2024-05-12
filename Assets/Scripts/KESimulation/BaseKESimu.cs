@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 /// <summary>
-/// None StaticDir Destory
+/// None StaticDir Destory Motivate
 /// </summary>
-public class BaseKESimu
+public class BaseKESimu:ICloneable
 {
     public KEDeliverType _KEType;
 
@@ -30,29 +30,36 @@ public class BaseKESimu
         _Dir = dir;
     }
 
+
+
     /// <summary>
     /// 设置动能，会计算转换后真正能量，碰撞使用
     /// </summary>
     /// <param name="energe"></param>
     /// <param name="dir"></param>
-    public void SetEnergeDir(int energe, Vector2 dir)
+    /// <param name="kEDeliverType"></param>
+    public virtual void SetEnergeDir(int energe, Vector2 dir)
     {
-        if (energe == 0) return;
+        if (energe == 0)
+        {
+            Debug.LogError("err");
+            return;
+        }
         CalRealKE(energe, dir, _KEType);
     }
 
-    public void ClearEnergeDir()
+    public virtual void ClearEnerge()
     {
         _Energe = 0;
-        _Dir = default;
     }
 
-    protected virtual void CalRealKE(int energe, Vector2 dir, KEDeliverType deliverKEType)
+    public virtual void CalRealKE(int energe, Vector2 dir, KEDeliverType deliverKEType)
     {
         switch (_KEType)
         {
-            case KEDeliverType.None: 
-                _Dir = dir; 
+            case KEDeliverType.None:
+            case KEDeliverType.Motivate:
+                _Dir = dir;
                 _Energe = energe;
                 break;
             case KEDeliverType.StaticDir:
@@ -61,5 +68,10 @@ public class BaseKESimu
             case KEDeliverType.Destory:
                 break;
         }
+    }
+
+    public virtual object Clone()
+    {
+        return new BaseKESimu(_KEType, _Dir);
     }
 }

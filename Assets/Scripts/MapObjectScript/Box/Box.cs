@@ -2,8 +2,10 @@ using MyInputSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Threading;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
+using UnityEngine.UIElements;
 
 public class Box : MapObject
 {
@@ -17,6 +19,7 @@ public class Box : MapObject
     {
         while (kESimu.Energe > 0)
         {
+            //Debug.Log(objectId + "kESimu.Energe:" + kESimu.Energe);
             Move(dir, command, isHit);
             yield return new WaitForSeconds(delta);
         }
@@ -27,6 +30,7 @@ public class Box : MapObject
         //Debug.Log("recieved bomb in pos:" + pos);
         Vector2 moveDir = dir;
         Vector2 movePos = WorldPos + moveDir;
+        //Debug.Log(dir);
         if (MapManager.Instance.BoxCanMove(movePos))
         {
             //Debug.Log("worldpos:" + WorldPos + " " + command);
@@ -36,20 +40,7 @@ public class Box : MapObject
         }
         else if (isHit)
         {
-            List<BaseMapObjectState> objs = MapManager.Instance.MapObjs(movePos);
-            Box box = objs.Find(x => x.type == MapObjectType.Box).mapObject as Box;
-            if (box != null)
-            {
-                BoxHit boxHit = new BoxHit(this, kESimu.Energe, kESimu.Dir);
-                kESimu.ClearEnergeDir();
-
-                if (kESimu.KEType == KEDeliverType.Motivate)
-                {
-                    MyEventSystem.Instance.InvokeEvent(InvokeEventType.Four,
-                        MapEventType.BoxCollision, WorldPos, boxHit);
-                }
-            }
-
+            HitHandle(dir, command, isHit);
         }
     }
 
@@ -62,25 +53,44 @@ public class Box : MapObject
 
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
     {
+        //Debug.Log(objectId + " " + kESimu.KEType);
         switch (mapEvent)
         {
             case MapEventType.Bomb:
-                BoxBeHit boxbehit = new BoxBeHit(this, 1, happenPos - this.WorldPos);
+                if (kESimu.KEType == KEDeliverType.WildCard)
+                    (kESimu as WildCardKESimu).SetHitKE(new BaseKESimu(KEDeliverType.None));
+                BoxBeHit boxbehit = new BoxBeHit(this, 1, this.WorldPos - happenPos);
                 boxbehit.Execute();
                 command.Next.Add(boxbehit);
-                StartCoroutine(Move(kESimu.Dir, command, true, MoveInterval));
-                HitedHandle(command, true);
+                HitedHandle(command, this.WorldPos - happenPos, true);
                 break;
             case MapEventType.PlayerMove:
                 if (boxMaterial == BoxMaterialType.Stone) return;
-                StartCoroutine(Move(happenPos, command, false, MoveInterval));
+                Move(this.WorldPos - happenPos, command, false);
                 break;
             case MapEventType.BoxCollision:
+                if (kESimu.KEType == KEDeliverType.WildCard)
+                {
+                    Debug.Log("WildCard objID" + command.ObjectId);
+                    var hitObj = MapManager.Instance.GetMapObjectByObjID(command.ObjectId);
+                    if (hitObj is Box)
+                    {
+                        (kESimu as WildCardKESimu).SetHitKE((hitObj as Box).kESimu);
+                    }
+                    else
+                    {
+                        Debug.LogError("err");
+                    }
+                }
                 BoxHit cmd = command as BoxHit;
+                if (cmd == null)
+                {
+                    Debug.LogError("err");
+                }
                 BoxBeHit boxbehit1 = new BoxBeHit(this, cmd.energe, cmd.dir);
                 boxbehit1.Execute();
                 command.Next.Add(boxbehit1);
-                HitedHandle(command, false);
+                HitedHandle(boxbehit1, this.WorldPos - happenPos, false);
                 break;
             default: break;
         }
@@ -91,24 +101,69 @@ public class Box : MapObject
     /// </summary>
     /// <param name="command"></param>
     /// <param name="isBomb"></param>
-    public void HitedHandle(Command command,bool isBomb)
+    public void HitedHandle(Command command, Vector2 dir, bool isBomb)
     {
-        StartCoroutine(Move(kESimu.Dir, command, true, MoveInterval));
-
+        Debug.Log("HitedHandle:" + objectId + " " + command.ObjectId + " " + kESimu.KEType);
         if (kESimu == null) return;
         switch (kESimu.KEType)
         {
-            case KEDeliverType.None: 
+            case KEDeliverType.None:
             case KEDeliverType.StaticDir:
             case KEDeliverType.ClockWise:
             case KEDeliverType.Calculate:
+            case KEDeliverType.WildCard:
                 StartCoroutine(Move(kESimu.Dir, command, true, MoveInterval));
                 break;
             case KEDeliverType.Destory:
-
+                this.gameObject.SetActive(false);
                 break;
             case KEDeliverType.Motivate:
+                Motivate(command, dir);
                 break;
+        }
+    }
+    /// <summary>
+    /// 移动撞到其他物品的处理
+    /// </summary>
+    /// <param name="dir">移动方向</param>
+    /// <param name="command"></param>
+    /// <param name="isHit"></param>
+    public void HitHandle(Vector2 dir, Command command, bool isHit)
+    {
+        //Debug.Log("HitHandle"+objectId);
+        if (kESimu == null || !isHit) return;
+        BoxHit cmd = new BoxHit(this, kESimu.Energe, kESimu.Dir);
+        command.Next.Add(cmd);
+        switch (kESimu.KEType)
+        {
+            case KEDeliverType.None:
+            case KEDeliverType.StaticDir:
+            case KEDeliverType.ClockWise:
+            case KEDeliverType.Calculate:
+            case KEDeliverType.WildCard:
+                MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BoxCollision,
+                    WorldPos, cmd, dir);
+                break;
+            case KEDeliverType.Destory:
+            case KEDeliverType.Motivate:
+                Debug.LogError("err");
+                break;
+        }
+        cmd.Execute();
+    }
+
+    Vector2[] Dirs = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
+
+    public void Motivate(Command command, Vector2 dir)
+    {
+        Debug.Log("Motivate" + kESimu.Energe + kESimu.Dir);
+        foreach (var d in Dirs)
+        {
+            if (d == -dir) continue;
+            BoxHit hit = new BoxHit(this, kESimu.Energe, d);
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two,
+                 MapEventType.BoxCollision, WorldPos, hit, d);
+            command.Next.Add(hit);
         }
     }
 }
@@ -122,6 +177,7 @@ public class BoxMove : Command
     {
         box = b;
         this.dir = dir;
+        objectId = b.objectId;
         //distance = dis;
         if (isHit)
         {
@@ -135,7 +191,7 @@ public class BoxMove : Command
 
     public override void Undo()
     {
-        Debug.Log("undo box Dir:" + dir);
+        //Debug.Log("undo box Dir:" + dir);
         box.Move(-dir);
     }
 }
@@ -148,6 +204,7 @@ public class BoxHit : Command
 
     public BoxHit(Box box, int energe, Vector2 dir)
     {
+        objectId = box.objectId;
         this.box = box;
         this.energe = energe;
         this.dir = dir;
@@ -155,7 +212,7 @@ public class BoxHit : Command
 
     public override void Execute()
     {
-        box.kESimu.ClearEnergeDir();
+        box.kESimu.ClearEnerge();
     }
 
     public override void Undo()
@@ -172,6 +229,7 @@ public class BoxBeHit : Command
 
     public BoxBeHit(Box box, int energe, Vector2 dir)
     {
+        objectId = box.objectId;
         this.box = box;
         this.energe = energe;
         this.dir = dir;
@@ -180,10 +238,11 @@ public class BoxBeHit : Command
     public override void Execute()
     {
         box.kESimu.SetEnergeDir(energe, dir);
+        //Debug.Log("after hited:" + objectId + " " + energe + " " + dir);
     }
 
     public override void Undo()
     {
-        box.kESimu.ClearEnergeDir();
+        box.kESimu.ClearEnerge();
     }
 }

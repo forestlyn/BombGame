@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.Jobs.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -29,6 +30,23 @@ public class MapManager : MonoBehaviour
         return null;
     }
 
+    public MapObject GetMapObjectByObjID(int objID)
+    {
+        for (int i = 0; i < mapState.length; i++)
+        {
+            for(int j = 0;j<mapState.width; j++)
+            {
+                foreach(BaseMapObjectState state in mapState[i,j])
+                {
+                    if(state.objectId == objID)
+                    {
+                        return state.mapObject;
+                    }
+                }
+            }
+        }
+        return null;
+    }
     private static MapManager instance;
     public static MapManager Instance { get { return instance; } }
 
@@ -50,7 +68,7 @@ public class MapManager : MonoBehaviour
         if (instance == null)
             instance = this;
     }
-    internal bool PlayerCanMove(Vector2 playerPos, Vector2 dir, int height)
+    internal bool PlayerCanMove(Vector2 playerPos, Vector2 dir)
     {
         var pos = CalMapPos(playerPos + dir);
         if (!InMap(pos))
@@ -61,7 +79,8 @@ public class MapManager : MonoBehaviour
             switch (obj.type)
             {
                 case MapObjectType.Box:
-                    if (BoxCanMove(playerPos + dir + dir))
+                    if (obj.boxMaterialType == BoxMaterialType.Wood &&
+                        BoxCanMove(playerPos + dir + dir))
                         continue;
                     else
                         return false;
@@ -148,6 +167,10 @@ public class MapManager : MonoBehaviour
                     {
                         obj = Player.Instance.gameObject;
                         if (obj == null) Debug.LogError("no player");
+                    }
+                    else if(gb.type == MapObjectType.Box)
+                    {
+                        obj = BoxFactory.Instance.GenerateBox(gb);
                     }
                     else
                     {
@@ -246,7 +269,7 @@ public class MapManager : MonoBehaviour
             //}
             //else
             //    Debug.Log(arrayPos + " " + i + " " + obj.type);
-            obj.mapObject?.HandleEvent(mapEvent, worldPos, command);
+            obj?.mapObject?.HandleEvent(mapEvent, worldPos, command);
         }
     }
     public void InvokeEventId(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command,int id)

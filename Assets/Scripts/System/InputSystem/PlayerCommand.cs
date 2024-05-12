@@ -7,6 +7,7 @@ namespace MyInputSystem
         protected Player player;
         public PlayerCommand(Player player)
         {
+            objectId = player.objectId;
             this.player = player;
         }
     }

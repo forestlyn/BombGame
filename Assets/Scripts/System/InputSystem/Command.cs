@@ -5,6 +5,8 @@ namespace MyInputSystem
 {
     public abstract class Command
     {
+        protected int objectId = -1;
+        public int ObjectId => objectId;
         public abstract void Execute();
         public abstract void Undo();
 
