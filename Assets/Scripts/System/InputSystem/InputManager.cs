@@ -8,13 +8,29 @@ namespace MyInputSystem
     {
         private PCInputActions pcInputActions;
         private PlayerAction playerAction;
+        private GameAction gameAction;
+
+        private static bool playerCanInput = true;
+
+        public static bool PlayerCanInput
+        {
+            get { return playerCanInput; }
+            set {
+                //Debug.LogWarning("playerCanInput:" + playerCanInput);
+                playerCanInput = value; 
+            }
+        }
+
+
+
         private void Awake()
         {
             pcInputActions = new PCInputActions();
-            playerAction = new PlayerAction(Player.Instance);
         }
         void Start()
         {
+            playerAction = new PlayerAction(Player.Instance);
+            gameAction = new GameAction();
             BindActionFunc();
         }
         private void OnEnable()
@@ -40,49 +56,63 @@ namespace MyInputSystem
             {
                 RedoManager.Instance.Undo();
             };
+            pcInputActions.Game.ReStart.performed += cbContext =>
+            {
+                gameAction.Restart();
+            };
         }
         private void BindPlayerInput()
         {
             //player move
             pcInputActions.Player.MoveUp.performed += cbContext =>
             {
-                playerAction.Move(Vector2.up, cbContext);
+                if (PlayerCanInput)
+                    playerAction.Move(Vector2.up, cbContext);
             };
             pcInputActions.Player.MoveUp.canceled += cbContext =>
             {
-                playerAction.StopMove(Vector2.up, cbContext);
+                if (PlayerCanInput)
+                    playerAction.StopMove(Vector2.up, cbContext);
             };
 
             pcInputActions.Player.MoveDown.performed += cbContext =>
             {
-                playerAction.Move(Vector2.down, cbContext);
+                if (PlayerCanInput)
+                    playerAction.Move(Vector2.down, cbContext);
             };
             pcInputActions.Player.MoveDown.canceled += cbContext =>
             {
-                playerAction.StopMove(Vector2.down, cbContext);
+                if (PlayerCanInput)
+                    playerAction.StopMove(Vector2.down, cbContext);
             };
 
             pcInputActions.Player.MoveLeft.performed += cbContext =>
             {
-                playerAction.Move(Vector2.left, cbContext);
+                if (PlayerCanInput)
+                    playerAction.Move(Vector2.left, cbContext);
             };
             pcInputActions.Player.MoveLeft.canceled += cbContext =>
             {
-                playerAction.StopMove(Vector2.left, cbContext);
+                if (PlayerCanInput)
+                    playerAction.StopMove(Vector2.left, cbContext);
             };
 
             pcInputActions.Player.MoveRight.performed += cbContext =>
             {
-                playerAction.Move(Vector2.right, cbContext);
+                if (PlayerCanInput)
+                    playerAction.Move(Vector2.right, cbContext);
             };
             pcInputActions.Player.MoveRight.canceled += cbContext =>
             {
-                playerAction.StopMove(Vector2.right, cbContext);
+                if (PlayerCanInput)
+                    playerAction.StopMove(Vector2.right, cbContext);
             };
 
             pcInputActions.Player.Bomb.performed += cbContext =>
             {
-                playerAction.Bomb();
+                Debug.Log("Bomb PlayerCanInput" + PlayerCanInput);
+                if (PlayerCanInput)
+                    playerAction.Bomb();
             };
         }
     }

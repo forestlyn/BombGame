@@ -3,22 +3,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class RedoManager : MonoBehaviour
 {
-    private RedoCommandList redo;
+    private RedoCommandList redoCommandList;
 
     private static RedoManager instance;
     public static RedoManager Instance { get { return instance; } }
     private void Awake()
     {
         instance = this;
-        redo = new RedoCommandList();
+        redoCommandList = new RedoCommandList();
+    }
+
+    public void ClearCommandLists()
+    {
+        redoCommandList.ClearLists();
     }
 
     public void AddCommand(Command command)
     {
-        redo.AppendRedoCommand(command, true);
+        redoCommandList.AppendRedoCommand(command, true);
     }
 
     /// <summary>
@@ -26,12 +32,12 @@ public class RedoManager : MonoBehaviour
     /// </summary>
     public void Redo()
     {
-        Command command = redo.GetUndoCommand(out bool flag);
+        Command command = redoCommandList.GetUndoCommand(out bool flag);
         if (!flag) return;
 
-        command.Execute();
+        redo(command);
 
-        redo.RedoHelp(command);
+        redoCommandList.RedoHelp(command);
     }
 
     /// <summary>
@@ -39,21 +45,39 @@ public class RedoManager : MonoBehaviour
     /// </summary>
     public void Undo()
     {
-        Command command = redo.GetRedoCommand(out bool flag);
+        Command command = redoCommandList.GetRedoCommand(out bool flag);
         if (!flag) return;
-
+        //print(command);
+        //Debug.Log("/////");
         undo(command);
 
-        redo.UndoHelp(command);
+        redoCommandList.UndoHelp(command);
+    }
+
+    private void print(Command cmd) {
+        Debug.Log(cmd);
+        foreach (var c in cmd.Next)
+        {
+            print(c);
+        }
     }
 
     private void undo(Command cmd)
     {
-        foreach (Command command in cmd.Next)
+        for(int i = cmd.Next.Count - 1; i >= 0; i--)
         {
-            undo(command);
+            undo(cmd.Next[i]);
         }
+        //Debug.Log(cmd);
         cmd.Undo();
     }
-
+    private void redo(Command cmd)
+    {
+        //Debug.Log(cmd);
+        cmd.Execute();
+        foreach (Command command in cmd.Next)
+        {
+            redo(command);
+        }
+    }
 }

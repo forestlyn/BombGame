@@ -10,7 +10,6 @@ public class MyGameObjectPool : MonoBehaviour
 
     private static MyGameObjectPool instance;
     public static MyGameObjectPool Instance { get { return instance; } }
-
     private void Awake()
     {
         instance = this;
@@ -30,8 +29,8 @@ public class MyGameObjectPool : MonoBehaviour
         GameObject obj = prefabList.GetPrefabByType(type);
         if (obj != null)
         {
-            Type t = obj.GetType();
-            string name = t.Name;
+            string name = type.ToString();
+            //Debug.Log(name);
             if (m_pool.ContainsKey(name))
             {
                 if (m_pool[name].Count > 0)
@@ -42,7 +41,7 @@ public class MyGameObjectPool : MonoBehaviour
                 }
                 else
                 {
-                    GameObject res = Instantiate(obj);
+                    GameObject res = Instantiate(obj, transform);
                     return res;
                 }
             }
@@ -52,9 +51,9 @@ public class MyGameObjectPool : MonoBehaviour
 
                 if (res != null)
                 {
-                    Debug.Log($"create {type} poll");
+                    //Debug.Log($"create {type} poll");
                     m_pool.Add(name, new Queue<GameObject>());
-                    res = Instantiate(res);
+                    res = Instantiate(res, transform);
                     return res;
                 }
                 else { return null; }
@@ -82,7 +81,7 @@ public class MyGameObjectPool : MonoBehaviour
             else
             {
                 GameObject obj = prefabList.GetPrefabs<T>();
-                obj = Instantiate(obj);
+                obj = Instantiate(obj, transform);
                 return obj;
             }
         }
@@ -94,7 +93,7 @@ public class MyGameObjectPool : MonoBehaviour
             {
                 Debug.Log($"create {name} poll");
                 m_pool.Add(name, new Queue<GameObject>());
-                obj = Instantiate(obj);
+                obj = Instantiate(obj, transform);
                 return obj;
             }
             else {
@@ -103,6 +102,23 @@ public class MyGameObjectPool : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// 归还物体
+    /// </summary>
+    /// <param name="obj"></param>
+    public void Return(GameObject obj,MapObjectType type)
+    {
+        if (obj != null)
+        {
+            string name = type.ToString();
+            if (m_pool.ContainsKey(name))
+            {
+                obj.SetActive(false);
+                m_pool[name].Enqueue(obj);
+            }
+        }
+    }
+
     /// <summary>
     /// 归还物体
     /// </summary>

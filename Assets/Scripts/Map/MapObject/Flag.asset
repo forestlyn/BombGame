@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0f9eb982bf4c54081474593cb04156, type: 3}
   m_Name: Flag
   m_EditorClassIdentifier: 
-  type: 6
+  type: 5
   prefab: {fileID: 9026036949467339362, guid: f1993634ca5f23e468db7b1138c144a1, type: 3}

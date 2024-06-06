@@ -43,17 +43,32 @@ namespace MyInputSystem
 
         public void Bomb()
         {
-            Command cmd = new PlayerBomb(player);
+            Command cmd;
+            if (player.HoldBombNum > 0)
+                cmd = new PlayerPutBomb(player);
+            else
+            {
+                if (MapManager.Instance.CheckType(player.ArrayPos, MapObjectType.Bomb))
+                    return;
+                cmd = new PlayerInvokeBomb(player);
+                foreach (var b in player.bombs)
+                {
+                    MyEventSystem.Instance.InvokeEvent(InvokeEventType.Four, MapEventType.Bomb, b.WorldPos, cmd);
+                }
+            }
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }
 
         private void Move(Vector2 dir)
         {
-            if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir, player.Height))
+            if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir))
                 return;
-            Command cmd = new PlayerMove(player, dir);
-            MyEventSystem.Instance.InvokeEvent(2, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
+            if (MapManager.Instance.CheckType(MapManager.CalMapPos(player.WorldPos + dir), MapObjectType.Water))
+                return;
+
+            Command cmd = new PlayerMove(player, dir, false);
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }

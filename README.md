@@ -6,3 +6,8 @@
 
 2. 修改当能成功执行指令时才生成command
 3. 修改Event为MapObject实现HandleEvent接口，在生效范围内获取mapobj调用函数
+
+## 23.1.2
+
+1. 修改加上游戏循环框架
+2. 从文件夹加载地图完成

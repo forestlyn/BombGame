@@ -78,6 +78,11 @@ public class RedoCommandList
         return t;
     }
 
+    public void ClearLists()
+    {
+        undoList.Clear();
+        redoList.Clear();
+    }
     internal void RedoHelp(Command command)
     {
         AppendRedoCommand(command, false);
