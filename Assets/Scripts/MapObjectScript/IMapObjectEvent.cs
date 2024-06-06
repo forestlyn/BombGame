@@ -7,6 +7,7 @@ public enum MapEventType
     BoxCollision,
     PlayerMove,
     BoxMove,
+    BombMove,
     PressBoardUp,
     PressBoardDown,
     Leave,

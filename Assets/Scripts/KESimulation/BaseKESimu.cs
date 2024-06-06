@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+public delegate void EnergeBecomeZero();
 /// <summary>
 /// None StaticDir Destory Motivate
 /// </summary>
-public class BaseKESimu:ICloneable
+public class BaseKESimu : ICloneable
 {
     public KEDeliverType _KEType;
 
@@ -15,6 +16,7 @@ public class BaseKESimu:ICloneable
 
     public KEDeliverType KEType { get => _KEType; }
 
+    public event EnergeBecomeZero OnEnergeBecomeZero;
     /// <summary>
     /// 行动减少动能，不会重新计算box转换
     /// </summary>
@@ -22,7 +24,9 @@ public class BaseKESimu:ICloneable
     public void EnergeDesc(int delta)
     {
         this._Energe -= delta;
-    } 
+        if (OnEnergeBecomeZero != null && _Energe == 0)
+            OnEnergeBecomeZero();
+    }
 
     public BaseKESimu(KEDeliverType kEType, Vector2 dir = default(Vector2))
     {
@@ -51,6 +55,8 @@ public class BaseKESimu:ICloneable
     public virtual void ClearEnerge()
     {
         _Energe = 0;
+        if (OnEnergeBecomeZero != null)
+            OnEnergeBecomeZero();
     }
 
     public virtual void CalRealKE(int energe, Vector2 dir, KEDeliverType deliverKEType)

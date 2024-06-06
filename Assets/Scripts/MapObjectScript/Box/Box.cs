@@ -1,11 +1,7 @@
 using MyInputSystem;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.UIElements;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class Box : MapObject
 {
@@ -14,6 +10,21 @@ public class Box : MapObject
     public float MoveInterval = 0.2f;
 
     public BoxMaterialType boxMaterial;
+
+    public Sprite[] sprites;
+
+
+    public void Init()
+    {
+        int idx = kESimu.KEType switch
+        {
+            KEDeliverType.None => 0,
+            KEDeliverType.StaticDir => 1,
+            KEDeliverType.Calculate => 2,
+            _ => 0,
+        };
+        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
+    }
 
     public IEnumerator Move(Vector2 dir, Command command, bool isHit, float delta)
     {
@@ -31,11 +42,12 @@ public class Box : MapObject
         Vector2 moveDir = dir;
         Vector2 movePos = WorldPos + moveDir;
         //Debug.Log(dir);
-        if (MapManager.Instance.BoxCanMove(movePos))
+        if (MapManager.Instance.BoxCanMove(movePos, dir))
         {
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new BoxMove(this, moveDir, isHit);
             command.Next.Add(move);
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BoxMove, WorldPos, command, moveDir);
             move.Execute();
         }
         else if (isHit)
@@ -44,13 +56,17 @@ public class Box : MapObject
         }
     }
 
-    public void Move(Vector2 dir)
+    public void Move(Vector2 dir, Command command)
     {
-        //Debug.Log("move Dir :" + Dir);
         MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
     }
 
+    public void MoveDontCalWater(Vector2 dir)
+    {
+        MoveTo(WorldPos, WorldPos + dir);
+        transform.Translate(dir);
+    }
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
     {
         //Debug.Log(objectId + " " + kESimu.KEType);
@@ -62,9 +78,10 @@ public class Box : MapObject
                 BoxBeHit boxbehit = new BoxBeHit(this, 1, this.WorldPos - happenPos);
                 boxbehit.Execute();
                 command.Next.Add(boxbehit);
-                HitedHandle(command, this.WorldPos - happenPos, true);
+                HitedHandle(boxbehit, this.WorldPos - happenPos, true);
                 break;
             case MapEventType.PlayerMove:
+            case MapEventType.BombMove:
                 if (boxMaterial == BoxMaterialType.Stone) return;
                 Move(this.WorldPos - happenPos, command, false);
                 break;
@@ -82,12 +99,12 @@ public class Box : MapObject
                         Debug.LogError("err");
                     }
                 }
-                BoxHit cmd = command as BoxHit;
+                IHitCommand cmd = command as IHitCommand;
                 if (cmd == null)
                 {
                     Debug.LogError("err");
                 }
-                BoxBeHit boxbehit1 = new BoxBeHit(this, cmd.energe, cmd.dir);
+                BoxBeHit boxbehit1 = new BoxBeHit(this, cmd.Energe, cmd.Dir);
                 boxbehit1.Execute();
                 command.Next.Add(boxbehit1);
                 HitedHandle(boxbehit1, this.WorldPos - happenPos, false);
@@ -150,6 +167,18 @@ public class Box : MapObject
                 break;
         }
         cmd.Execute();
+        if (kESimu.Energe == 0)
+        {
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+                .Find(x => x.type == MapObjectType.Water) != null;
+            if (isInWater)
+            {
+                Debug.Log("into water");
+                MapObjIntoWater cmd1 = new MapObjIntoWater(this);
+                command.Next.Add(cmd1);
+                cmd1.Execute();
+            }
+        }
     }
 
     Vector2[] Dirs = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
@@ -186,21 +215,26 @@ public class BoxMove : Command
     }
     public override void Execute()
     {
-        box.Move(dir);
+        box.Move(dir, this);
+        //Debug.Log("Execute box Dir:" + dir);
     }
 
     public override void Undo()
     {
         //Debug.Log("undo box Dir:" + dir);
-        box.Move(-dir);
+        box.MoveDontCalWater(-dir);
     }
 }
 
-public class BoxHit : Command
+public class BoxHit : Command, IHitCommand
 {
     Box box;
-    public int energe;
-    public Vector2 dir;
+    int energe;
+    Vector2 dir;
+
+    public int Energe => energe;
+
+    public Vector2 Dir => dir;
 
     public BoxHit(Box box, int energe, Vector2 dir)
     {

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0f9eb982bf4c54081474593cb04156, type: 3}
   m_Name: PressBoard
   m_EditorClassIdentifier: 
-  type: 5
+  type: 9
   prefab: {fileID: 3479544307457493924, guid: ba91b23ff22e83b4a8d000b53ff0eaf6, type: 3}

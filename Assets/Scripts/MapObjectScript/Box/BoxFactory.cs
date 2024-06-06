@@ -33,7 +33,8 @@ public class BoxFactory : MonoBehaviour
                 new KECalculateSimu(keType, new KEMathematics(add: baseMapObject.boxAdd, multi: baseMapObject.boxMulti)),
             KEDeliverType.WildCard => new WildCardKESimu(keType),
             _ => new BaseKESimu(keType, GetDir(baseMapObject.boxDir))
-        }; ;
+        };
+        box.Init();
         return box.gameObject;
     }
 

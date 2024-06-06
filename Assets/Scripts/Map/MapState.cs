@@ -25,6 +25,7 @@ public class MapState
     }
     public BaseMapObjectState RemoveLast(int x, int y, MapObject mapObject)
     {
+        Debug.Log(x + ", " + y);
         if (Map[x, y].Count == 0) return null;
         var obj = Map[x, y].Find(obj => obj.objectId == mapObject.objectId);
         Map[x, y].Remove(obj);

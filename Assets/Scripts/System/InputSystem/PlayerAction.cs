@@ -46,8 +46,16 @@ namespace MyInputSystem
             Command cmd;
             if (player.HoldBombNum > 0)
                 cmd = new PlayerPutBomb(player);
-            else 
+            else
+            {
+                if (MapManager.Instance.CheckType(player.ArrayPos, MapObjectType.Bomb))
+                    return;
                 cmd = new PlayerInvokeBomb(player);
+                foreach (var b in player.bombs)
+                {
+                    MyEventSystem.Instance.InvokeEvent(InvokeEventType.Four, MapEventType.Bomb, b.WorldPos, cmd);
+                }
+            }
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }
@@ -56,7 +64,10 @@ namespace MyInputSystem
         {
             if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir))
                 return;
-            Command cmd = new PlayerMove(player, dir);
+            if (MapManager.Instance.CheckType(MapManager.CalMapPos(player.WorldPos + dir), MapObjectType.Water))
+                return;
+
+            Command cmd = new PlayerMove(player, dir, false);
             MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
             cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);

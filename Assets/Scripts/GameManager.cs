@@ -66,10 +66,6 @@ public class GameManager : MonoBehaviour
         TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Play");
     }
 
-    public void WinGame()
-    {
-        MapManager.Instance.WinGame();
-    }
 
     private void OnAfterLoadScene()
     {
@@ -77,5 +73,10 @@ public class GameManager : MonoBehaviour
         {
             MapManager.Instance.LoadMapFromFile(loadMapFile);
         }
+    }
+
+    public void WinGame()
+    {
+        MapManager.Instance.WinGame();
     }
 }

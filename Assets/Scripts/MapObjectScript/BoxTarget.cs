@@ -1,7 +1,7 @@
 using MyInputSystem;
 using UnityEngine;
 
-public class PressBoard : MapObject
+public class BoxTarget : MapObject
 {
     public bool Open
     {
@@ -10,9 +10,9 @@ public class PressBoard : MapObject
         {
             if (open != value)
             {
-                MyEventSystem.Instance.InvokePressBoardStateChange(value, id);
+                open = value;
+                MyEventSystem.Instance.InvokeBoxTargetStateChange(value, objectId);
             }
-            open = value;
         }
     }
     private void OnEnable()
@@ -39,7 +39,6 @@ public class PressBoard : MapObject
         {
             switch (item.type)
             {
-                case MapObjectType.Player:
                 case MapObjectType.Box:
                     Open = true;
                     return;

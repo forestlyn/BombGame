@@ -5,22 +5,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public delegate void PressBoardChangeState(bool open, int id);
+public delegate void BoxTargetChangeState(bool open, int objId);
+public delegate void FlagChangeState(bool open, int objId);
 
 public class MyEventSystem : MonoBehaviour
 {
     private static MyEventSystem instance;
     public static MyEventSystem Instance { get { return instance; } }
-    public event PressBoardChangeState OnPressBoardStateChange;
+    public event BoxTargetChangeState OnBoxTargetStateChange;
+    public event FlagChangeState OnFlagStateChange;
 
     private void Awake()
     {
         instance = this;
     }
 
-    public void InvokePressBoardStateChange(bool open,int id)
+    public void InvokeBoxTargetStateChange(bool open,int objId)
     {
-        OnPressBoardStateChange?.Invoke(open, id);
+        OnBoxTargetStateChange?.Invoke(open,objId);
+    }
+    public void InvokeFlagStateChange(bool open, int objId)
+    {
+        OnFlagStateChange?.Invoke(open, objId);
     }
 
     public void InvokeEvent(InvokeEventType v, MapEventType mapEvent, Vector2 worldPos, Command command, Vector2 dir = default, int id = 0)
@@ -66,6 +72,7 @@ public class MyEventSystem : MonoBehaviour
     public void InvokeEventInTwo(MapEventType mapEvent, Vector2 worldPos,Vector2 dir, Command command)
     {
         var arrayPos = MapManager.CalMapPos(worldPos);
+        //Debug.Log(arrayPos +" "+ dir + " " + mapEvent);
         InvokeEvent(mapEvent, arrayPos + dir, worldPos, command);
     }
 
