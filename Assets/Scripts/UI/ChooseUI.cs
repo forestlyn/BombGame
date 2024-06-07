@@ -7,21 +7,48 @@ using UnityEngine.UI;
 
 public class ChooseUI : MonoBehaviour
 {
-    private List<string> mapFiles = new List<string>();
+    private List<MapFile> mapFiles = new List<MapFile>();
 
     public GameObject levelPrefab;
+
+    public Text levelText;
+    public Button leftBtn;
+    public Button rightBtn;
+
+    private int currentMapLevel;
+    public int CurrentMapLevel
+    {
+        get => currentMapLevel;
+        set
+        {
+            currentMapLevel = value;
+            GameManager.Instance.SetMapLevel(value);
+        }
+    }
     private void Awake()
     {
         mapFiles = GameManager.Instance.MapFiles;
     }
     void Start()
     {
-        DrawAllLevels();
+        leftBtn.onClick.AddListener(delegate { ChangeMapLevel(-1); });
+        rightBtn.onClick.AddListener(delegate { ChangeMapLevel(1); });
+        SetMapLevel(0);
+        DrawAllLevels(0);
     }
 
-    public void DrawAllLevels()
+    public void DrawAllLevels(int idx)
     {
-        foreach (string file in mapFiles)
+        levelText.text = mapFiles[idx].LevelName;
+        foreach (Transform child in transform.GetComponentsInChildren<Transform>())
+        {
+            if (child == transform)
+            {
+                continue;
+            }
+            Destroy(child.gameObject);
+        }
+        foreach (string file in mapFiles[idx].LevelFile)
         {
             //Debug.Log(file);
             GameObject gb = Instantiate(levelPrefab, transform);
@@ -38,8 +65,8 @@ public class ChooseUI : MonoBehaviour
 
     private string GetFileName(string file)
     {
-        var f1 =file.Split('.');
-        return f1[0].Split('\\')[1];
+        var f1 = Path.GetFileName(file).Split('.');
+        return f1[0];
     }
 
     private void ChooseLevel(string levelPath)
@@ -47,5 +74,19 @@ public class ChooseUI : MonoBehaviour
         GameManager.Instance.LoadMap(levelPath);
     }
 
+    private void ChangeMapLevel(int delta)
+    {
+        SetMapLevel(CurrentMapLevel + delta);
+    }
 
+    private void SetMapLevel(int level)
+    {
+        if (level >= 0 && level < mapFiles.Count)
+        {
+            CurrentMapLevel = level;
+        }
+        DrawAllLevels(CurrentMapLevel);
+        leftBtn.gameObject.SetActive(CurrentMapLevel != 0);
+        rightBtn.gameObject.SetActive(CurrentMapLevel != mapFiles.Count - 1);
+    }
 }

@@ -410,7 +410,7 @@ public class MapManager : MonoBehaviour
 
     public void NextLevel()
     {
-
+        GameManager.Instance.NextLevel();
     }
 
 }

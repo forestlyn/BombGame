@@ -1,0 +1,800 @@
+{
+    "length": 6,
+    "width": 6,
+    "Map": [
+        [
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Player",
+                    "type": 7,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Player",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 5,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 1,
+                    "boxMulti": 1,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 5,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 1,
+                    "boxMulti": 1,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 4,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 1,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                },
+                {
+                    "Name": "Box",
+                    "type": 2,
+                    "height": 1,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Box",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ],
+            [
+                {
+                    "Name": "Ground",
+                    "type": 0,
+                    "height": 0,
+                    "id": 0,
+                    "open": false,
+                    "boxMaterialType": 0,
+                    "boxKEType": 0,
+                    "boxDir": 0,
+                    "boxRotateAngle": 0,
+                    "boxAdd": 0,
+                    "boxMulti": 0,
+                    "name": "Ground",
+                    "hideFlags": 0
+                }
+            ]
+        ]
+    ],
+    "MapName": [
+        [
+            "Ground",
+            "Box",
+            "Player",
+            "Ground",
+            "Ground",
+            "Ground"
+        ],
+        [
+            "Ground",
+            "Ground",
+            "Ground",
+            "Ground",
+            "Ground",
+            "Ground"
+        ],
+        [
+            "Ground",
+            "Ground",
+            "Box",
+            "Ground",
+            "Box",
+            "Ground"
+        ],
+        [
+            "Ground",
+            "Ground",
+            "Ground",
+            "Ground",
+            "Ground",
+            "Ground"
+        ],
+        [
+            "Ground",
+            "Box",
+            "Box",
+            "Box",
+            "Ground",
+            "Ground"
+        ],
+        [
+            "Ground",
+            "Ground",
+            "Box",
+            "Ground",
+            "Ground",
+            "Ground"
+        ]
+    ]
+}
