@@ -60,6 +60,18 @@ public class Box : MapObject
     {
         MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
+        if (kESimu.Energe == 0)
+        {
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+                .Find(x => x.type == MapObjectType.Water) != null;
+            if (isInWater)
+            {
+                Debug.Log("into water");
+                MapObjIntoWater cmd1 = new MapObjIntoWater(this);
+                command.Next.Add(cmd1);
+                cmd1.Execute();
+            }
+        }
     }
 
     public void MoveDontCalWater(Vector2 dir)
