@@ -25,6 +25,7 @@ public class KEMathematics
             dir = -dir;
             energe = -energe;
         }
+        //Debug.Log("cal energe:" + energe + " dir:" + dir);
     }
 
     private int CalOperation(int energe, int add, int multi)

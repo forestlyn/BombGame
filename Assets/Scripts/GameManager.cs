@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
 
     public bool HasNextLevel()
     {
-        if (mapFiles[currentMapLevel].LevelFile.Count > currentLevel+1)
+        if (mapFiles[currentMapLevel].LevelFile.Count > currentLevel + 1)
         {
             return true;
         }

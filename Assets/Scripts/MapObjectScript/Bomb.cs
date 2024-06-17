@@ -34,8 +34,9 @@ public class Bomb : MapObject
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new BombMove(this, moveDir);
             command.Next.Add(move);
-            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BombMove, WorldPos, move, dir);
+            var pos = WorldPos;
             move.Execute();
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BombMove, pos, move, dir);
         }
     }
     public void Move(Vector2 dir, Command command)
@@ -66,7 +67,7 @@ public class BombMove : Command
     Bomb bomb;
     Vector2 dir;
 
-    public BombMove(Bomb bomb, Vector2 dir)
+    public BombMove(Bomb bomb, Vector2 dir):base(bomb)
     {
         this.bomb = bomb;
         this.dir = dir;

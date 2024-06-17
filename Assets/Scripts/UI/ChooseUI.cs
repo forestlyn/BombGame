@@ -34,7 +34,6 @@ public class ChooseUI : MonoBehaviour
         leftBtn.onClick.AddListener(delegate { ChangeMapLevel(-1); });
         rightBtn.onClick.AddListener(delegate { ChangeMapLevel(1); });
         SetMapLevel(0);
-        DrawAllLevels(0);
     }
 
     public void DrawAllLevels(int idx)

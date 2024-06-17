@@ -166,9 +166,9 @@ public class Player : MapObject
         if (kESimu == null || !isHit) return;
         PlayerHit cmd = new PlayerHit(this, kESimu.Energe, kESimu.Dir);
         command.Next.Add(cmd);
+        cmd.Execute();
         MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BoxCollision,
             WorldPos, cmd, dir);
-        cmd.Execute();
 
         InputManager.PlayerCanInput = true;
 

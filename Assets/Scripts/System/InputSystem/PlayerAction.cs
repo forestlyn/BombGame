@@ -5,6 +5,7 @@ using UnityEngine.InputSystem.Interactions;
 using UnityEngine.InputSystem;
 using MyTools.MyCoroutines;
 using System;
+using Unity.VisualScripting;
 
 namespace MyInputSystem
 {
@@ -45,18 +46,22 @@ namespace MyInputSystem
         {
             Command cmd;
             if (player.HoldBombNum > 0)
+            {
                 cmd = new PlayerPutBomb(player);
+                cmd.Execute();
+            }
             else
             {
                 if (MapManager.Instance.CheckType(player.ArrayPos, MapObjectType.Bomb))
                     return;
                 cmd = new PlayerInvokeBomb(player);
-                foreach (var b in player.bombs)
+                var bombs = new List<Bomb>(player.bombs);
+                cmd.Execute();
+                foreach (var b in bombs)
                 {
                     MyEventSystem.Instance.InvokeEvent(InvokeEventType.Four, MapEventType.Bomb, b.WorldPos, cmd);
                 }
             }
-            cmd.Execute();
             RedoManager.Instance.AddCommand(cmd);
         }
 
@@ -68,8 +73,9 @@ namespace MyInputSystem
                 return;
 
             Command cmd = new PlayerMove(player, dir, false);
-            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, player.WorldPos, cmd, dir);
+            Vector2 pos = player.WorldPos;
             cmd.Execute();
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, pos, cmd, dir);
             RedoManager.Instance.AddCommand(cmd);
         }
 

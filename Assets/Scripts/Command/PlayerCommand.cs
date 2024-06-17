@@ -7,7 +7,7 @@ namespace MyInputSystem
     public abstract class PlayerCommand : Command
     {
         protected Player player;
-        public PlayerCommand(Player player)
+        public PlayerCommand(Player player) : base(player)
         {
             objectId = player.objectId;
             this.player = player;

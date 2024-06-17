@@ -8,7 +8,7 @@ public class MapObjIntoWater : Command
     Vector2 worldPos;
     Vector2 arrayPos;
     BaseMapObjectState state;
-    public MapObjIntoWater(MapObject mapObj)
+    public MapObjIntoWater(MapObject mapObj):base(mapObj)
     {
         this.mapObj = mapObj;
         worldPos = mapObj.WorldPos;

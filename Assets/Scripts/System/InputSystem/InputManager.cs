@@ -110,7 +110,7 @@ namespace MyInputSystem
 
             pcInputActions.Player.Bomb.performed += cbContext =>
             {
-                Debug.Log("Bomb PlayerCanInput" + PlayerCanInput);
+                //Debug.Log("Bomb PlayerCanInput" + PlayerCanInput);
                 if (PlayerCanInput)
                     playerAction.Bomb();
             };

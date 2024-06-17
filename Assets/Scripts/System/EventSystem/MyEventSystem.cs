@@ -81,8 +81,8 @@ public class MyEventSystem : MonoBehaviour
         var arrayPos = MapManager.CalMapPos(worldPos);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y - 1), worldPos, command);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y + 1), worldPos, command);
-        InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x + 1, arrayPos.y), worldPos, command);
+        InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
     }
     /// <summary>
     /// 

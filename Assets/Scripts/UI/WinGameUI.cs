@@ -21,4 +21,16 @@ public class WinGameUI : MonoBehaviour
             MapManager.Instance.NextLevel();
         });
     }
+
+    private void OnEnable()
+    {
+        if (GameManager.Instance.HasNextLevel())
+        {
+            nextLevelBtn.gameObject.SetActive(true);
+        }
+        else
+        {
+            nextLevelBtn.gameObject.SetActive(false);
+        }
+    }
 }
