@@ -65,6 +65,11 @@ public class ChooseUI : MonoBehaviour
     private string GetFileName(string file)
     {
         var f1 = Path.GetFileName(file).Split('.');
+        var filenames = f1[0].Split(' ');
+        if (filenames.Length == 2)
+        {
+            return filenames[0];
+        }
         return f1[0];
     }
 

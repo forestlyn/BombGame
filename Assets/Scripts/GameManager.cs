@@ -64,7 +64,13 @@ public class GameManager : MonoBehaviour
                         jsonFiles.Add(file);
                     }
                 }
-                mapFiles.Add(new MapFile(Path.GetFileName(dir), jsonFiles));
+                var dirsplit = dir.Split(' ');
+                var dirname = dir;
+                if (dirsplit.Length == 2)
+                {
+                    dirname = dirsplit[1];
+                }
+                mapFiles.Add(new MapFile(Path.GetFileName(dirname), jsonFiles));
             }
         }
         catch {
