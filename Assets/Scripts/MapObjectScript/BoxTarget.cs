@@ -15,7 +15,7 @@ public class BoxTarget : MapObject
             }
         }
     }
-    private void OnEnable()
+    public override void Initialize()
     {
         Check(ArrayPos);
     }

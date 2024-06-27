@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
     public string StartSceneName;
 
     private string loadMapFile;
-    private List<MapFile> mapFiles = new List<MapFile>();
+    private List<MapFiles> mapFiles = new List<MapFiles>();
 
     /// <summary>
     /// µ±Ç°¹Ø¿¨
@@ -28,7 +29,7 @@ public class GameManager : MonoBehaviour
     private int currentMapLevel = 0;
 
 
-    public List<MapFile> MapFiles
+    public List<MapFiles> MapFiles
     {
         get => mapFiles;
     }
@@ -53,7 +54,6 @@ public class GameManager : MonoBehaviour
             string[] dirs = Directory.GetDirectories(path);
             foreach (string dir in dirs)
             {
-                
                 Debug.Log(dir);
                 string[] files = Directory.GetFiles(dir);
                 List<string> jsonFiles = new List<string>();
@@ -64,17 +64,19 @@ public class GameManager : MonoBehaviour
                         jsonFiles.Add(file);
                     }
                 }
-                var dirsplit = dir.Split(' ');
+                var dirsplit = Path.GetFileName(dir).Split(' ');
+                //Debug.Log($"{dirsplit[0]}");
                 var dirname = dir;
                 if (dirsplit.Length == 2)
                 {
                     dirname = dirsplit[1];
                 }
-                mapFiles.Add(new MapFile(Path.GetFileName(dirname), jsonFiles));
+                //Debug.Log($"{dirname}:{dirsplit[0]}");
+                mapFiles.Add(new MapFiles(dirsplit[0], dirname, jsonFiles));
             }
         }
-        catch {
-            Debug.Log("GetAllLevels err");
+        catch(Exception e) {
+            Debug.Log("GetAllLevels err" + e.ToString());
         }
     }
     private void OnEnable()
@@ -98,7 +100,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadMap(string file)
     {
-        currentLevel = mapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x));
+        currentLevel = mapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
         loadMapFile = file;
         TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Play");
     }
@@ -137,6 +139,7 @@ public class GameManager : MonoBehaviour
     public void NextLevel()
     {
         currentLevel++;
-        LoadMap(mapFiles[currentMapLevel].LevelFile[currentLevel]);
+        Debug.Log($"{currentLevel}:{mapFiles[currentMapLevel].LevelFile[currentLevel].levelDir}");
+        LoadMap(mapFiles[currentMapLevel].LevelFile[currentLevel].levelDir);
     }
 }

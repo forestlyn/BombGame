@@ -20,7 +20,7 @@ public class KECalculateSimu : BaseKESimu
         kEMathematics.Calculate(ref myEnerge, ref mydir);
         this._Energe = myEnerge;
         this._Dir = mydir;
-        Debug.Log(mydir);
+        Debug.Log(energe + " " + dir + mydir + " " + myEnerge);
     }
 
     public override object Clone()

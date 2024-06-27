@@ -188,7 +188,7 @@ public class MapManager : MonoBehaviour
         var objs = transform.GetComponentsInChildren<Transform>();
         foreach (var obj in objs)
         {
-            if (obj == transform)
+            if (obj == transform || obj.GetComponent<MapObject>() == null)
             {
                 continue;
             }
@@ -253,6 +253,16 @@ public class MapManager : MonoBehaviour
                         Debug.LogError("no GameObject type is " + gb.type);
                     }
                     ObjectIdx++;
+                }
+            }
+        }
+        for(int i = 0; i < mapState.length; i++)
+        {
+            for(int j = 0; j < mapState.width; j++)
+            {
+                foreach(BaseMapObjectState gb in mapState[i, j])
+                {
+                    gb.mapObject.Initialize();
                 }
             }
         }

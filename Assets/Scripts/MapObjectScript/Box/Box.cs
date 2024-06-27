@@ -11,10 +11,12 @@ public class Box : MapObject
 
     public BoxMaterialType boxMaterial;
 
+    public GameObject boxSpriteObj;
     public Sprite[] sprites;
 
     public void Init()
     {
+        boxSpriteObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         int idx = kESimu.KEType switch
         {
             KEDeliverType.None => 0,
@@ -26,26 +28,26 @@ public class Box : MapObject
         {
             if (kESimu.Dir == Vector2.up)
             {
-                gameObject.transform.Rotate(0, 0, 90);
+                boxSpriteObj.transform.Rotate(0, 0, 90);
             }
             else if (kESimu.Dir == Vector2.left)
             {
-                gameObject.transform.Rotate(0, 0, 180);
+                boxSpriteObj.transform.Rotate(0, 0, 180);
             }
             else if (kESimu.Dir == Vector2.down)
             {
-                gameObject.transform.Rotate(0, 0, 270);
+                boxSpriteObj.transform.Rotate(0, 0, 270);
             }
         }
-        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
+        boxSpriteObj.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
     }
 
-    public IEnumerator Move(Vector2 dir,Command command, bool isHit, float delta)
+    public IEnumerator Move(Vector2 dir, Command command, bool isHit, float delta)
     {
         while (kESimu.Energe > 0)
         {
             //Debug.Log(MoveInterval);
-            Debug.Log(objectId + " " + kESimu.Dir + " " + dir + movedir + delta);
+            //Debug.Log(objectId + " " + kESimu.Dir + " " + dir + movedir + delta);
             Move(kESimu.Dir, command, isHit);
             yield return new WaitForSeconds(MoveInterval);
         }
@@ -77,6 +79,20 @@ public class Box : MapObject
         }
     }
 
+    //public void Move(Vector2 dir)
+    //{
+    //    switch (kESimu.KEType)
+    //    {
+    //        case KEDeliverType.None:
+    //        case KEDeliverType.Calculate:
+    //            transform.Translate(dir);
+    //            break;
+    //        case KEDeliverType.StaticDir: 
+
+    //            break;
+    //    }
+    //}
+
     public void Move(Vector2 dir, Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
@@ -102,10 +118,10 @@ public class Box : MapObject
     }
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
     {
-        if (command != null && command.ObjectId == objectId) 
+        if (command != null && command.ObjectId == objectId)
         {
             //Debug.Log(mapEvent+":event send by self");
-            return; 
+            return;
         }
 
         //if (command == null)

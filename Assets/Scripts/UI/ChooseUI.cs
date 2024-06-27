@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class ChooseUI : MonoBehaviour
 {
-    private List<MapFile> mapFiles = new List<MapFile>();
+    private List<MapFiles> mapFiles = new List<MapFiles>();
 
     public GameObject levelPrefab;
 
@@ -47,31 +47,21 @@ public class ChooseUI : MonoBehaviour
             }
             Destroy(child.gameObject);
         }
-        foreach (string file in mapFiles[idx].LevelFile)
+        foreach (MapFile file in mapFiles[idx].LevelFile)
         {
             //Debug.Log(file);
             GameObject gb = Instantiate(levelPrefab, transform);
             Button b = gb.GetComponent<Button>();
-            b.onClick.AddListener(delegate { ChooseLevel(file); });
+            b.onClick.AddListener(delegate { ChooseLevel(file.levelDir); });
             Text t = b.GetComponentInChildren<Text>();
             if (t == null)
             {
                 Debug.Log("er");
             }
-            t.text = GetFileName(file);
+            t.text = file.levelName;
         }
     }
 
-    private string GetFileName(string file)
-    {
-        var f1 = Path.GetFileName(file).Split('.');
-        var filenames = f1[0].Split(' ');
-        if (filenames.Length == 2)
-        {
-            return filenames[0];
-        }
-        return f1[0];
-    }
 
     private void ChooseLevel(string levelPath)
     {
