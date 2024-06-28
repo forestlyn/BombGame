@@ -26,6 +26,7 @@ public class BoxTarget : MapObject
         {
             case MapEventType.Leave:
             case MapEventType.Arrive:
+            case MapEventType.BoxStop:
                 Check(ArrayPos);
                 break;
         }
@@ -40,6 +41,9 @@ public class BoxTarget : MapObject
             switch (item.type)
             {
                 case MapObjectType.Box:
+                    Box box = item.mapObject as Box;
+                    if (box.kESimu.Energe != 0)
+                        return;
                     Open = true;
                     return;
                 default:

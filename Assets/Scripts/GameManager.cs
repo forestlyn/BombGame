@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -64,7 +63,7 @@ public class GameManager : MonoBehaviour
                         jsonFiles.Add(file);
                     }
                 }
-                var dirsplit = Path.GetFileName(dir).Split(' ');
+                var dirsplit = Path.GetFileName(dir).Split(' ', 2);
                 //Debug.Log($"{dirsplit[0]}");
                 var dirname = dir;
                 if (dirsplit.Length == 2)

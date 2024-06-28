@@ -77,6 +77,11 @@ public class Box : MapObject
         {
             Debug.Log("no Hit and can't move");
         }
+        if (kESimu.Energe == 0)
+        {
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.One,
+                MapEventType.BoxStop, WorldPos, null);
+        }
     }
 
     //public void Move(Vector2 dir)

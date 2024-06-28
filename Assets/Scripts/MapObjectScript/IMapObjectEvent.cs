@@ -5,6 +5,7 @@ public enum MapEventType
 {
     Bomb,
     BoxCollision,
+    BoxStop,
     PlayerMove,
     BoxMove,
     BombMove,

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 
 public static class CheckGameWin
 {
@@ -16,6 +15,7 @@ public static class CheckGameWin
 
     public static bool CheckWin()
     {
+        if (!MyInputSystem.InputManager.PlayerCanInput) return false;
         for (int i = 0; i < objStates.Count; i++)
         {
             if (objStates[i].mapObject.open != true) {
