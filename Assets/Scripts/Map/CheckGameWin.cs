@@ -15,7 +15,8 @@ public static class CheckGameWin
 
     public static bool CheckWin()
     {
-        if (!MyInputSystem.InputManager.PlayerCanInput) return false;
+        //玩家锁定输入或者是撤销不可触发检查
+        if (!MyInputSystem.InputManager.PlayerCanInput || RedoManager.isUndo) return false;
         for (int i = 0; i < objStates.Count; i++)
         {
             if (objStates[i].mapObject.open != true) {

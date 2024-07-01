@@ -11,6 +11,8 @@ public class RedoManager : MonoBehaviour
 
     private static RedoManager instance;
     public static RedoManager Instance { get { return instance; } }
+
+    public static bool isUndo = false;
     private void Awake()
     {
         instance = this;
@@ -62,14 +64,16 @@ public class RedoManager : MonoBehaviour
         }
     }
 
-    private void undo(Command cmd)
+    private void undo(Command cmd,bool isFirstCMD = true)
     {
+        isUndo = true;
         for(int i = cmd.Next.Count - 1; i >= 0; i--)
         {
-            undo(cmd.Next[i]);
+            undo(cmd.Next[i], false);
         }
         //Debug.Log(cmd);
         cmd.Undo();
+        isUndo = isFirstCMD ? false : true;
     }
     private void redo(Command cmd)
     {
