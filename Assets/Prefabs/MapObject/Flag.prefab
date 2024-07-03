@@ -100,3 +100,7 @@ MonoBehaviour:
   objectId: 0
   open: 0
   type: 5
+  materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -876546973899608171, guid: f602d35a3ce512f44a2bfb9101b1fa71, type: 3}
+  sr: {fileID: 5893858190871461533}

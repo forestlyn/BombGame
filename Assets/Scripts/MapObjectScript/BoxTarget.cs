@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class BoxTarget : MapObject
 {
+    public Material[] materials;
+    public SpriteRenderer sr;
     public bool Open
     {
         get => open;
@@ -12,6 +14,7 @@ public class BoxTarget : MapObject
             {
                 open = value;
                 MyEventSystem.Instance.InvokeBoxTargetStateChange(value, objectId);
+                sr.material = materials[open == true ? 1 : 0];
             }
         }
     }

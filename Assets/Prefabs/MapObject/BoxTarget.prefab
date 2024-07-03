@@ -97,6 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185f92f6c072f2a45825738c2617d405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
   objectId: 0
   open: 0
+  type: 0
+  materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -876546973899608171, guid: f602d35a3ce512f44a2bfb9101b1fa71, type: 3}
+  sr: {fileID: 2709821199141365433}

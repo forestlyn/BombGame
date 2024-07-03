@@ -97,10 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c5d86a15166d1545a7a60fec021bddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
   objectId: 0
   open: 0
+  type: 0
   Height: 0
   HoldBombNum: 1
-  HoldBombMaxNum: 3
+  HoldBombMaxNum: 1
   moveTimeInterval: 0.2
+  bombs: []
