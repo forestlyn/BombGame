@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6023348306267200368}
   - component: {fileID: 3879399959836392240}
   - component: {fileID: 5301266566549928387}
+  - component: {fileID: 2299223281101435108}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -105,3 +106,19 @@ MonoBehaviour:
   HoldBombMaxNum: 1
   moveTimeInterval: 0.2
   bombs: []
+--- !u!114 &2299223281101435108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9118203971213747921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ad0588d26aa8de46b504c26326835a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deceleration: 5
+  moveTranform: {fileID: 6023348306267200368}
+  isMoving: 0
+  CurrentSpeed: 0

@@ -50,11 +50,11 @@ namespace MyInputSystem
         {
             pcInputActions.Game.Redo.performed += cbContext =>
             {
-                RedoManager.Instance.Redo();
+                gameAction.Redo();
             };
             pcInputActions.Game.Undo.performed += cbContext =>
             {
-                RedoManager.Instance.Undo();
+                gameAction.Undo();
             };
             pcInputActions.Game.ReStart.performed += cbContext =>
             {

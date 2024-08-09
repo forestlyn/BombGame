@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class Player : MapObject
 {
+
+    public IMove uniformMove;
+
+    public bool IsMoving { get => uniformMove.IsMoving; }
     private static Player instance;
     public static Player Instance { get { return instance; } }
 
@@ -49,6 +53,8 @@ public class Player : MapObject
         instance = this;
         bombs = new List<Bomb>();
         kESimu = new BaseKESimu(KEDeliverType.None);
+        uniformMove = GetComponent<IMove>();
+        uniformMove.OnSpeedBecomeZero += CheckInWater;
     }
     private void Start()
     {
@@ -100,6 +106,11 @@ public class Player : MapObject
         while (kESimu.Energe > 0)
         {
             //Debug.Log(objectId + "kESimu.Energe:" + kESimu.Energe);
+            while (uniformMove.IsMoving)
+            {
+                yield return new WaitForSeconds(0.01f);
+            }
+            uniformMove.MoveDistance = kESimu.Energe;
             Move(dir, command, isHit);
             yield return new WaitForSeconds(delta);
         }
@@ -125,16 +136,32 @@ public class Player : MapObject
     public void Move(Vector2 dir, Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
+        //transform.Translate(dir);
+        uniformMove.Target = WorldPos + dir;
+        LastestMoveCmd = command;
+    }
+    public void UndoMove(Vector2 dir, Command command)
+    {
+        MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
+        //uniformMove.Target = WorldPos + dir;
+        LastestMoveCmd = command;
+    }
+
+    public Command LastestMoveCmd;
+
+    public void CheckInWater()
+    {
         if (kESimu.Energe == 0)
         {
             bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
                 .Find(x => x.type == MapObjectType.Water) != null;
+            Debug.Log(ArrayPos);
             if (isInWater)
             {
                 PlayerDestory cmd = new PlayerDestory(this);
                 cmd.Execute();
-                command.Next.Add(cmd);
+                LastestMoveCmd.Next.Add(cmd);
             }
             else
             {

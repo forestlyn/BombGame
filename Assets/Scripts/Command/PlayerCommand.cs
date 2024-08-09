@@ -34,7 +34,7 @@ namespace MyInputSystem
 
         public override void Undo()
         {
-            player.Move(-dir, this);
+            player.UndoMove(-dir, this);
         }
     }
 

@@ -1,10 +1,13 @@
 using MyInputSystem;
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class Box : MapObject
 {
+    public IMove uniformMove;
+
     public BaseKESimu kESimu;
 
     public float MoveInterval = 1.2f;
@@ -40,6 +43,25 @@ public class Box : MapObject
             }
         }
         boxSpriteObj.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
+        uniformMove = GetComponent<IMove>();
+        uniformMove.OnSpeedBecomeZero += CheckInWater;
+
+    }
+    private Command LastestMoveCmd;
+    private void CheckInWater()
+    {
+        if (kESimu.Energe == 0)
+        {
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+                .Find(x => x.type == MapObjectType.Water) != null;
+            if (isInWater)
+            {
+                Debug.Log("into water");
+                MapObjIntoWater cmd1 = new MapObjIntoWater(this);
+                LastestMoveCmd.Next.Add(cmd1);
+                cmd1.Execute();
+            }
+        }
     }
 
     public IEnumerator Move(Vector2 dir, Command command, bool isHit, float delta)
@@ -48,6 +70,10 @@ public class Box : MapObject
         {
             //Debug.Log(MoveInterval);
             //Debug.Log(objectId + " " + kESimu.Dir + " " + dir + movedir + delta);
+            while(uniformMove.IsMoving)
+                yield return new WaitForSeconds(0.01f);
+            uniformMove.MoveDistance = kESimu.Energe;
+
             Move(kESimu.Dir, command, isHit);
             yield return new WaitForSeconds(MoveInterval);
         }
@@ -98,29 +124,34 @@ public class Box : MapObject
     //    }
     //}
 
+
     public void Move(Vector2 dir, Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
-        transform.Translate(dir);
-        if (kESimu.Energe == 0)
-        {
-            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
-                .Find(x => x.type == MapObjectType.Water) != null;
-            if (isInWater)
-            {
-                Debug.Log("into water");
-                MapObjIntoWater cmd1 = new MapObjIntoWater(this);
-                command.Next.Add(cmd1);
-                cmd1.Execute();
-            }
-        }
+        //transform.Translate(dir);
+        uniformMove.Target = WorldPos + dir;
+        LastestMoveCmd = command;
+        //if (kESimu.Energe == 0)
+        //{
+        //    bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+        //        .Find(x => x.type == MapObjectType.Water) != null;
+        //    if (isInWater)
+        //    {
+        //        Debug.Log("into water");
+        //        MapObjIntoWater cmd1 = new MapObjIntoWater(this);
+        //        command.Next.Add(cmd1);
+        //        cmd1.Execute();
+        //    }
+        //}
     }
 
-    public void MoveDontCalWater(Vector2 dir)
+    public void MoveDontCalWater(Vector2 dir,Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
+        LastestMoveCmd = command;
     }
+
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
     {
         if (command != null && command.ObjectId == objectId)
@@ -293,7 +324,7 @@ public class BoxMove : Command
     public override void Undo()
     {
         //Debug.Log("undo box Dir:" + dir);
-        box.MoveDontCalWater(-dir);
+        box.MoveDontCalWater(-dir,this);
     }
 }
 

@@ -386,7 +386,7 @@ public class MapManager : MonoBehaviour
         var obj = mapState.RemoveLast(mapObject.ArrayPos, mapObject);
         if (obj == null)
         {
-            Debug.LogWarning("remove fail!");
+            Debug.LogWarning("remove fail!:"+mapObject.type+" "+mapObject.objectId);
         }
         return obj;
     }
