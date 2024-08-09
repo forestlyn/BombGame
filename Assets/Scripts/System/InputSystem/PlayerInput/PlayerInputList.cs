@@ -75,7 +75,7 @@ namespace MyInputSystem
             {
                 PlayerInput playerInput = playerInputList[i];
                 TimeSpan timeDifference = time - playerInput.InputTime;
-                Debug.Log(timeDifference.ToString());
+                //Debug.Log(timeDifference.ToString());
                 if (timeDifference.TotalSeconds >= 0.3)
                 {
                     playerInputList.Remove(playerInput);

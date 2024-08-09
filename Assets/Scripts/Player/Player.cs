@@ -156,7 +156,7 @@ public class Player : MapObject
         {
             bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
                 .Find(x => x.type == MapObjectType.Water) != null;
-            Debug.Log(ArrayPos);
+            //Debug.Log(ArrayPos);
             if (isInWater)
             {
                 PlayerDestory cmd = new PlayerDestory(this);

@@ -101,7 +101,7 @@ public class Box : MapObject
         }
         else
         {
-            Debug.Log("no Hit and can't move");
+            Debug.LogWarning("no Hit and can't move");
         }
         if (kESimu.Energe == 0)
         {

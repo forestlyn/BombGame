@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,7 +24,16 @@ public class MapManager : MonoBehaviour
     public List<BaseMapObjectState> MapObjs(Vector2 arrayPos)
     {
         if (InMap(arrayPos))
+        {
+            //Debug.Log(arrayPos+"("+ (int)arrayPos.x+","+ (int)arrayPos.y+")");
+            //Debug.Log(arrayPos.x);
+            //Debug.Log(arrayPos.y);
+            //foreach (var obj in mapState[(int)arrayPos.x, (int)arrayPos.y])
+            //{
+            //    Debug.Log(arrayPos + " " + obj.objectId + obj.type + " " + obj.mapObject.ArrayPos + obj.mapObject.WorldPos);
+            //}
             return mapState[(int)arrayPos.x, (int)arrayPos.y];
+        }
         return null;
     }
 
@@ -114,10 +124,12 @@ public class MapManager : MonoBehaviour
     public bool BoxCanMove(Vector2 boxPos, Vector2 dir)
     {
         var pos = CalMapPos(boxPos);
+        Debug.Log(pos);
         if (InMap(pos))
         {
             foreach (var obj in MapObjs(pos))
             {
+                //Debug.Log(obj.type);
                 switch (obj.type)
                 {
                     case MapObjectType.Ground:
@@ -131,9 +143,11 @@ public class MapManager : MonoBehaviour
                     case MapObjectType.Bomb:
                         return BombCanMove(boxPos + dir, dir, true);
                     case MapObjectType.Box:
+                        Debug.Log(obj.objectId);
+                        Debug.Log(obj.mapObject.ArrayPos);
                         return false;
                     default:
-                        Debug.Log(obj.type);
+                        Debug.LogError(obj.type);
                         return false;
                 }
             }
@@ -149,7 +163,7 @@ public class MapManager : MonoBehaviour
             foreach (var obj in MapObjs(pos))
             {
                 if (obj.height == 0) continue;
-                else if (obj.type == MapObjectType.Box && 
+                else if (obj.type == MapObjectType.Box &&
                     obj.boxMaterialType != BoxMaterialType.Stone
                     && !PushedByBox && BoxCanMove(bombPos + dir, dir))
                 {
@@ -256,11 +270,11 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-        for(int i = 0; i < mapState.length; i++)
+        for (int i = 0; i < mapState.length; i++)
         {
-            for(int j = 0; j < mapState.width; j++)
+            for (int j = 0; j < mapState.width; j++)
             {
-                foreach(BaseMapObjectState gb in mapState[i, j])
+                foreach (BaseMapObjectState gb in mapState[i, j])
                 {
                     gb.mapObject.Initialize();
                 }
@@ -281,7 +295,11 @@ public class MapManager : MonoBehaviour
     }
     public static Vector2 CalMapPos(Vector2 pos)
     {
-        return new Vector2(pos.x - offset_x, pos.y - offset_y);
+        //发现一个情况下的bug,在玩家连续推箱子情况下，箱子慢一步导致arraypos还在上一步不正常
+        //但是箱子逻辑上已经到了对应位置，导致mapobjs错误
+        //现将arraypos四舍五入一下，但实际上感觉应当按照逻辑位置来，暂且这样解决，还是移动有过程导致的啊~
+        //return new Vector2(pos.x - offset_x, pos.y - offset_y);
+        return new Vector2((float)Math.Round(pos.x - offset_x), (float)Math.Round(pos.y - offset_y));
     }
     public static Vector2 CalWorldPos(int x, int y)
     {
@@ -386,7 +404,7 @@ public class MapManager : MonoBehaviour
         var obj = mapState.RemoveLast(mapObject.ArrayPos, mapObject);
         if (obj == null)
         {
-            Debug.LogWarning("remove fail!:"+mapObject.type+" "+mapObject.objectId);
+            Debug.LogWarning("remove fail!:" + mapObject.type + " " + mapObject.objectId);
         }
         return obj;
     }
