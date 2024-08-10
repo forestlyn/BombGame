@@ -21,6 +21,7 @@ namespace MyInputSystem
 
         internal void Move(Vector2 dir, InputAction.CallbackContext cbContext)
         {
+            //Debug.Log(cbContext.interaction is HoldInteraction);
             if (cbContext.interaction is HoldInteraction)
             {
                 StopMove();
@@ -29,7 +30,6 @@ namespace MyInputSystem
             if (cbContext.interaction is TapInteraction)
             {
                 StopMove();
-                Move(dir);
             }
         }
 
@@ -87,7 +87,7 @@ namespace MyInputSystem
             }
         }
 
-        private void Move(Vector2 dir)
+        internal void Move(Vector2 dir)
         {
             var input = new PlayerInput(PlayerInputType.Move, dir); ;
             PlayerInputManager.Instance.Add(input);

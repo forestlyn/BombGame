@@ -10,6 +10,8 @@ namespace MyInputSystem
         private PlayerAction playerAction;
         private GameAction gameAction;
 
+        public bool ShowplayerCanInput=true;
+        [SerializeField]
         private static bool playerCanInput = true;
 
         public static bool PlayerCanInput
@@ -17,10 +19,13 @@ namespace MyInputSystem
             get { return playerCanInput; }
             set {
                 //Debug.LogWarning("playerCanInput:" + playerCanInput);
-                playerCanInput = value; 
+                playerCanInput = value;
             }
         }
-
+        private void Update()
+        {
+            ShowplayerCanInput = playerCanInput;
+        }
 
 
         private void Awake()
@@ -46,6 +51,7 @@ namespace MyInputSystem
             BindPlayerInput();
             BindGameInput();
         }
+
         private void BindGameInput()
         {
             pcInputActions.Game.Redo.performed += cbContext =>
@@ -67,7 +73,10 @@ namespace MyInputSystem
             pcInputActions.Player.MoveUp.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.up);
                     playerAction.Move(Vector2.up, cbContext);
+                }
             };
             pcInputActions.Player.MoveUp.canceled += cbContext =>
             {
@@ -78,7 +87,10 @@ namespace MyInputSystem
             pcInputActions.Player.MoveDown.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.down);
                     playerAction.Move(Vector2.down, cbContext);
+                }
             };
             pcInputActions.Player.MoveDown.canceled += cbContext =>
             {
@@ -89,18 +101,26 @@ namespace MyInputSystem
             pcInputActions.Player.MoveLeft.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.left);
                     playerAction.Move(Vector2.left, cbContext);
+                }
             };
             pcInputActions.Player.MoveLeft.canceled += cbContext =>
             {
                 if (PlayerCanInput)
+                {
                     playerAction.StopMove(Vector2.left, cbContext);
+                }
             };
 
             pcInputActions.Player.MoveRight.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.right);
                     playerAction.Move(Vector2.right, cbContext);
+                }
             };
             pcInputActions.Player.MoveRight.canceled += cbContext =>
             {

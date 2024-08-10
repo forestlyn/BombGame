@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c43c1a2570c6434294958604f9a2d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowplayerCanInput: 0
 --- !u!114 &1363283765058682645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6e64f7863fe62468c4853a1da570f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WinGamePanel: {fileID: 0}
 --- !u!114 &3749050159331979676
 MonoBehaviour:
   m_ObjectHideFlags: 0
