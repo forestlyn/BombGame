@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace MyInputSystem
 {
@@ -70,11 +71,17 @@ namespace MyInputSystem
         private void BindPlayerInput()
         {
             //player move
+            pcInputActions.Player.MoveUp.started += ctx =>
+            {
+                if(PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.up);
+                }
+            };
             pcInputActions.Player.MoveUp.performed += cbContext =>
             {
                 if (PlayerCanInput)
                 {
-                    playerAction.Move(Vector2.up);
                     playerAction.Move(Vector2.up, cbContext);
                 }
             };
@@ -84,11 +91,17 @@ namespace MyInputSystem
                     playerAction.StopMove(Vector2.up, cbContext);
             };
 
-            pcInputActions.Player.MoveDown.performed += cbContext =>
+            pcInputActions.Player.MoveDown.started += ctx =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.down);
+                }
+            };
+            pcInputActions.Player.MoveDown.performed += cbContext =>
+            {
+                if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.down, cbContext);
                 }
             };
@@ -98,11 +111,17 @@ namespace MyInputSystem
                     playerAction.StopMove(Vector2.down, cbContext);
             };
 
-            pcInputActions.Player.MoveLeft.performed += cbContext =>
+            pcInputActions.Player.MoveLeft.started += ctx =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.left);
+                }
+            };
+            pcInputActions.Player.MoveLeft.performed += cbContext =>
+            {
+                if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.left, cbContext);
                 }
             };
@@ -114,11 +133,17 @@ namespace MyInputSystem
                 }
             };
 
-            pcInputActions.Player.MoveRight.performed += cbContext =>
+            pcInputActions.Player.MoveRight.started += ctx =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.right);
+                }
+            };
+            pcInputActions.Player.MoveRight.performed += cbContext =>
+            {
+                if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.right, cbContext);
                 }
             };
