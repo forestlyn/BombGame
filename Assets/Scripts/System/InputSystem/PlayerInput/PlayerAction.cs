@@ -89,7 +89,7 @@ namespace MyInputSystem
 
         internal void Move(Vector2 dir)
         {
-            Debug.Log("1");
+            //Debug.Log("1");
             var input = new PlayerInput(PlayerInputType.Move, dir); ;
             PlayerInputManager.Instance.Add(input);
         }

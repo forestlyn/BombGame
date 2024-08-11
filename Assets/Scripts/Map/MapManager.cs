@@ -123,8 +123,9 @@ public class MapManager : MonoBehaviour
 
     public bool BoxCanMove(Vector2 boxPos, Vector2 dir)
     {
+        Debug.Log("Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
         var pos = CalMapPos(boxPos);
-        Debug.Log(pos);
+        //Debug.Log(pos);
         if (InMap(pos))
         {
             foreach (var obj in MapObjs(pos))
@@ -143,8 +144,8 @@ public class MapManager : MonoBehaviour
                     case MapObjectType.Bomb:
                         return BombCanMove(boxPos + dir, dir, true);
                     case MapObjectType.Box:
-                        Debug.Log(obj.objectId);
-                        Debug.Log(obj.mapObject.ArrayPos);
+                        //Debug.Log(obj.objectId);
+                        //Debug.Log(obj.mapObject.ArrayPos);
                         return false;
                     default:
                         Debug.LogError(obj.type);

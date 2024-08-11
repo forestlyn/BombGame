@@ -108,7 +108,7 @@ public class Player : MapObject
             //Debug.Log(objectId + "kESimu.Energe:" + kESimu.Energe);
             while (uniformMove.IsMoving)
             {
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSeconds(0.001f);
             }
             uniformMove.MoveDistance = kESimu.Energe;
             Move(dir, command, isHit);

@@ -104,7 +104,7 @@ MonoBehaviour:
   Height: 0
   HoldBombNum: 1
   HoldBombMaxNum: 1
-  moveTimeInterval: 0.2
+  moveTimeInterval: 0
   bombs: []
 --- !u!114 &2299223281101435108
 MonoBehaviour:

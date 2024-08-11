@@ -10,7 +10,7 @@ public class Box : MapObject
 
     public BaseKESimu kESimu;
 
-    public float MoveInterval = 1.2f;
+    public float MoveInterval = 0.005f;
 
     public BoxMaterialType boxMaterial;
 
@@ -68,14 +68,19 @@ public class Box : MapObject
     {
         while (kESimu.Energe > 0)
         {
+            //Debug.Log("I'm moving~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
             //Debug.Log(MoveInterval);
             //Debug.Log(objectId + " " + kESimu.Dir + " " + dir + movedir + delta);
-            while(uniformMove.IsMoving)
-                yield return new WaitForSeconds(0.01f);
+            while (uniformMove.IsMoving)
+            {
+                //Debug.Log("I'm waiting~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
+                yield return new WaitForSeconds(0.001f);
+            }
             uniformMove.MoveDistance = kESimu.Energe;
 
             Move(kESimu.Dir, command, isHit);
-            yield return new WaitForSeconds(MoveInterval);
+            //Debug.Log("I'm moving over~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
+            yield return null;
         }
     }
 
@@ -87,6 +92,7 @@ public class Box : MapObject
         //Debug.Log(dir);
         if (MapManager.Instance.BoxCanMove(movePos, dir))
         {
+            //Debug.Log("Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new BoxMove(this, moveDir, isHit);
             command.Next.Add(move);
