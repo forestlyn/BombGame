@@ -21,19 +21,30 @@ public class UniformVariableMove : MonoBehaviour, IMove
         set
         {
             target = value;
-            isMoving = true;
+            IsMoving = true;
             CurrentSpeed = CalculateSpeed();
         }
     }
     public float MoveDistance { get => moveDistance; set => moveDistance = value; }
 
-    public bool IsMoving => isMoving;
+    public bool IsMoving
+    {
+        get => isMoving; 
+        set
+        {
+            if(IsMoving!=value)
+            {
+                isMoving = value;
+                //CheckGameWin.OnMovingStateChange(this.GetInstanceID(), value);
+            }
+        }
+    }
 
     public event SpeedBecomeZero OnSpeedBecomeZero;
 
     public void Update()
     {
-        if (isMoving)
+        if (IsMoving)
         {
             Move(Time.deltaTime);
         }
@@ -55,7 +66,7 @@ public class UniformVariableMove : MonoBehaviour, IMove
         {
             transform.position = target;
             CurrentSpeed = 0;
-            isMoving = false;
+            IsMoving = false;
             OnSpeedBecomeZero?.Invoke();
             MoveDistance = 0;
         }
@@ -63,7 +74,7 @@ public class UniformVariableMove : MonoBehaviour, IMove
         {
             // 否则，按照移动方向和距离移动物体
             transform.position = pos + direction.normalized * distanceToMove;
-            CurrentSpeed = nextSpeed; 
+            CurrentSpeed = nextSpeed;
         }
     }
 

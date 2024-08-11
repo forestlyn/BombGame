@@ -1,8 +1,10 @@
 using MyInputSystem;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -123,7 +125,7 @@ public class MapManager : MonoBehaviour
 
     public bool BoxCanMove(Vector2 boxPos, Vector2 dir)
     {
-        Debug.Log("Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
+        //Debug.Log("Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
         var pos = CalMapPos(boxPos);
         //Debug.Log(pos);
         if (InMap(pos))
@@ -432,8 +434,9 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void WinGame()
+    public IEnumerator WinGame()
     {
+        yield return new WaitForSeconds(0.4f);
         WinGamePanel.SetActive(true);
     }
 

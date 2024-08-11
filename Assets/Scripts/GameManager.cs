@@ -1,3 +1,4 @@
+using MyInputSystem;
 using MyTools.MyCoroutines;
 using System;
 using System.Collections;
@@ -27,11 +28,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private int currentMapLevel = 0;
 
+    public bool isAnimMoving = false;
 
     public List<MapFiles> MapFiles
     {
         get => mapFiles;
     }
+    public bool isGameWin;
+
     private void Awake()
     {
         if (instance == null)
@@ -99,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadMap(string file)
     {
+        isGameWin = false;
         currentLevel = mapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
         loadMapFile = file;
         TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Play");
@@ -118,7 +123,7 @@ public class GameManager : MonoBehaviour
     }
     public void WinGame()
     {
-        MapManager.Instance.WinGame();
+        StartCoroutine(MapManager.Instance.WinGame());
     }
 
     public bool HasNextLevel()

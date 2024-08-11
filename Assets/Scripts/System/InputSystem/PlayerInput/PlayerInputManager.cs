@@ -27,7 +27,7 @@ namespace MyInputSystem
 
         private void Update()
         {
-            if (Player.Instance.IsMoving)
+            if (Player.Instance.IsMoving || GameManager.Instance.isGameWin)
             {
                 return;
             }
@@ -53,6 +53,11 @@ namespace MyInputSystem
                         break;
                 }
             }
+        }
+
+        public void ClearInputList()
+        {
+            m_PlayerInputList.Clear();
         }
 
         internal void Add(PlayerInput input)

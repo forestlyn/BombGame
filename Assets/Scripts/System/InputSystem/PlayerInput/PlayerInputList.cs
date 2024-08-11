@@ -68,6 +68,11 @@ namespace MyInputSystem
             return null;
         }
 
+        internal void Clear()
+        {
+            playerInputList.Clear();
+        }
+
         private void UpdateList()
         {
             DateTime time = DateTime.UtcNow;
@@ -76,7 +81,7 @@ namespace MyInputSystem
                 PlayerInput playerInput = playerInputList[i];
                 TimeSpan timeDifference = time - playerInput.InputTime;
                 //Debug.Log(timeDifference.ToString());
-                if (timeDifference.TotalSeconds >= 0.3)
+                if (timeDifference.TotalSeconds >= 0.2)
                 {
                     playerInputList.Remove(playerInput);
                 }
