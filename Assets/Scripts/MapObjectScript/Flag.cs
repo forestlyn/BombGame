@@ -41,6 +41,7 @@ public class Flag : MapObject
             switch (item.type)
             {
                 case MapObjectType.Player:
+                    //Debug.LogWarning("pl");
                     Open = true;
                     return;
                 default:

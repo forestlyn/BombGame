@@ -47,7 +47,7 @@ public class BaseKESimu : ICloneable
     {
         if (energe == 0)
         {
-            Debug.LogError("err");
+            //Debug.LogError("err");
             return;
         }
         //Debug.Log("SetEnergeDir" + energe + dir);
@@ -77,6 +77,7 @@ public class BaseKESimu : ICloneable
             case KEDeliverType.Destory:
                 break;
         }
+        //Debug.Log("cal energe:" + energe + " dir:" + dir);
     }
 
     public virtual object Clone()

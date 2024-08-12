@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTools.MyCoroutines;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -27,7 +28,7 @@ public class MapManager : MonoBehaviour
     {
         if (InMap(arrayPos))
         {
-            //Debug.Log(arrayPos+"("+ (int)arrayPos.x+","+ (int)arrayPos.y+")");
+            //Debug.Log(arrayPos + "(" + (int)arrayPos.x + "," + (int)arrayPos.y + ")");
             //Debug.Log(arrayPos.x);
             //Debug.Log(arrayPos.y);
             //foreach (var obj in mapState[(int)arrayPos.x, (int)arrayPos.y])
@@ -36,6 +37,7 @@ public class MapManager : MonoBehaviour
             //}
             return mapState[(int)arrayPos.x, (int)arrayPos.y];
         }
+        Debug.LogWarning(arrayPos);
         return null;
     }
 
@@ -428,15 +430,19 @@ public class MapManager : MonoBehaviour
     private void OnObjStateChange(bool open, int objId)
     {
         //Debug.Log("OnObjStateChange :" + open + objId);
+        CheckGameState();
+    }
+
+    public void CheckGameState()
+    {
         if (CheckGameWin.CheckWin())
         {
             GameManager.Instance.WinGame();
         }
     }
-
     public IEnumerator WinGame()
     {
-        yield return new WaitForSeconds(0.4f);
+        yield return new YieldWaitForSeconds(0.4f);
         WinGamePanel.SetActive(true);
     }
 

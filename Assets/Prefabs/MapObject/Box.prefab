@@ -133,7 +133,7 @@ MonoBehaviour:
   objectId: 0
   open: 0
   type: 2
-  MoveInterval: 0.2
+  MoveInterval: 0
   boxMaterial: 0
   boxSpriteObj: {fileID: 1073545744507059570}
   sprites:

@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTools.MyCoroutines;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -135,6 +136,7 @@ public class Player : MapObject
 
     public void Move(Vector2 dir, Command command)
     {
+        //Debug.Log(WorldPos);
         MoveTo(WorldPos, WorldPos + dir);
         //transform.Translate(dir);
         uniformMove.Target = WorldPos + dir;
@@ -169,7 +171,6 @@ public class Player : MapObject
             }
         }
     }
-
     /// <summary>
     /// 被撞之后的处理
     /// </summary>
@@ -179,6 +180,7 @@ public class Player : MapObject
     {
         Debug.Log("HitedHandle:" + objectId + " " + command.ObjectId + " " + kESimu.KEType + " " + kESimu.Energe);
         if (kESimu == null) return;
+        StopAllCoroutines();
         StartCoroutine(Move(kESimu.Dir, command, true, moveTimeInterval));
     }
     /// <summary>

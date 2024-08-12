@@ -10,7 +10,7 @@ public class Box : MapObject
 
     public BaseKESimu kESimu;
 
-    public float MoveInterval = 0.005f;
+    public float MoveInterval = 0;
 
     public BoxMaterialType boxMaterial;
 
@@ -52,7 +52,7 @@ public class Box : MapObject
     {
         if (kESimu.Energe == 0)
         {
-            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)?
                 .Find(x => x.type == MapObjectType.Water) != null;
             if (isInWater)
             {
@@ -64,13 +64,15 @@ public class Box : MapObject
         }
     }
 
+    //需要hit后关闭一下，有时候会开启两个Coroutine
     public IEnumerator Move(Vector2 dir, Command command, bool isHit, float delta)
     {
+        //Debug.Log(objectId + "start a coroutine" + System.DateTime.Now.ToString("HH:mm:ss.fff"));
         while (kESimu.Energe > 0)
         {
             //Debug.Log("I'm moving~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
             //Debug.Log(MoveInterval);
-            //Debug.Log(objectId + " " + kESimu.Dir + " " + dir + movedir + delta);
+            //Debug.Log(objectId + " " + kESimu.Dir + kESimu.Energe + " " + dir + movedir + delta);
             while (uniformMove.IsMoving)
             {
                 //Debug.Log("I'm waiting~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
@@ -80,7 +82,7 @@ public class Box : MapObject
 
             Move(kESimu.Dir, command, isHit);
             //Debug.Log("I'm moving over~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
-            yield return null;
+            yield return new WaitForSeconds(delta);
         }
     }
 
@@ -218,7 +220,7 @@ public class Box : MapObject
     }
 
     Vector2 movedir;
-
+    Coroutine moveCoroutine = null;
     /// <summary>
     /// 被撞之后的处理
     /// </summary>
@@ -236,7 +238,8 @@ public class Box : MapObject
             case KEDeliverType.ClockWise:
             case KEDeliverType.Calculate:
             case KEDeliverType.WildCard:
-                StartCoroutine(Move(movedir, command, true, MoveInterval));
+                StopAllCoroutines();
+                moveCoroutine = StartCoroutine(Move(movedir, command, true, MoveInterval));
                 break;
             case KEDeliverType.Destory:
                 gameObject.SetActive(false);
@@ -277,7 +280,7 @@ public class Box : MapObject
         }
         if (kESimu.Energe == 0)
         {
-            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)?
                 .Find(x => x.type == MapObjectType.Water) != null;
             if (isInWater)
             {
@@ -359,6 +362,7 @@ public class BoxHit : Command, IHitCommand
 
     public override void Undo()
     {
+        //Debug.Log(energe + " " + objectId);
         box.kESimu.SetEnergeDir(energe, dir);
     }
 }

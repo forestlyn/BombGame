@@ -21,6 +21,10 @@ namespace MyInputSystem
             set {
                 //Debug.LogWarning("playerCanInput:" + playerCanInput);
                 playerCanInput = value;
+                if(playerCanInput)
+                {
+                    MapManager.Instance.CheckGameState();
+                }
             }
         }
         private void Update()

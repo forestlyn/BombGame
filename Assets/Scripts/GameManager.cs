@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
     }
     public void WinGame()
     {
-        StartCoroutine(MapManager.Instance.WinGame());
+        MyCoroutines.StartCoroutine(MapManager.Instance.WinGame());
     }
 
     public bool HasNextLevel()

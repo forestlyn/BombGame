@@ -12,11 +12,13 @@ namespace MyInputSystem
         private static PlayerInputManager instance;
         public static PlayerInputManager Instance { get { return instance; } }
 
+        public double removeDelta;
         private Player player;
         private void Awake()
         {
             player = Player.Instance;
             m_PlayerInputList = new PlayerInputList();
+            m_PlayerInputList.removeDelta = removeDelta;
             if (instance == null)
                 instance = this;
             else

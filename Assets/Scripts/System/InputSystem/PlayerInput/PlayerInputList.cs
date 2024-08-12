@@ -34,7 +34,7 @@ namespace MyInputSystem
     public class PlayerInputList
     {
         public List<PlayerInput> playerInputList;
-
+        public double removeDelta = 0.2;
         public PlayerInputList()
         {
             playerInputList = new List<PlayerInput>();
@@ -81,7 +81,7 @@ namespace MyInputSystem
                 PlayerInput playerInput = playerInputList[i];
                 TimeSpan timeDifference = time - playerInput.InputTime;
                 //Debug.Log(timeDifference.ToString());
-                if (timeDifference.TotalSeconds >= 0.2)
+                if (timeDifference.TotalSeconds >= removeDelta)
                 {
                     playerInputList.Remove(playerInput);
                 }
