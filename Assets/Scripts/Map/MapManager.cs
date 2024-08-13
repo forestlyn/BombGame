@@ -37,7 +37,7 @@ public class MapManager : MonoBehaviour
             //}
             return mapState[(int)arrayPos.x, (int)arrayPos.y];
         }
-        Debug.LogWarning(arrayPos);
+        //Debug.LogWarning(arrayPos);
         return null;
     }
 
@@ -176,14 +176,14 @@ public class MapManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("bomb can't move 1" + obj.type);
+                    //Debug.Log("bomb can't move 1" + obj.type);
                     return false;
                 }
             }
-            Debug.Log("bomb can move");
+            //Debug.Log("bomb can move");
             return true;
         }
-        Debug.Log("bomb can't move");
+        //Debug.Log("bomb can't move");
         return false;
     }
     public void ReStart()
@@ -242,7 +242,6 @@ public class MapManager : MonoBehaviour
                     if (gb.type == MapObjectType.Player)
                     {
                         obj = Player.Instance.gameObject;
-                        Player.Instance.ResetPlayer();
                         if (obj == null) Debug.LogError("no player");
                     }
                     else if (gb.type == MapObjectType.Box)

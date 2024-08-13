@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 namespace MyInputSystem
 {
     public class PlayerInputManager : MonoBehaviour
@@ -26,6 +27,7 @@ namespace MyInputSystem
                 Debug.LogError("err");
             }
         }
+        DateTime lastTime = DateTime.Now;
 
         private void Update()
         {
@@ -36,6 +38,10 @@ namespace MyInputSystem
             var playerInput = m_PlayerInputList.GetNext();
             if (playerInput != null)
             {
+                TimeSpan timeDifference = DateTime.Now - lastTime;
+                lastTime = DateTime.Now;
+                Debug.Log(System.DateTime.Now.ToString("HH:mm:ss.fff") +
+                    ": Player执行" + playerInput.type + " 间隔上一个操作:" + timeDifference);
                 switch (playerInput.type)
                 {
                     case PlayerInputType.Move:

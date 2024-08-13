@@ -45,8 +45,8 @@ public class Box : MapObject
         boxSpriteObj.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
         uniformMove = GetComponent<IMove>();
         uniformMove.OnSpeedBecomeZero += CheckInWater;
-
     }
+
     private Command LastestMoveCmd;
     private void CheckInWater()
     {

@@ -83,7 +83,7 @@ namespace MyInputSystem
             while (true)
             {
                 Move(dir);
-                yield return new YieldWaitForSeconds(player.moveTimeInterval);
+                yield return new YieldWaitForSeconds(0.1f);
             }
         }
 

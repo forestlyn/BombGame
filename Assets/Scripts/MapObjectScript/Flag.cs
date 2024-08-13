@@ -5,6 +5,10 @@ public class Flag : MapObject
 {
     public Material[] materials;
     public SpriteRenderer sr;
+    //public override void Initialize()
+    //{
+    //    Debug.Log(open);
+    //}
     public bool Open
     {
         get => open;

@@ -71,6 +71,10 @@ public class Player : MapObject
         InputManager.PlayerCanInput = false;
         return base.MyDestory();
     }
+    public override void Initialize()
+    {
+        ResetPlayer();
+    }
     public void ResetPlayer()
     {
         HoldBombNum = HoldBombMaxNum;
@@ -233,7 +237,14 @@ public class Player : MapObject
             HoldBombNum++;
         }
     }
-
+    internal void AddBomb(Bomb bomb)
+    {
+        if (bombs != null && !bombs.Contains(bomb))
+        {
+            bombs.Add(bomb);
+            HoldBombNum--;
+        }
+    }
     #endregion
 }
 

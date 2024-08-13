@@ -1,8 +1,30 @@
 using MyInputSystem;
+using System;
 using UnityEngine;
 
 public class Bomb : MapObject
 {
+    public IMove uniformMove;
+
+
+    public void Awake()
+    {
+        uniformMove = GetComponent<IMove>();
+        uniformMove.OnSpeedBecomeZero += CheckInWater;
+    }
+    Command lastMoveCmd;
+    private void CheckInWater()
+    {
+        bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+                .Find(x => x.type == MapObjectType.Water) != null;
+        if (isInWater)
+        {
+            MapObjIntoWater cmd = new MapObjIntoWater(this);
+            cmd.Execute();
+            lastMoveCmd.Next.Add(cmd);
+        }
+    }
+
     public void Explosion()
     {
         //Debug.Log("explosion!");
@@ -43,18 +65,16 @@ public class Bomb : MapObject
     {
         //Debug.Log("move Dir :" + Dir);
         MoveTo(WorldPos, WorldPos + dir);
-        transform.Translate(dir);
-
-        bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
-            .Find(x => x.type == MapObjectType.Water) != null;
-        if (isInWater)
-        {
-            MapObjIntoWater cmd = new MapObjIntoWater(this);
-            cmd.Execute();
-            command.Next.Add(cmd);
-        }
+        uniformMove.Target = WorldPos + dir;
+        lastMoveCmd = command;
     }
-
+    public void UndoMove(Vector2 dir, Command command)
+    {
+        //Debug.Log("move Dir :" + Dir);
+        MoveTo(WorldPos, WorldPos + dir);
+        transform.Translate(dir);
+        lastMoveCmd = command;
+    }
     public override BaseMapObjectState MyDestory()
     {
         Player.Instance.RemoveBomb(this);
@@ -67,7 +87,7 @@ public class BombMove : Command
     Bomb bomb;
     Vector2 dir;
 
-    public BombMove(Bomb bomb, Vector2 dir):base(bomb)
+    public BombMove(Bomb bomb, Vector2 dir) : base(bomb)
     {
         this.bomb = bomb;
         this.dir = dir;
@@ -80,7 +100,7 @@ public class BombMove : Command
 
     public override void Undo()
     {
-        bomb.Move(-dir, this);
+        bomb.UndoMove(-dir, this);
     }
 }
 

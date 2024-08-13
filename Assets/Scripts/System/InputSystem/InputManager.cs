@@ -11,19 +11,23 @@ namespace MyInputSystem
         private PlayerAction playerAction;
         private GameAction gameAction;
 
-        public bool ShowplayerCanInput=true;
+        public bool ShowplayerCanInput = true;
         [SerializeField]
         private static bool playerCanInput = true;
 
         public static bool PlayerCanInput
         {
             get { return playerCanInput; }
-            set {
+            set
+            {
                 //Debug.LogWarning("playerCanInput:" + playerCanInput);
-                playerCanInput = value;
-                if(playerCanInput)
+                if(playerCanInput != value)
                 {
-                    MapManager.Instance.CheckGameState();
+                    playerCanInput = value;
+                    if (playerCanInput)
+                    {
+                        MapManager.Instance.CheckGameState();
+                    }
                 }
             }
         }
@@ -77,7 +81,7 @@ namespace MyInputSystem
             //player move
             pcInputActions.Player.MoveUp.started += ctx =>
             {
-                if(PlayerCanInput)
+                if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.up);
                 }
