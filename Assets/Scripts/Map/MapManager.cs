@@ -429,6 +429,12 @@ public class MapManager : MonoBehaviour
     private void OnObjStateChange(bool open, int objId)
     {
         //Debug.Log("OnObjStateChange :" + open + objId);
+        //MyCoroutines.StartCoroutine(CheckGameState(0.0f));
+        CheckGameState();
+    }
+    public IEnumerator CheckGameState(float time)
+    {
+        yield return new YieldWaitForSeconds(0.4f);
         CheckGameState();
     }
 

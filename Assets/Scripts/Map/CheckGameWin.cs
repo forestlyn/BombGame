@@ -30,11 +30,13 @@ public static class CheckGameWin
 
     public static bool CheckWin()
     {
+        MyLog.Log("check game win");
         //Debug.Log(isMovingId.Count);
         //玩家锁定输入或者是撤销,或者在动画状态不可触发检查
         //但当玩家被撞飞最后一格为终点时，检查返回导致无法成功检查win
         if (!InputManager.PlayerCanInput
-            || RedoManager.isUndo /*|| isMovingId.Count != 0*/) 
+            || RedoManager.isUndo /*|| isMovingId.Count != 0*/
+            || MyEventSystem.Instance.IsInvokingEvent) 
             return false;
         for (int i = 0; i < objStates.Count; i++)
         {

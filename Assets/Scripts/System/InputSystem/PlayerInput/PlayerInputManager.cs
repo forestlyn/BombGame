@@ -31,7 +31,9 @@ namespace MyInputSystem
 
         private void Update()
         {
-            if (Player.Instance.IsMoving || GameManager.Instance.isGameWin)
+            if (Player.Instance.IsMoving || GameManager.Instance.isGameWin
+                || MyEventSystem.Instance.IsInvokingEvent
+                || BoxManager.HasMoving)
             {
                 return;
             }

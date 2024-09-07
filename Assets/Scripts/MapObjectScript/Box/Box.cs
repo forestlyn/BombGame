@@ -17,6 +17,11 @@ public class Box : MapObject
     public GameObject boxSpriteObj;
     public Sprite[] sprites;
 
+    public bool IsMoving
+    {
+        get => uniformMove.IsMoving || kESimu.Energe != 0;
+    }
+
     public void Init()
     {
         boxSpriteObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -45,7 +50,15 @@ public class Box : MapObject
         boxSpriteObj.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
         uniformMove = GetComponent<IMove>();
         uniformMove.OnSpeedBecomeZero += CheckInWater;
+        BoxManager.Add(this);
     }
+
+    public override BaseMapObjectState MyDestory()
+    {
+        BoxManager.Remove(this);
+        return base.MyDestory();
+    }
+
 
     private Command LastestMoveCmd;
     private void CheckInWater()
@@ -139,18 +152,6 @@ public class Box : MapObject
         //transform.Translate(dir);
         uniformMove.Target = WorldPos + dir;
         LastestMoveCmd = command;
-        //if (kESimu.Energe == 0)
-        //{
-        //    bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
-        //        .Find(x => x.type == MapObjectType.Water) != null;
-        //    if (isInWater)
-        //    {
-        //        Debug.Log("into water");
-        //        MapObjIntoWater cmd1 = new MapObjIntoWater(this);
-        //        command.Next.Add(cmd1);
-        //        cmd1.Execute();
-        //    }
-        //}
     }
 
     public void MoveDontCalWater(Vector2 dir,Command command)
@@ -219,8 +220,6 @@ public class Box : MapObject
         }
     }
 
-    Vector2 movedir;
-    Coroutine moveCoroutine = null;
     /// <summary>
     /// 被撞之后的处理
     /// </summary>
@@ -230,7 +229,6 @@ public class Box : MapObject
     {
         //Debug.Log("HitedHandle:" + objectId + " " + command.ObjectId + " " + kESimu.KEType);
         if (kESimu == null) return;
-        movedir = kESimu.Dir;
         switch (kESimu.KEType)
         {
             case KEDeliverType.None:
@@ -239,7 +237,7 @@ public class Box : MapObject
             case KEDeliverType.Calculate:
             case KEDeliverType.WildCard:
                 StopAllCoroutines();
-                moveCoroutine = StartCoroutine(Move(movedir, command, true, MoveInterval));
+                StartCoroutine(Move(kESimu.Dir, command, true, MoveInterval));
                 break;
             case KEDeliverType.Destory:
                 gameObject.SetActive(false);
