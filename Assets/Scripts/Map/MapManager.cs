@@ -81,8 +81,8 @@ public class MapManager : MonoBehaviour
     }
     private void Start()
     {
-        MyEventSystem.Instance.OnBoxTargetStateChange += OnObjStateChange;
-        MyEventSystem.Instance.OnFlagStateChange += OnObjStateChange;
+        //MyEventSystem.Instance.OnBoxTargetStateChange += OnObjStateChange;
+        //MyEventSystem.Instance.OnFlagStateChange += OnObjStateChange;
     }
 
 
@@ -97,22 +97,18 @@ public class MapManager : MonoBehaviour
             //Debug.Log(pos);
             switch (obj.type)
             {
+                case MapObjectType.Ground:
+                case MapObjectType.BoxTarget:
+                case MapObjectType.Flag:
+                case MapObjectType.Water:
+                case MapObjectType.Player:
+                    continue;
                 case MapObjectType.Box:
                     if (obj.boxMaterialType == BoxMaterialType.Wood &&
                         BoxCanMove(playerPos + dir + dir, dir))
                         continue;
                     else
                         return false;
-                case MapObjectType.Ground:
-                    continue;
-                case MapObjectType.BoxTarget:
-                    continue;
-                case MapObjectType.Flag:
-                    continue;
-                case MapObjectType.Water:
-                    continue;
-                case MapObjectType.Player:
-                    continue;
                 case MapObjectType.Bomb:
                     if (BombCanMove(playerPos + dir + dir, dir))
                     {
@@ -144,13 +140,12 @@ public class MapManager : MonoBehaviour
                         continue;
                     case MapObjectType.Player:
                     case MapObjectType.Wall:
-                        return false;
-                    case MapObjectType.Bomb:
-                        return BombCanMove(boxPos + dir, dir, true);
                     case MapObjectType.Box:
                         //Debug.Log(obj.objectId);
                         //Debug.Log(obj.mapObject.ArrayPos);
                         return false;
+                    case MapObjectType.Bomb:
+                        return BombCanMove(boxPos + dir, dir, true);
                     default:
                         Debug.LogError(obj.type);
                         return false;
@@ -426,17 +421,17 @@ public class MapManager : MonoBehaviour
         return false;
     }
 
-    private void OnObjStateChange(bool open, int objId)
-    {
-        //Debug.Log("OnObjStateChange :" + open + objId);
-        //MyCoroutines.StartCoroutine(CheckGameState(0.0f));
-        CheckGameState();
-    }
-    public IEnumerator CheckGameState(float time)
-    {
-        yield return new YieldWaitForSeconds(0.4f);
-        CheckGameState();
-    }
+    //private void OnObjStateChange(bool open, int objId)
+    //{
+    //    //Debug.Log("OnObjStateChange :" + open + objId);
+    //    //MyCoroutines.StartCoroutine(CheckGameState(0.0f));
+    //    CheckGameState();
+    //}
+    //public IEnumerator CheckGameState(float time)
+    //{
+    //    yield return new YieldWaitForSeconds(0.4f);
+    //    CheckGameState();
+    //}
 
     public void CheckGameState()
     {

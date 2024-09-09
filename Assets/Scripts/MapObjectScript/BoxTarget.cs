@@ -13,7 +13,7 @@ public class BoxTarget : MapObject
             if (open != value)
             {
                 open = value;
-                MyEventSystem.Instance.InvokeBoxTargetStateChange(value, objectId);
+                //MyEventSystem.Instance.InvokeBoxTargetStateChange(value, objectId);
                 //sr.material = materials[open == true ? 1 : 0];
             }
         }
