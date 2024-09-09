@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class Player : MapObject
 {
@@ -130,7 +131,9 @@ public class Player : MapObject
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new PlayerMove(this, dir, isHit);
             command.Next.Add(move);
+            Vector2 pos = WorldPos;
             move.Execute();
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, pos, command, dir);
         }
         else if (isHit)
         {

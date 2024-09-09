@@ -5,15 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public delegate void BoxTargetChangeState(bool open, int objId);
+//public delegate void BoxTargetChangeState(bool open, int objId);
 public delegate void FlagChangeState(bool open, int objId);
 
 public class MyEventSystem : MonoBehaviour
 {
     private static MyEventSystem instance;
     public static MyEventSystem Instance { get { return instance; } }
-    public event BoxTargetChangeState OnBoxTargetStateChange;
-    public event FlagChangeState OnFlagStateChange;
+    //public event BoxTargetChangeState OnBoxTargetStateChange;
+    //public event FlagChangeState OnFlagStateChange;
     [SerializeField]
     private bool isInvokeingEvent = false;
     public bool IsInvokingEvent
@@ -53,19 +53,19 @@ public class MyEventSystem : MonoBehaviour
         instance = this;
     }
 
-    public void InvokeBoxTargetStateChange(bool open, int objId)
-    {
-        OnBoxTargetStateChange?.Invoke(open, objId);
-    }
-    public void InvokeFlagStateChange(bool open, int objId)
-    {
-        OnFlagStateChange?.Invoke(open, objId);
-    }
+    //public void InvokeBoxTargetStateChange(bool open, int objId)
+    //{
+    //    OnBoxTargetStateChange?.Invoke(open, objId);
+    //}
+    //public void InvokeFlagStateChange(bool open, int objId)
+    //{
+    //    OnFlagStateChange?.Invoke(open, objId);
+    //}
 
 
     public void InvokeEvent(InvokeEventType v, MapEventType mapEvent, Vector2 worldPos, Command command, Vector2 dir = default, int id = 0)
     {
-        MyLog.Log("InvokeEventStart:" + v + mapEvent);
+        MyLog.LogWithTime("InvokeEventStart:" + v + mapEvent);
         InvokeEventCount++;
         switch (v)
         {
@@ -85,8 +85,8 @@ public class MyEventSystem : MonoBehaviour
                 InvokeEventInAllId(mapEvent, worldPos, command, id);
                 break;
         }
+        MyLog.LogWithTime("InvokeEventEnd" + v + mapEvent);
         InvokeEventCount--;
-        MyLog.Log("InvokeEventEnd" + v + mapEvent);
     }
 
     public void InvokeEventInThree(MapEventType mapEvent, Vector2 worldPos, Vector2 dir, Command command)

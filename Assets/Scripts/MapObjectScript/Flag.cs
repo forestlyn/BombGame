@@ -17,7 +17,7 @@ public class Flag : MapObject
             if (open != value)
             {
                 open = value;
-                MyEventSystem.Instance.InvokeFlagStateChange(value, objectId);
+                //MyEventSystem.Instance.InvokeFlagStateChange(value, objectId);
                 //Debug.Log("flag state becomes " + value);
                 //sr.material = materials[open == true ? 1 : 0];
             }
