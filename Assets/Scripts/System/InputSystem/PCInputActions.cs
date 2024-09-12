@@ -203,7 +203,7 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""d7cd2542-4194-460c-9f58-27b00d59326f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap,Hold"",
                     ""initialStateCheck"": false
                 }
             ],

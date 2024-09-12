@@ -1,3 +1,8 @@
+using MyTools.MyCoroutines;
+using UnityEngine.InputSystem.Interactions;
+using UnityEngine.InputSystem;
+using System.Collections;
+
 namespace MyInputSystem
 {
     public class GameAction
@@ -17,6 +22,45 @@ namespace MyInputSystem
         {
             var input = new PlayerInput(PlayerInputType.Undo);
             PlayerInputManager.Instance.Add(input);
+        }
+
+        MyCoroutine undo;
+
+        internal void Undo(InputAction.CallbackContext cbContext)
+        {
+            //Debug.Log(cbContext.interaction is HoldInteraction);
+            if (cbContext.interaction is HoldInteraction)
+            {
+                StopUndo();
+                undo = MyCoroutines.StartCoroutine(StartContinuousRedo());
+            }
+            if (cbContext.interaction is TapInteraction)
+            {
+                StopUndo();
+            }
+        }
+
+
+        internal void StopUndo(InputAction.CallbackContext cbContext)
+        {
+            if (cbContext.interaction is HoldInteraction)
+            {
+                StopUndo();
+            }
+        }
+
+        private void StopUndo()
+        {
+            MyCoroutines.StopCoroutine(undo);
+        }
+
+        private IEnumerator StartContinuousRedo()
+        {
+            while (true)
+            {
+                Undo();
+                yield return new YieldWaitForSeconds(0.15f);
+            }
         }
     }
 }

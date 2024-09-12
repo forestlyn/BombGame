@@ -8,7 +8,7 @@ public class WinGameUI : MonoBehaviour
 {
     public Button returnMenuBtn;
     public Button nextLevelBtn;
-
+    public Text tipText;
     public void Start()
     {
         returnMenuBtn.onClick.AddListener(() =>
@@ -27,10 +27,22 @@ public class WinGameUI : MonoBehaviour
         if (GameManager.Instance.HasNextLevel())
         {
             nextLevelBtn.gameObject.SetActive(true);
+            tipText.gameObject.SetActive(true);
         }
         else
         {
             nextLevelBtn.gameObject.SetActive(false);
+            tipText.gameObject.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (!GameManager.Instance.HasNextLevel())
+            return;
+        if (Input.anyKeyDown && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
+        {
+            GameManager.Instance.NextLevel();
         }
     }
 }

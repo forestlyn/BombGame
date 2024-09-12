@@ -67,9 +67,17 @@ namespace MyInputSystem
             {
                 gameAction.Redo();
             };
-            pcInputActions.Game.Undo.performed += cbContext =>
+            pcInputActions.Game.Undo.started += cbContext =>
             {
                 gameAction.Undo();
+            };
+            pcInputActions.Game.Undo.performed += cbContext =>
+            {
+                gameAction.Undo(cbContext);
+            };
+            pcInputActions.Game.Undo.canceled += cbContext =>
+            {
+                gameAction.StopUndo(cbContext);
             };
             pcInputActions.Game.ReStart.performed += cbContext =>
             {
