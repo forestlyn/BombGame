@@ -27,7 +27,7 @@ public class ChooseUI : MonoBehaviour
     }
     private void Awake()
     {
-        mapFiles = GameManager.Instance.MapFiles;
+        mapFiles = GameManager.Instance.AllMapFiles;
     }
     void Start()
     {

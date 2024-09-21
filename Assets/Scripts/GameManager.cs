@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour
     public string StartSceneName;
 
     private string loadMapFile;
-    private List<MapFiles> mapFiles = new List<MapFiles>();
+    private string currentMapName;
+    private List<MapFiles> allMapFiles = new List<MapFiles>();
 
     /// <summary>
     /// µ±Ç°¹Ø¿¨
@@ -30,9 +31,9 @@ public class GameManager : MonoBehaviour
 
     public bool isAnimMoving = false;
 
-    public List<MapFiles> MapFiles
+    public List<MapFiles> AllMapFiles
     {
-        get => mapFiles;
+        get => allMapFiles;
     }
     public bool isGameWin;
 
@@ -57,7 +58,7 @@ public class GameManager : MonoBehaviour
             string[] dirs = Directory.GetDirectories(path);
             foreach (string dir in dirs)
             {
-                Debug.Log(dir);
+                //Debug.Log(dir);
                 string[] files = Directory.GetFiles(dir);
                 List<string> jsonFiles = new List<string>();
                 foreach (var file in files)
@@ -75,11 +76,12 @@ public class GameManager : MonoBehaviour
                     dirname = dirsplit[1];
                 }
                 //Debug.Log($"{dirname}:{dirsplit[0]}");
-                mapFiles.Add(new MapFiles(dirsplit[0], dirname, jsonFiles));
+                allMapFiles.Add(new MapFiles(dirsplit[0], dirname, jsonFiles));
             }
         }
-        catch(Exception e) {
-            Debug.Log("GetAllLevels err" + e.ToString());
+        catch (Exception e)
+        {
+            Debug.LogError("GetAllLevels err" + e.ToString());
         }
     }
     private void OnEnable()
@@ -104,8 +106,9 @@ public class GameManager : MonoBehaviour
     public void LoadMap(string file)
     {
         isGameWin = false;
-        currentLevel = mapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
+        currentLevel = allMapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
         loadMapFile = file;
+        currentMapName = allMapFiles[currentMapLevel].LevelFile[currentLevel].showLevelName;
         TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Play");
     }
 
@@ -114,7 +117,15 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Play")
         {
-            MapManager.Instance.LoadMapFromFile(loadMapFile);
+            MapManager.Instance.LoadMapFromFile(loadMapFile, currentMapName);
+            if (currentMapLevel == 0 && currentLevel < 3)
+            {
+                MapManager.Instance.ShowTip(true);
+            }
+            else
+            {
+                MapManager.Instance.ShowTip(false);
+            }
         }
     }
     private void OnStartLoadScene()
@@ -128,7 +139,7 @@ public class GameManager : MonoBehaviour
 
     public bool HasNextLevel()
     {
-        if (mapFiles[currentMapLevel].LevelFile.Count > currentLevel + 1)
+        if (allMapFiles[currentMapLevel].LevelFile.Count > currentLevel + 1)
         {
             return true;
         }
@@ -143,7 +154,7 @@ public class GameManager : MonoBehaviour
     public void NextLevel()
     {
         currentLevel++;
-        Debug.Log($"{currentLevel}:{mapFiles[currentMapLevel].LevelFile[currentLevel].levelDir}");
-        LoadMap(mapFiles[currentMapLevel].LevelFile[currentLevel].levelDir);
+        Debug.Log($"{currentLevel}:{allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir}");
+        LoadMap(allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir);
     }
 }

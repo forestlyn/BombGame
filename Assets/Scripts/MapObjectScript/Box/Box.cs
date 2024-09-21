@@ -12,10 +12,20 @@ public class Box : MapObject
 
     public float MoveInterval = 0;
 
+    
+    public float ShineTime = 0f;
+    public Color ShineColor;
+    public Color DefaultWoodColor;
+    public Color DefaultStoneColor;
+    public Color DefaultColor;
+    public Material ShineMaterial;
+
     public BoxMaterialType boxMaterial;
 
-    public GameObject boxSpriteObj;
-    public Sprite[] sprites;
+    public GameObject boxMainSpriteObj;
+    public GameObject boxSymbolSpriteObj;
+    public Sprite[] mainsprites;
+    public Sprite[] symbolsprites;
 
     public bool IsMoving
     {
@@ -24,7 +34,7 @@ public class Box : MapObject
 
     public void Init()
     {
-        boxSpriteObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        boxSymbolSpriteObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         int idx = kESimu.KEType switch
         {
             KEDeliverType.None => 0,
@@ -36,20 +46,24 @@ public class Box : MapObject
         {
             if (kESimu.Dir == Vector2.up)
             {
-                boxSpriteObj.transform.Rotate(0, 0, 90);
+                boxSymbolSpriteObj.transform.Rotate(0, 0, 90);
             }
             else if (kESimu.Dir == Vector2.left)
             {
-                boxSpriteObj.transform.Rotate(0, 0, 180);
+                boxSymbolSpriteObj.transform.Rotate(0, 0, 180);
             }
             else if (kESimu.Dir == Vector2.down)
             {
-                boxSpriteObj.transform.Rotate(0, 0, 270);
+                boxSymbolSpriteObj.transform.Rotate(0, 0, 270);
             }
         }
-        boxSpriteObj.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
+        boxMainSpriteObj.GetComponent<SpriteRenderer>().sprite = mainsprites[boxMaterial == BoxMaterialType.Wood ? 0 : 1];
+        boxSymbolSpriteObj.GetComponent<SpriteRenderer>().sprite = symbolsprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
         uniformMove = GetComponent<IMove>();
         uniformMove.OnSpeedBecomeZero += CheckInWater;
+        ShineMaterial = boxSymbolSpriteObj.GetComponent<SpriteRenderer>().material;
+        DefaultColor = boxMaterial == BoxMaterialType.Wood ? DefaultWoodColor : DefaultStoneColor;
+        ShineMaterial.SetColor("_Color", DefaultColor);
         BoxManager.Add(this);
     }
 
@@ -131,21 +145,6 @@ public class Box : MapObject
         }
     }
 
-    //public void Move(Vector2 dir)
-    //{
-    //    switch (kESimu.KEType)
-    //    {
-    //        case KEDeliverType.None:
-    //        case KEDeliverType.Calculate:
-    //            transform.Translate(dir);
-    //            break;
-    //        case KEDeliverType.StaticDir: 
-
-    //            break;
-    //    }
-    //}
-
-
     public void Move(Vector2 dir, Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
@@ -185,7 +184,7 @@ public class Box : MapObject
                 BoxBeHit boxbehit = new BoxBeHit(this, 1, this.WorldPos - happenPos);
                 boxbehit.Execute();
                 command.Next.Add(boxbehit);
-                HitedHandle(boxbehit, this.WorldPos - happenPos, true);
+                StartCoroutine(StartHitedHandle(boxbehit, this.WorldPos - happenPos, true));
                 break;
             case MapEventType.PlayerMove:
             case MapEventType.BombMove:
@@ -214,12 +213,23 @@ public class Box : MapObject
                 BoxBeHit boxbehit1 = new BoxBeHit(this, cmd.Energe, cmd.Dir);
                 boxbehit1.Execute();
                 command.Next.Add(boxbehit1);
-                HitedHandle(boxbehit1, this.WorldPos - happenPos, false);
+                StartCoroutine(StartHitedHandle(boxbehit1, this.WorldPos - happenPos, false));
                 break;
             default: break;
         }
     }
 
+
+    public IEnumerator StartHitedHandle(Command command, Vector2 dir, bool isBomb)
+    {
+        ShineMaterial.SetColor("_Color", ShineColor);
+        if (kESimu.KEType != KEDeliverType.None)
+        {
+            yield return new WaitForSeconds(ShineTime);
+        }
+        ShineMaterial.SetColor("_Color", DefaultColor);
+        HitedHandle(command, dir, isBomb);
+    }
     /// <summary>
     /// 被撞之后的处理
     /// </summary>

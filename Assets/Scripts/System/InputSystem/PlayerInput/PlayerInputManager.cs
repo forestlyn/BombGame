@@ -42,8 +42,8 @@ namespace MyInputSystem
             {
                 TimeSpan timeDifference = DateTime.Now - lastTime;
                 lastTime = DateTime.Now;
-                Debug.Log(System.DateTime.Now.ToString("HH:mm:ss.fff") +
-                    ": Player执行" + playerInput.type + " 间隔上一个操作:" + timeDifference);
+                //Debug.Log(System.DateTime.Now.ToString("HH:mm:ss.fff") +
+                //    ": Player执行" + playerInput.type + " 间隔上一个操作:" + timeDifference);
                 switch (playerInput.type)
                 {
                     case PlayerInputType.Move:

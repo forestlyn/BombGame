@@ -65,7 +65,7 @@ public class MyEventSystem : MonoBehaviour
 
     public void InvokeEvent(InvokeEventType v, MapEventType mapEvent, Vector2 worldPos, Command command, Vector2 dir = default, int id = 0)
     {
-        MyLog.LogWithTime("InvokeEventStart:" + v + mapEvent);
+        //MyLog.LogWithTime("InvokeEventStart:" + v + mapEvent);
         InvokeEventCount++;
         switch (v)
         {
@@ -85,7 +85,7 @@ public class MyEventSystem : MonoBehaviour
                 InvokeEventInAllId(mapEvent, worldPos, command, id);
                 break;
         }
-        MyLog.LogWithTime("InvokeEventEnd" + v + mapEvent);
+        //MyLog.LogWithTime("InvokeEventEnd" + v + mapEvent);
         InvokeEventCount--;
     }
 

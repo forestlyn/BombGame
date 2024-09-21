@@ -9,14 +9,19 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
     private MapState mapState;
     private string mapFilePath;
+    private string mapName;
+
     private int ObjectIdx;
 
     public GameObject WinGamePanel;
+    public GameObject TipPanel;
+    public Text mapFileNameText;
     private bool InMap(Vector2 arrayPos)
     {
         if (mapState == null)
@@ -61,6 +66,7 @@ public class MapManager : MonoBehaviour
     private static MapManager instance;
     public static MapManager Instance { get { return instance; } }
 
+
     private static int offset_x;
     private static int offset_y;
     public MapState GetMapState()
@@ -85,7 +91,10 @@ public class MapManager : MonoBehaviour
         //MyEventSystem.Instance.OnFlagStateChange += OnObjStateChange;
     }
 
-
+    public void ShowTip(bool show)
+    {
+        TipPanel.SetActive(show);
+    }
 
     internal bool PlayerCanMove(Vector2 playerPos, Vector2 dir)
     {
@@ -183,16 +192,17 @@ public class MapManager : MonoBehaviour
     }
     public void ReStart()
     {
-        LoadMapFromFile(mapFilePath);
+        LoadMapFromFile(mapFilePath,mapName);
     }
-    public void LoadMapFromFile(string path)
+    public void LoadMapFromFile(string path,string name)
     {
         DeleteMap();
         //Debug.Log(path);
         mapFilePath = path;
+        mapName = name;
         mapState = JsonConvert.DeserializeObject<MapState>(File.ReadAllText(path));
-
-        Debug.Log("l:" + mapState.length + "w:" + mapState.width);
+        mapFileNameText.text = name;
+        //Debug.Log("l:" + mapState.length + "w:" + mapState.width);
 
         CreateMap(mapState);
     }
