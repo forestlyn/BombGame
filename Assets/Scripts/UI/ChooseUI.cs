@@ -15,13 +15,11 @@ public class ChooseUI : MonoBehaviour
     public Button leftBtn;
     public Button rightBtn;
 
-    private int currentMapLevel;
     public int CurrentMapLevel
     {
-        get => currentMapLevel;
+        get => GameManager.Instance.currentMapLevel;
         set
         {
-            currentMapLevel = value;
             GameManager.Instance.SetMapLevel(value);
         }
     }
@@ -33,10 +31,10 @@ public class ChooseUI : MonoBehaviour
     {
         leftBtn.onClick.AddListener(delegate { ChangeMapLevel(-1); });
         rightBtn.onClick.AddListener(delegate { ChangeMapLevel(1); });
-        SetMapLevel(0);
+        SetMapLevel(CurrentMapLevel);
     }
 
-    public void DrawAllLevels(int idx)
+    private void DrawAllLevels(int idx)
     {
         levelText.text = mapFiles[idx].LevelName;
         foreach (Transform child in transform.GetComponentsInChildren<Transform>())

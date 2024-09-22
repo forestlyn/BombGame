@@ -23,11 +23,11 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 当前关卡
     /// </summary>
-    private int currentLevel = 0;
+    public int currentLevel { get; private set; }
     /// <summary>
     /// 当前大关卡
     /// </summary>
-    private int currentMapLevel = 0;
+    public int currentMapLevel {  get; private set; }
 
     public bool isAnimMoving = false;
 
@@ -127,6 +127,14 @@ public class GameManager : MonoBehaviour
                 MapManager.Instance.ShowTip(false);
             }
         }
+        else if (SceneManager.GetActiveScene().name == "Choose")
+        {
+            ChooseUI chooseUI = transform.Find("Canvas/Panel")?.GetComponent<ChooseUI>();
+            if (chooseUI != null)
+            {
+                chooseUI.CurrentMapLevel = currentMapLevel;
+            }
+        }
     }
     private void OnStartLoadScene()
     {
@@ -146,9 +154,18 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    public bool HasNextBigLevel()
+    {
+        if (allMapFiles.Count > currentMapLevel + 1)
+        {
+            return true;
+        }
+        return false;
+    }
     public void SetMapLevel(int maplevel)
     {
         currentMapLevel = maplevel;
+        //MyLog.Log("SetMapLevel:" + currentMapLevel);
     }
 
     public void NextLevel()
