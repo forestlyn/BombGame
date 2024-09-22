@@ -219,7 +219,7 @@ MonoBehaviour:
   open: 0
   type: 2
   MoveInterval: 0
-  ShineTime: 1
+  ShineTime: 0.15
   ShineColor: {r: 1, g: 1, b: 1, a: 0}
   DefaultWoodColor: {r: 0.86666673, g: 0.43921572, b: 0.14509805, a: 0}
   DefaultStoneColor: {r: 0.3529412, g: 0.3372549, b: 0.32156864, a: 0}
