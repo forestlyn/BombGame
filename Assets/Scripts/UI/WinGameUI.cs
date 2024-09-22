@@ -18,7 +18,13 @@ public class WinGameUI : MonoBehaviour
         });
         nextLevelBtn.onClick.AddListener(() =>
         {
-            MapManager.Instance.NextLevel();
+            if (GameManager.Instance.HasNextLevel())
+                GameManager.Instance.NextLevel();
+            else
+            {
+                GameManager.Instance.SetMapLevel(GameManager.Instance.currentMapLevel + 1);
+                TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Choose");
+            }
         });
     }
 
