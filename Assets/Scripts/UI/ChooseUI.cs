@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ChooseUI : MonoBehaviour
@@ -60,6 +61,13 @@ public class ChooseUI : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Start");
+        }
+    }
 
     private void ChooseLevel(string levelPath)
     {
