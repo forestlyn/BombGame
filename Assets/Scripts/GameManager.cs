@@ -174,4 +174,9 @@ public class GameManager : MonoBehaviour
         Debug.Log($"{currentLevel}:{allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir}");
         LoadMap(allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir);
     }
+
+    public void ShowGrid()
+    {
+        MapManager.Instance.ShowGrid();
+    }
 }

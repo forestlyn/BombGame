@@ -61,6 +61,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WinGamePanel: {fileID: 0}
+  TipPanel: {fileID: 0}
+  mapFileNameText: {fileID: 0}
+  gridMat: {fileID: 2100000, guid: 8770ac2b19e16dd4babae846fe093796, type: 2}
 --- !u!114 &3749050159331979676
 MonoBehaviour:
   m_ObjectHideFlags: 0

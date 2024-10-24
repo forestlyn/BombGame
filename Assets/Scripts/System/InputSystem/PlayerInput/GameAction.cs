@@ -26,6 +26,11 @@ namespace MyInputSystem
 
         MyCoroutine undo;
 
+        public void ShowGrid()
+        {
+            GameManager.Instance.ShowGrid();
+        }
+
         internal void Undo(InputAction.CallbackContext cbContext)
         {
             //Debug.Log(cbContext.interaction is HoldInteraction);

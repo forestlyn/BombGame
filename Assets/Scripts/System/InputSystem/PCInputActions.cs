@@ -205,6 +205,15 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Tap,Hold"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShowGrid"",
+                    ""type"": ""Button"",
+                    ""id"": ""a6bdb2ad-28bd-4f0e-8eaa-355040018f00"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +249,17 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Undo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f44ff90-e71c-49e0-8f14-3cef938fe657"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShowGrid"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -258,6 +278,7 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
         m_Game_ReStart = m_Game.FindAction("ReStart", throwIfNotFound: true);
         m_Game_Redo = m_Game.FindAction("Redo", throwIfNotFound: true);
         m_Game_Undo = m_Game.FindAction("Undo", throwIfNotFound: true);
+        m_Game_ShowGrid = m_Game.FindAction("ShowGrid", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -400,6 +421,7 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_ReStart;
     private readonly InputAction m_Game_Redo;
     private readonly InputAction m_Game_Undo;
+    private readonly InputAction m_Game_ShowGrid;
     public struct GameActions
     {
         private @PCInputActions m_Wrapper;
@@ -407,6 +429,7 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
         public InputAction @ReStart => m_Wrapper.m_Game_ReStart;
         public InputAction @Redo => m_Wrapper.m_Game_Redo;
         public InputAction @Undo => m_Wrapper.m_Game_Undo;
+        public InputAction @ShowGrid => m_Wrapper.m_Game_ShowGrid;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -425,6 +448,9 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
             @Undo.started += instance.OnUndo;
             @Undo.performed += instance.OnUndo;
             @Undo.canceled += instance.OnUndo;
+            @ShowGrid.started += instance.OnShowGrid;
+            @ShowGrid.performed += instance.OnShowGrid;
+            @ShowGrid.canceled += instance.OnShowGrid;
         }
 
         private void UnregisterCallbacks(IGameActions instance)
@@ -438,6 +464,9 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
             @Undo.started -= instance.OnUndo;
             @Undo.performed -= instance.OnUndo;
             @Undo.canceled -= instance.OnUndo;
+            @ShowGrid.started -= instance.OnShowGrid;
+            @ShowGrid.performed -= instance.OnShowGrid;
+            @ShowGrid.canceled -= instance.OnShowGrid;
         }
 
         public void RemoveCallbacks(IGameActions instance)
@@ -468,5 +497,6 @@ public partial class @PCInputActions: IInputActionCollection2, IDisposable
         void OnReStart(InputAction.CallbackContext context);
         void OnRedo(InputAction.CallbackContext context);
         void OnUndo(InputAction.CallbackContext context);
+        void OnShowGrid(InputAction.CallbackContext context);
     }
 }

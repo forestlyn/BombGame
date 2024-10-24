@@ -22,6 +22,7 @@ public class MapManager : MonoBehaviour
     public GameObject WinGamePanel;
     public GameObject TipPanel;
     public Text mapFileNameText;
+    public Material gridMat;
     private bool InMap(Vector2 arrayPos)
     {
         if (mapState == null)
@@ -461,4 +462,9 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.NextLevel();
     }
 
+    public void ShowGrid()
+    {
+        float offset = gridMat.GetFloat("_IsShow");
+        gridMat.SetFloat("_IsShow", offset == 1 ? 0 : 1);    
+    }
 }

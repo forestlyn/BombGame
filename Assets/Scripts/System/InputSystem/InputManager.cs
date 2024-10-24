@@ -83,6 +83,10 @@ namespace MyInputSystem
             {
                 gameAction.Restart();
             };
+            pcInputActions.Game.ShowGrid.performed += cbContext =>
+            {
+                gameAction.ShowGrid();
+            };
         }
         private void BindPlayerInput()
         {
