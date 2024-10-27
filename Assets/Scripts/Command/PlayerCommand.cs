@@ -7,7 +7,7 @@ namespace MyInputSystem
     public abstract class PlayerCommand : Command
     {
         protected Player player;
-        public PlayerCommand(Player player)
+        public PlayerCommand(Player player) : base(player)
         {
             objectId = player.objectId;
             this.player = player;
@@ -34,7 +34,7 @@ namespace MyInputSystem
 
         public override void Undo()
         {
-            player.Move(-dir, this);
+            player.UndoMove(-dir, this);
         }
     }
 

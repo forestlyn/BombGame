@@ -6,7 +6,7 @@ namespace MyInputSystem
     {
         MapState mapState;
         MapManager mapManager;
-        public GameReStartCommand(MapManager mapManager)
+        public GameReStartCommand(MapManager mapManager):base(null)
         {
             this.mapManager = mapManager;
         }

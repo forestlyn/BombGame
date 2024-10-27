@@ -5,33 +5,69 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public delegate void BoxTargetChangeState(bool open, int objId);
+//public delegate void BoxTargetChangeState(bool open, int objId);
 public delegate void FlagChangeState(bool open, int objId);
 
 public class MyEventSystem : MonoBehaviour
 {
     private static MyEventSystem instance;
     public static MyEventSystem Instance { get { return instance; } }
-    public event BoxTargetChangeState OnBoxTargetStateChange;
-    public event FlagChangeState OnFlagStateChange;
+    //public event BoxTargetChangeState OnBoxTargetStateChange;
+    //public event FlagChangeState OnFlagStateChange;
+    [SerializeField]
+    private bool isInvokeingEvent = false;
+    public bool IsInvokingEvent
+    {
+        get => isInvokeingEvent;
+        private set
+        {
+            isInvokeingEvent = value;
+            if (value == false)
+            {
+                MapManager.Instance.CheckGameState();
+            }
+        }
+    }
+    [SerializeField]
+    private int invokeEventCount = 0;
+    public int InvokeEventCount
+    {
+        get { return invokeEventCount; }
+        set
+        {
+            invokeEventCount = value;
+            if (invokeEventCount == 0)
+            {
+                IsInvokingEvent = false;
+            }
+            else
+            {
+                IsInvokingEvent = true;
+            }
+        }
+    }
+
 
     private void Awake()
     {
         instance = this;
     }
 
-    public void InvokeBoxTargetStateChange(bool open,int objId)
-    {
-        OnBoxTargetStateChange?.Invoke(open,objId);
-    }
-    public void InvokeFlagStateChange(bool open, int objId)
-    {
-        OnFlagStateChange?.Invoke(open, objId);
-    }
+    //public void InvokeBoxTargetStateChange(bool open, int objId)
+    //{
+    //    OnBoxTargetStateChange?.Invoke(open, objId);
+    //}
+    //public void InvokeFlagStateChange(bool open, int objId)
+    //{
+    //    OnFlagStateChange?.Invoke(open, objId);
+    //}
+
 
     public void InvokeEvent(InvokeEventType v, MapEventType mapEvent, Vector2 worldPos, Command command, Vector2 dir = default, int id = 0)
     {
-        switch(v)
+        //MyLog.LogWithTime("InvokeEventStart:" + v + mapEvent);
+        InvokeEventCount++;
+        switch (v)
         {
             case InvokeEventType.One:
                 InvokeEvent(mapEvent, MapManager.CalMapPos(worldPos), worldPos, command);
@@ -49,6 +85,8 @@ public class MyEventSystem : MonoBehaviour
                 InvokeEventInAllId(mapEvent, worldPos, command, id);
                 break;
         }
+        //MyLog.LogWithTime("InvokeEventEnd" + v + mapEvent);
+        InvokeEventCount--;
     }
 
     public void InvokeEventInThree(MapEventType mapEvent, Vector2 worldPos, Vector2 dir, Command command)
@@ -58,18 +96,18 @@ public class MyEventSystem : MonoBehaviour
             InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y + 1), worldPos, command);
         if (dir != Vector2.up)
             InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y - 1), worldPos, command);
-        if (dir != Vector2.left) 
+        if (dir != Vector2.left)
             InvokeEvent(mapEvent, new Vector2(arrayPos.x + 1, arrayPos.y), worldPos, command);
         if (dir != Vector2.right)
             InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
     }
 
-    private void InvokeEventInAllId(MapEventType mapEvent, Vector2 worldPos, Command command,int id)
+    private void InvokeEventInAllId(MapEventType mapEvent, Vector2 worldPos, Command command, int id)
     {
         MapManager.Instance.InvokeEventAllId(mapEvent, worldPos, command, id);
     }
 
-    public void InvokeEventInTwo(MapEventType mapEvent, Vector2 worldPos,Vector2 dir, Command command)
+    public void InvokeEventInTwo(MapEventType mapEvent, Vector2 worldPos, Vector2 dir, Command command)
     {
         var arrayPos = MapManager.CalMapPos(worldPos);
         //Debug.Log(arrayPos +" "+ dir + " " + mapEvent);
@@ -81,8 +119,8 @@ public class MyEventSystem : MonoBehaviour
         var arrayPos = MapManager.CalMapPos(worldPos);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y - 1), worldPos, command);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x, arrayPos.y + 1), worldPos, command);
-        InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
         InvokeEvent(mapEvent, new Vector2(arrayPos.x + 1, arrayPos.y), worldPos, command);
+        InvokeEvent(mapEvent, new Vector2(arrayPos.x - 1, arrayPos.y), worldPos, command);
     }
     /// <summary>
     /// 
@@ -91,7 +129,7 @@ public class MyEventSystem : MonoBehaviour
     /// <param name="arrayPos">事件发送给当前地图哪一格子的物体</param>
     /// <param name="worldPos">事件发生的地点</param>
     /// <param name="command">指令</param>
-    private void InvokeEvent(MapEventType mapEvent,Vector2 arrayPos,Vector2 worldPos, Command command)
+    private void InvokeEvent(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command)
     {
         MapManager.Instance.InvokeEvent(mapEvent, arrayPos, worldPos, command);
     }

@@ -8,7 +8,7 @@ public class MapObjIntoWater : Command
     Vector2 worldPos;
     Vector2 arrayPos;
     BaseMapObjectState state;
-    public MapObjIntoWater(MapObject mapObj)
+    public MapObjIntoWater(MapObject mapObj) : base(mapObj)
     {
         this.mapObj = mapObj;
         worldPos = mapObj.WorldPos;
@@ -24,6 +24,10 @@ public class MapObjIntoWater : Command
     {
         MapManager.Instance.MapObjs(arrayPos).Add(state);
         mapObj.transform.position = worldPos;
-        Debug.Log(mapObj.type +""+ worldPos);
+        //Debug.Log(mapObj.type +""+ worldPos);
+        if (mapObj.type == MapObjectType.Bomb)
+        {
+            Player.Instance.AddBomb(mapObj as Bomb);
+        }
     }
 }

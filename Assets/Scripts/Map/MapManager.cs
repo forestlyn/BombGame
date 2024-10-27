@@ -1,18 +1,28 @@
 using MyInputSystem;
+using MyTools.MyCoroutines;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
     private MapState mapState;
     private string mapFilePath;
+    private string mapName;
+
     private int ObjectIdx;
 
     public GameObject WinGamePanel;
+    public GameObject TipPanel;
+    public Text mapFileNameText;
+    public Material gridMat;
     private bool InMap(Vector2 arrayPos)
     {
         if (mapState == null)
@@ -23,7 +33,17 @@ public class MapManager : MonoBehaviour
     public List<BaseMapObjectState> MapObjs(Vector2 arrayPos)
     {
         if (InMap(arrayPos))
+        {
+            //Debug.Log(arrayPos + "(" + (int)arrayPos.x + "," + (int)arrayPos.y + ")");
+            //Debug.Log(arrayPos.x);
+            //Debug.Log(arrayPos.y);
+            //foreach (var obj in mapState[(int)arrayPos.x, (int)arrayPos.y])
+            //{
+            //    Debug.Log(arrayPos + " " + obj.objectId + obj.type + " " + obj.mapObject.ArrayPos + obj.mapObject.WorldPos);
+            //}
             return mapState[(int)arrayPos.x, (int)arrayPos.y];
+        }
+        //Debug.LogWarning(arrayPos);
         return null;
     }
 
@@ -47,6 +67,7 @@ public class MapManager : MonoBehaviour
     private static MapManager instance;
     public static MapManager Instance { get { return instance; } }
 
+
     private static int offset_x;
     private static int offset_y;
     public MapState GetMapState()
@@ -67,11 +88,14 @@ public class MapManager : MonoBehaviour
     }
     private void Start()
     {
-        MyEventSystem.Instance.OnBoxTargetStateChange += OnObjStateChange;
-        MyEventSystem.Instance.OnFlagStateChange += OnObjStateChange;
+        //MyEventSystem.Instance.OnBoxTargetStateChange += OnObjStateChange;
+        //MyEventSystem.Instance.OnFlagStateChange += OnObjStateChange;
     }
 
-
+    public void ShowTip(bool show)
+    {
+        TipPanel.SetActive(show);
+    }
 
     internal bool PlayerCanMove(Vector2 playerPos, Vector2 dir)
     {
@@ -83,22 +107,18 @@ public class MapManager : MonoBehaviour
             //Debug.Log(pos);
             switch (obj.type)
             {
+                case MapObjectType.Ground:
+                case MapObjectType.BoxTarget:
+                case MapObjectType.Flag:
+                case MapObjectType.Water:
+                case MapObjectType.Player:
+                    continue;
                 case MapObjectType.Box:
                     if (obj.boxMaterialType == BoxMaterialType.Wood &&
                         BoxCanMove(playerPos + dir + dir, dir))
                         continue;
                     else
                         return false;
-                case MapObjectType.Ground:
-                    continue;
-                case MapObjectType.BoxTarget:
-                    continue;
-                case MapObjectType.Flag:
-                    continue;
-                case MapObjectType.Water:
-                    continue;
-                case MapObjectType.Player:
-                    continue;
                 case MapObjectType.Bomb:
                     if (BombCanMove(playerPos + dir + dir, dir))
                     {
@@ -113,11 +133,14 @@ public class MapManager : MonoBehaviour
 
     public bool BoxCanMove(Vector2 boxPos, Vector2 dir)
     {
+        //Debug.Log("Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
         var pos = CalMapPos(boxPos);
+        //Debug.Log(pos);
         if (InMap(pos))
         {
             foreach (var obj in MapObjs(pos))
             {
+                //Debug.Log(obj.type);
                 switch (obj.type)
                 {
                     case MapObjectType.Ground:
@@ -127,13 +150,14 @@ public class MapManager : MonoBehaviour
                         continue;
                     case MapObjectType.Player:
                     case MapObjectType.Wall:
+                    case MapObjectType.Box:
+                        //Debug.Log(obj.objectId);
+                        //Debug.Log(obj.mapObject.ArrayPos);
                         return false;
                     case MapObjectType.Bomb:
                         return BombCanMove(boxPos + dir, dir, true);
-                    case MapObjectType.Box:
-                        return false;
                     default:
-                        Debug.Log(obj.type);
+                        Debug.LogError(obj.type);
                         return false;
                 }
             }
@@ -149,7 +173,7 @@ public class MapManager : MonoBehaviour
             foreach (var obj in MapObjs(pos))
             {
                 if (obj.height == 0) continue;
-                else if (obj.type == MapObjectType.Box && 
+                else if (obj.type == MapObjectType.Box &&
                     obj.boxMaterialType != BoxMaterialType.Stone
                     && !PushedByBox && BoxCanMove(bombPos + dir, dir))
                 {
@@ -157,28 +181,29 @@ public class MapManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("bomb can't move 1" + obj.type);
+                    //Debug.Log("bomb can't move 1" + obj.type);
                     return false;
                 }
             }
-            Debug.Log("bomb can move");
+            //Debug.Log("bomb can move");
             return true;
         }
-        Debug.Log("bomb can't move");
+        //Debug.Log("bomb can't move");
         return false;
     }
     public void ReStart()
     {
-        LoadMapFromFile(mapFilePath);
+        LoadMapFromFile(mapFilePath,mapName);
     }
-    public void LoadMapFromFile(string path)
+    public void LoadMapFromFile(string path,string name)
     {
         DeleteMap();
         //Debug.Log(path);
         mapFilePath = path;
+        mapName = name;
         mapState = JsonConvert.DeserializeObject<MapState>(File.ReadAllText(path));
-
-        Debug.Log("l:" + mapState.length + "w:" + mapState.width);
+        mapFileNameText.text = name;
+        //Debug.Log("l:" + mapState.length + "w:" + mapState.width);
 
         CreateMap(mapState);
     }
@@ -188,7 +213,7 @@ public class MapManager : MonoBehaviour
         var objs = transform.GetComponentsInChildren<Transform>();
         foreach (var obj in objs)
         {
-            if (obj == transform)
+            if (obj == transform || obj.GetComponent<MapObject>() == null)
             {
                 continue;
             }
@@ -223,7 +248,6 @@ public class MapManager : MonoBehaviour
                     if (gb.type == MapObjectType.Player)
                     {
                         obj = Player.Instance.gameObject;
-                        Player.Instance.ResetPlayer();
                         if (obj == null) Debug.LogError("no player");
                     }
                     else if (gb.type == MapObjectType.Box)
@@ -256,6 +280,16 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+        for (int i = 0; i < mapState.length; i++)
+        {
+            for (int j = 0; j < mapState.width; j++)
+            {
+                foreach (BaseMapObjectState gb in mapState[i, j])
+                {
+                    gb.mapObject.Initialize();
+                }
+            }
+        }
     }
 
     public void AddNewObj(Vector2 arrayPos, BaseMapObjectState baseMapObjectState)
@@ -271,7 +305,11 @@ public class MapManager : MonoBehaviour
     }
     public static Vector2 CalMapPos(Vector2 pos)
     {
-        return new Vector2(pos.x - offset_x, pos.y - offset_y);
+        //发现一个情况下的bug,在玩家连续推箱子情况下，箱子慢一步导致arraypos还在上一步不正常
+        //但是箱子逻辑上已经到了对应位置，导致mapobjs错误
+        //现将arraypos四舍五入一下，但实际上感觉应当按照逻辑位置来，暂且这样解决，还是移动有过程导致的啊~
+        //return new Vector2(pos.x - offset_x, pos.y - offset_y);
+        return new Vector2((float)Math.Round(pos.x - offset_x), (float)Math.Round(pos.y - offset_y));
     }
     public static Vector2 CalWorldPos(int x, int y)
     {
@@ -376,7 +414,7 @@ public class MapManager : MonoBehaviour
         var obj = mapState.RemoveLast(mapObject.ArrayPos, mapObject);
         if (obj == null)
         {
-            Debug.LogWarning("remove fail!");
+            Debug.LogWarning("remove fail!:" + mapObject.type + " " + mapObject.objectId);
         }
         return obj;
     }
@@ -394,23 +432,39 @@ public class MapManager : MonoBehaviour
         return false;
     }
 
-    private void OnObjStateChange(bool open, int objId)
+    //private void OnObjStateChange(bool open, int objId)
+    //{
+    //    //Debug.Log("OnObjStateChange :" + open + objId);
+    //    //MyCoroutines.StartCoroutine(CheckGameState(0.0f));
+    //    CheckGameState();
+    //}
+    //public IEnumerator CheckGameState(float time)
+    //{
+    //    yield return new YieldWaitForSeconds(0.4f);
+    //    CheckGameState();
+    //}
+
+    public void CheckGameState()
     {
-        //Debug.Log("OnObjStateChange :" + open + objId);
         if (CheckGameWin.CheckWin())
         {
             GameManager.Instance.WinGame();
         }
     }
-
-    public void WinGame()
+    public IEnumerator WinGame()
     {
+        yield return new YieldWaitForSeconds(0.4f);
         WinGamePanel.SetActive(true);
     }
 
     public void NextLevel()
     {
-
+        GameManager.Instance.NextLevel();
     }
 
+    public void ShowGrid()
+    {
+        float offset = gridMat.GetFloat("_IsShow");
+        gridMat.SetFloat("_IsShow", offset == 1 ? 0 : 1);    
+    }
 }

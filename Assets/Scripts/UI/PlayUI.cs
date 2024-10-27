@@ -9,6 +9,7 @@ public class PlayUI : MonoBehaviour
 {
     public Button settingButton;
     public Button backToGameButton;
+    public Button backToChooseButton;
     public Button backToMenuButton;
 
     public GameObject settingPanel;
@@ -20,6 +21,18 @@ public class PlayUI : MonoBehaviour
         {
             TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Start");
         });
+        backToChooseButton.onClick.AddListener(() =>
+        {
+            gameObject.SetActive(false);
+            TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Choose");
+        });
     }
 
+    private void Update()
+    {
+        if (!GameManager.Instance.isGameWin && Input.GetKeyDown(KeyCode.Escape))
+        {
+            settingPanel.SetActive(!settingPanel.activeSelf);
+        }
+    }
 }

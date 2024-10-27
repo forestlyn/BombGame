@@ -8,7 +8,7 @@ public class WinGameUI : MonoBehaviour
 {
     public Button returnMenuBtn;
     public Button nextLevelBtn;
-
+    public Text tipText;
     public void Start()
     {
         returnMenuBtn.onClick.AddListener(() =>
@@ -18,7 +18,50 @@ public class WinGameUI : MonoBehaviour
         });
         nextLevelBtn.onClick.AddListener(() =>
         {
-            MapManager.Instance.NextLevel();
+            if (GameManager.Instance.HasNextLevel())
+                GameManager.Instance.NextLevel();
+            else
+            {
+                GameManager.Instance.SetMapLevel(GameManager.Instance.currentMapLevel + 1);
+                TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Choose");
+            }
         });
+    }
+
+    private void OnEnable()
+    {
+        if (GameManager.Instance.HasNextLevel())
+        {
+            nextLevelBtn.gameObject.SetActive(true);
+            tipText.gameObject.SetActive(true);
+            tipText.text = "按任意键进入下一关";
+        }
+        else if (GameManager.Instance.HasNextBigLevel())
+        {
+            nextLevelBtn.gameObject.SetActive(true);
+            tipText.gameObject.SetActive(true);
+            tipText.text = "按任意键进入下一大关";
+        }
+        else
+        {
+            nextLevelBtn.gameObject.SetActive(false);
+            tipText.gameObject.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (!GameManager.Instance.HasNextLevel() && !GameManager.Instance.HasNextBigLevel())
+            return;
+        if (Input.anyKeyDown && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
+        {
+            if (GameManager.Instance.HasNextLevel())
+                GameManager.Instance.NextLevel();
+            else
+            {
+                GameManager.Instance.SetMapLevel(GameManager.Instance.currentMapLevel + 1);
+                TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Choose");
+            }
+        }
     }
 }

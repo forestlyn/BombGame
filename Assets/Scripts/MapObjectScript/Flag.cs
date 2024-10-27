@@ -1,12 +1,14 @@
 using MyInputSystem;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Flag : MapObject
 {
+    public Material[] materials;
+    public SpriteRenderer sr;
+    //public override void Initialize()
+    //{
+    //    Debug.Log(open);
+    //}
     public bool Open
     {
         get => open;
@@ -15,9 +17,11 @@ public class Flag : MapObject
             if (open != value)
             {
                 open = value;
-                MyEventSystem.Instance.InvokeFlagStateChange(value, objectId);
-                Debug.Log("flag state becomes " + value);
+                //MyEventSystem.Instance.InvokeFlagStateChange(value, objectId);
+                //Debug.Log("flag state becomes " + value);
+                //sr.material = materials[open == true ? 1 : 0];
             }
+            
         }
     }
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
@@ -41,6 +45,7 @@ public class Flag : MapObject
             switch (item.type)
             {
                 case MapObjectType.Player:
+                    //Debug.LogWarning("pl");
                     Open = true;
                     return;
                 default:

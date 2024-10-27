@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using UnityEditor;
+using UnityEngine;
+
 
 namespace MyInputSystem
 {
@@ -24,6 +25,16 @@ namespace MyInputSystem
                 if (next == null)
                     next = new List<Command>();
                 return next;
+            }
+        }
+
+        public Command(MapObject mapObject)
+        {
+            if (mapObject != null)
+                objectId = mapObject.objectId;
+            else
+            {
+                //Debug.LogError("isnull");
             }
         }
     }

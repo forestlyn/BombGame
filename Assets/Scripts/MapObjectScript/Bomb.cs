@@ -3,6 +3,27 @@ using UnityEngine;
 
 public class Bomb : MapObject
 {
+    public IMove uniformMove;
+
+
+    public void Awake()
+    {
+        uniformMove = GetComponent<IMove>();
+        uniformMove.OnSpeedBecomeZero += CheckInWater;
+    }
+    Command lastMoveCmd;
+    private void CheckInWater()
+    {
+        bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+                .Find(x => x.type == MapObjectType.Water) != null;
+        if (isInWater)
+        {
+            MapObjIntoWater cmd = new MapObjIntoWater(this);
+            cmd.Execute();
+            lastMoveCmd.Next.Add(cmd);
+        }
+    }
+
     public void Explosion()
     {
         //Debug.Log("explosion!");
@@ -34,26 +55,25 @@ public class Bomb : MapObject
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new BombMove(this, moveDir);
             command.Next.Add(move);
-            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BombMove, WorldPos, move, dir);
+            var pos = WorldPos;
             move.Execute();
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BombMove, pos, move, dir);
         }
     }
     public void Move(Vector2 dir, Command command)
     {
         //Debug.Log("move Dir :" + Dir);
         MoveTo(WorldPos, WorldPos + dir);
-        transform.Translate(dir);
-
-        bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
-            .Find(x => x.type == MapObjectType.Water) != null;
-        if (isInWater)
-        {
-            MapObjIntoWater cmd = new MapObjIntoWater(this);
-            cmd.Execute();
-            command.Next.Add(cmd);
-        }
+        uniformMove.Target = WorldPos + dir;
+        lastMoveCmd = command;
     }
-
+    public void UndoMove(Vector2 dir, Command command)
+    {
+        //Debug.Log("move Dir :" + Dir);
+        MoveTo(WorldPos, WorldPos + dir);
+        transform.Translate(dir);
+        lastMoveCmd = command;
+    }
     public override BaseMapObjectState MyDestory()
     {
         Player.Instance.RemoveBomb(this);
@@ -66,7 +86,7 @@ public class BombMove : Command
     Bomb bomb;
     Vector2 dir;
 
-    public BombMove(Bomb bomb, Vector2 dir)
+    public BombMove(Bomb bomb, Vector2 dir) : base(bomb)
     {
         this.bomb = bomb;
         this.dir = dir;
@@ -79,7 +99,7 @@ public class BombMove : Command
 
     public override void Undo()
     {
-        bomb.Move(-dir, this);
+        bomb.UndoMove(-dir, this);
     }
 }
 

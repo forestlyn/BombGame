@@ -1,21 +1,40 @@
 using MyInputSystem;
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class Box : MapObject
 {
+    public IMove uniformMove;
+
     public BaseKESimu kESimu;
 
-    public float MoveInterval = 0.2f;
+    public float MoveInterval = 0;
+
+    
+    public float ShineTime = 0f;
+    public Color ShineColor;
+    public Color DefaultWoodColor;
+    public Color DefaultStoneColor;
+    public Color DefaultColor;
+    public Material ShineMaterial;
 
     public BoxMaterialType boxMaterial;
 
-    public Sprite[] sprites;
+    public GameObject boxMainSpriteObj;
+    public GameObject boxSymbolSpriteObj;
+    public Sprite[] mainsprites;
+    public Sprite[] symbolsprites;
 
+    public bool IsMoving
+    {
+        get => uniformMove.IsMoving || kESimu.Energe != 0;
+    }
 
     public void Init()
     {
+        boxSymbolSpriteObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         int idx = kESimu.KEType switch
         {
             KEDeliverType.None => 0,
@@ -23,15 +42,73 @@ public class Box : MapObject
             KEDeliverType.Calculate => 2,
             _ => 0,
         };
-        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
+        if (kESimu.KEType == KEDeliverType.StaticDir)
+        {
+            if (kESimu.Dir == Vector2.up)
+            {
+                boxSymbolSpriteObj.transform.Rotate(0, 0, 90);
+            }
+            else if (kESimu.Dir == Vector2.left)
+            {
+                boxSymbolSpriteObj.transform.Rotate(0, 0, 180);
+            }
+            else if (kESimu.Dir == Vector2.down)
+            {
+                boxSymbolSpriteObj.transform.Rotate(0, 0, 270);
+            }
+        }
+        boxMainSpriteObj.GetComponent<SpriteRenderer>().sprite = mainsprites[boxMaterial == BoxMaterialType.Wood ? 0 : 1];
+        boxSymbolSpriteObj.GetComponent<SpriteRenderer>().sprite = symbolsprites[boxMaterial == BoxMaterialType.Wood ? idx : idx + 3];
+        uniformMove = GetComponent<IMove>();
+        uniformMove.OnSpeedBecomeZero += CheckInWater;
+        ShineMaterial = boxSymbolSpriteObj.GetComponent<SpriteRenderer>().material;
+        DefaultColor = boxMaterial == BoxMaterialType.Wood ? DefaultWoodColor : DefaultStoneColor;
+        ShineMaterial.SetColor("_Color", DefaultColor);
+        BoxManager.Add(this);
     }
 
+    public override BaseMapObjectState MyDestory()
+    {
+        BoxManager.Remove(this);
+        return base.MyDestory();
+    }
+
+
+    private Command LastestMoveCmd;
+    private void CheckInWater()
+    {
+        if (kESimu.Energe == 0)
+        {
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)?
+                .Find(x => x.type == MapObjectType.Water) != null;
+            if (isInWater)
+            {
+                Debug.Log("into water");
+                MapObjIntoWater cmd1 = new MapObjIntoWater(this);
+                LastestMoveCmd.Next.Add(cmd1);
+                cmd1.Execute();
+            }
+        }
+    }
+
+    //需要hit后关闭一下，有时候会开启两个Coroutine
     public IEnumerator Move(Vector2 dir, Command command, bool isHit, float delta)
     {
+        //Debug.Log(objectId + "start a coroutine" + System.DateTime.Now.ToString("HH:mm:ss.fff"));
         while (kESimu.Energe > 0)
         {
-            //Debug.Log(objectId + "kESimu.Energe:" + kESimu.Energe);
-            Move(dir, command, isHit);
+            //Debug.Log("I'm moving~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
+            //Debug.Log(MoveInterval);
+            //Debug.Log(objectId + " " + kESimu.Dir + kESimu.Energe + " " + dir + movedir + delta);
+            while (uniformMove.IsMoving)
+            {
+                //Debug.Log("I'm waiting~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
+                yield return new WaitForSeconds(0.001f);
+            }
+            uniformMove.MoveDistance = kESimu.Energe;
+
+            Move(kESimu.Dir, command, isHit);
+            //Debug.Log("I'm moving over~ Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
             yield return new WaitForSeconds(delta);
         }
     }
@@ -44,32 +121,61 @@ public class Box : MapObject
         //Debug.Log(dir);
         if (MapManager.Instance.BoxCanMove(movePos, dir))
         {
+            //Debug.Log("Current time: " + System.DateTime.Now.ToString("HH:mm:ss.fff"));
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new BoxMove(this, moveDir, isHit);
             command.Next.Add(move);
-            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BoxMove, WorldPos, command, moveDir);
+            Vector2 pos = WorldPos;
             move.Execute();
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BoxMove, pos, command, moveDir);
         }
         else if (isHit)
         {
+            //Debug.Log("Hit" + isHit);
             HitHandle(dir, command, isHit);
+        }
+        else
+        {
+            Debug.LogWarning("no Hit and can't move");
+        }
+        if (kESimu.Energe == 0)
+        {
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.One,
+                MapEventType.BoxStop, WorldPos, null);
         }
     }
 
     public void Move(Vector2 dir, Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
-        transform.Translate(dir);
+        //transform.Translate(dir);
+        uniformMove.Target = WorldPos + dir;
+        LastestMoveCmd = command;
     }
 
-    public void MoveDontCalWater(Vector2 dir)
+    public void MoveDontCalWater(Vector2 dir,Command command)
     {
         MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
+        LastestMoveCmd = command;
     }
+
     public override void HandleEvent(MapEventType mapEvent, Vector2 happenPos, Command command)
     {
-        //Debug.Log(objectId + " " + kESimu.KEType);
+        if (command != null && command.ObjectId == objectId)
+        {
+            //Debug.Log(mapEvent+":event send by self");
+            return;
+        }
+
+        //if (command == null)
+        //{
+        //    Debug.LogError(mapEvent);
+        //}
+        //if(command != null)
+        //{
+        //    Debug.Log(objectId + " " + kESimu.KEType + command.ObjectId);
+        //}
         switch (mapEvent)
         {
             case MapEventType.Bomb:
@@ -78,7 +184,7 @@ public class Box : MapObject
                 BoxBeHit boxbehit = new BoxBeHit(this, 1, this.WorldPos - happenPos);
                 boxbehit.Execute();
                 command.Next.Add(boxbehit);
-                HitedHandle(boxbehit, this.WorldPos - happenPos, true);
+                StartCoroutine(StartHitedHandle(boxbehit, this.WorldPos - happenPos, true));
                 break;
             case MapEventType.PlayerMove:
             case MapEventType.BombMove:
@@ -107,12 +213,23 @@ public class Box : MapObject
                 BoxBeHit boxbehit1 = new BoxBeHit(this, cmd.Energe, cmd.Dir);
                 boxbehit1.Execute();
                 command.Next.Add(boxbehit1);
-                HitedHandle(boxbehit1, this.WorldPos - happenPos, false);
+                StartCoroutine(StartHitedHandle(boxbehit1, this.WorldPos - happenPos, false));
                 break;
             default: break;
         }
     }
 
+
+    public IEnumerator StartHitedHandle(Command command, Vector2 dir, bool isBomb)
+    {
+        ShineMaterial.SetColor("_Color", ShineColor);
+        if (kESimu.KEType != KEDeliverType.None)
+        {
+            yield return new WaitForSeconds(ShineTime);
+        }
+        ShineMaterial.SetColor("_Color", DefaultColor);
+        HitedHandle(command, dir, isBomb);
+    }
     /// <summary>
     /// 被撞之后的处理
     /// </summary>
@@ -120,7 +237,7 @@ public class Box : MapObject
     /// <param name="isBomb"></param>
     public void HitedHandle(Command command, Vector2 dir, bool isBomb)
     {
-        Debug.Log("HitedHandle:" + objectId + " " + command.ObjectId + " " + kESimu.KEType);
+        //Debug.Log("HitedHandle:" + objectId + " " + command.ObjectId + " " + kESimu.KEType);
         if (kESimu == null) return;
         switch (kESimu.KEType)
         {
@@ -129,10 +246,11 @@ public class Box : MapObject
             case KEDeliverType.ClockWise:
             case KEDeliverType.Calculate:
             case KEDeliverType.WildCard:
+                StopAllCoroutines();
                 StartCoroutine(Move(kESimu.Dir, command, true, MoveInterval));
                 break;
             case KEDeliverType.Destory:
-                this.gameObject.SetActive(false);
+                gameObject.SetActive(false);
                 break;
             case KEDeliverType.Motivate:
                 Motivate(command, dir);
@@ -150,7 +268,9 @@ public class Box : MapObject
         //Debug.Log("HitHandle"+objectId);
         if (kESimu == null || !isHit) return;
         BoxHit cmd = new BoxHit(this, kESimu.Energe, kESimu.Dir);
+        //Debug.Log("HitHandle" + kESimu.Energe + kESimu.Dir + dir);
         command.Next.Add(cmd);
+        cmd.Execute();
         switch (kESimu.KEType)
         {
             case KEDeliverType.None:
@@ -166,10 +286,9 @@ public class Box : MapObject
                 Debug.LogError("err");
                 break;
         }
-        cmd.Execute();
         if (kESimu.Energe == 0)
         {
-            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
+            bool isInWater = MapManager.Instance.MapObjs(ArrayPos)?
                 .Find(x => x.type == MapObjectType.Water) != null;
             if (isInWater)
             {
@@ -202,7 +321,7 @@ public class BoxMove : Command
 {
     Box box;
     Vector2 dir;
-    public BoxMove(Box b, Vector2 dir, bool isHit)
+    public BoxMove(Box b, Vector2 dir, bool isHit) : base(b)
     {
         box = b;
         this.dir = dir;
@@ -222,7 +341,7 @@ public class BoxMove : Command
     public override void Undo()
     {
         //Debug.Log("undo box Dir:" + dir);
-        box.MoveDontCalWater(-dir);
+        box.MoveDontCalWater(-dir,this);
     }
 }
 
@@ -236,7 +355,7 @@ public class BoxHit : Command, IHitCommand
 
     public Vector2 Dir => dir;
 
-    public BoxHit(Box box, int energe, Vector2 dir)
+    public BoxHit(Box box, int energe, Vector2 dir) : base(box)
     {
         objectId = box.objectId;
         this.box = box;
@@ -251,6 +370,7 @@ public class BoxHit : Command, IHitCommand
 
     public override void Undo()
     {
+        //Debug.Log(energe + " " + objectId);
         box.kESimu.SetEnergeDir(energe, dir);
     }
 }
@@ -261,7 +381,7 @@ public class BoxBeHit : Command
     public int energe;
     public Vector2 dir;
 
-    public BoxBeHit(Box box, int energe, Vector2 dir)
+    public BoxBeHit(Box box, int energe, Vector2 dir) : base(box)
     {
         objectId = box.objectId;
         this.box = box;
@@ -278,5 +398,6 @@ public class BoxBeHit : Command
     public override void Undo()
     {
         box.kESimu.ClearEnerge();
+        //Debug.Log("undo hited:" + objectId + " " + energe + " " + dir);
     }
 }

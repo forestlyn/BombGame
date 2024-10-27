@@ -24,6 +24,7 @@ public class BaseKESimu : ICloneable
     public void EnergeDesc(int delta)
     {
         this._Energe -= delta;
+        //Debug.Log("_Energe:" + _Energe + "delta:" + delta);
         if (OnEnergeBecomeZero != null && _Energe == 0)
             OnEnergeBecomeZero();
     }
@@ -46,14 +47,16 @@ public class BaseKESimu : ICloneable
     {
         if (energe == 0)
         {
-            Debug.LogError("err");
+            //Debug.LogError("err");
             return;
         }
+        //Debug.Log("SetEnergeDir" + energe + dir);
         CalRealKE(energe, dir, _KEType);
     }
 
     public virtual void ClearEnerge()
     {
+        //Debug.Log("clear _Energe:" + _Energe);
         _Energe = 0;
         if (OnEnergeBecomeZero != null)
             OnEnergeBecomeZero();
@@ -74,6 +77,7 @@ public class BaseKESimu : ICloneable
             case KEDeliverType.Destory:
                 break;
         }
+        //Debug.Log("cal energe:" + energe + " dir:" + dir);
     }
 
     public virtual object Clone()

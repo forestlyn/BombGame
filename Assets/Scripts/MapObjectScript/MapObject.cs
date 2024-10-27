@@ -24,4 +24,9 @@ public abstract class MapObject : MonoBehaviour, IMapObjectPosition, IMapObjectE
     {
         return MapManager.Instance.RemoveMapObj(this);
     }
+
+    public virtual void Initialize()
+    {
+
+    }
 }

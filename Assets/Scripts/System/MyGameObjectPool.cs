@@ -91,7 +91,7 @@ public class MyGameObjectPool : MonoBehaviour
 
             if (obj != null)
             {
-                Debug.Log($"create {name} poll");
+                //Debug.Log($"create {name} poll");
                 m_pool.Add(name, new Queue<GameObject>());
                 obj = Instantiate(obj, transform);
                 return obj;

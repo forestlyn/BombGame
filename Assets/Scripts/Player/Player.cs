@@ -1,11 +1,14 @@
 using MyInputSystem;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MapObject
 {
+
+    public IMove uniformMove;
+
+    public bool IsMoving { get => uniformMove.IsMoving; }
     private static Player instance;
     public static Player Instance { get { return instance; } }
 
@@ -49,6 +52,8 @@ public class Player : MapObject
         instance = this;
         bombs = new List<Bomb>();
         kESimu = new BaseKESimu(KEDeliverType.None);
+        uniformMove = GetComponent<IMove>();
+        uniformMove.OnSpeedBecomeZero += CheckInWater;
     }
     private void Start()
     {
@@ -63,6 +68,10 @@ public class Player : MapObject
     {
         InputManager.PlayerCanInput = false;
         return base.MyDestory();
+    }
+    public override void Initialize()
+    {
+        ResetPlayer();
     }
     public void ResetPlayer()
     {
@@ -100,6 +109,11 @@ public class Player : MapObject
         while (kESimu.Energe > 0)
         {
             //Debug.Log(objectId + "kESimu.Energe:" + kESimu.Energe);
+            while (uniformMove.IsMoving)
+            {
+                yield return new WaitForSeconds(0.001f);
+            }
+            uniformMove.MoveDistance = kESimu.Energe;
             Move(dir, command, isHit);
             yield return new WaitForSeconds(delta);
         }
@@ -114,7 +128,9 @@ public class Player : MapObject
             //Debug.Log("worldpos:" + WorldPos + " " + command);
             var move = new PlayerMove(this, dir, isHit);
             command.Next.Add(move);
+            Vector2 pos = WorldPos;
             move.Execute();
+            MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.PlayerMove, pos, command, dir);
         }
         else if (isHit)
         {
@@ -124,17 +140,34 @@ public class Player : MapObject
 
     public void Move(Vector2 dir, Command command)
     {
+        //Debug.Log(WorldPos);
+        MoveTo(WorldPos, WorldPos + dir);
+        //transform.Translate(dir);
+        uniformMove.Target = WorldPos + dir;
+        LastestMoveCmd = command;
+    }
+    public void UndoMove(Vector2 dir, Command command)
+    {
         MoveTo(WorldPos, WorldPos + dir);
         transform.Translate(dir);
+        //uniformMove.Target = WorldPos + dir;
+        LastestMoveCmd = command;
+    }
+
+    public Command LastestMoveCmd;
+
+    public void CheckInWater()
+    {
         if (kESimu.Energe == 0)
         {
             bool isInWater = MapManager.Instance.MapObjs(ArrayPos)
                 .Find(x => x.type == MapObjectType.Water) != null;
+            //Debug.Log(ArrayPos);
             if (isInWater)
             {
                 PlayerDestory cmd = new PlayerDestory(this);
                 cmd.Execute();
-                command.Next.Add(cmd);
+                LastestMoveCmd.Next.Add(cmd);
             }
             else
             {
@@ -142,7 +175,6 @@ public class Player : MapObject
             }
         }
     }
-
     /// <summary>
     /// 被撞之后的处理
     /// </summary>
@@ -152,6 +184,7 @@ public class Player : MapObject
     {
         Debug.Log("HitedHandle:" + objectId + " " + command.ObjectId + " " + kESimu.KEType + " " + kESimu.Energe);
         if (kESimu == null) return;
+        StopAllCoroutines();
         StartCoroutine(Move(kESimu.Dir, command, true, moveTimeInterval));
     }
     /// <summary>
@@ -166,9 +199,9 @@ public class Player : MapObject
         if (kESimu == null || !isHit) return;
         PlayerHit cmd = new PlayerHit(this, kESimu.Energe, kESimu.Dir);
         command.Next.Add(cmd);
+        cmd.Execute();
         MyEventSystem.Instance.InvokeEvent(InvokeEventType.Two, MapEventType.BoxCollision,
             WorldPos, cmd, dir);
-        cmd.Execute();
 
         InputManager.PlayerCanInput = true;
 
@@ -204,7 +237,14 @@ public class Player : MapObject
             HoldBombNum++;
         }
     }
-
+    internal void AddBomb(Bomb bomb)
+    {
+        if (bombs != null && !bombs.Contains(bomb))
+        {
+            bombs.Add(bomb);
+            HoldBombNum--;
+        }
+    }
     #endregion
 }
 

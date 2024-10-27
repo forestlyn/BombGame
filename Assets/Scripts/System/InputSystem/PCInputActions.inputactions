@@ -181,6 +181,15 @@
                     "id": "d7cd2542-4194-460c-9f58-27b00d59326f",
                     "expectedControlType": "Button",
                     "processors": "",
+                    "interactions": "Tap,Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ShowGrid",
+                    "type": "Button",
+                    "id": "a6bdb2ad-28bd-4f0e-8eaa-355040018f00",
+                    "expectedControlType": "Button",
+                    "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 }
@@ -216,6 +225,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Undo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f44ff90-e71c-49e0-8f14-3cef938fe657",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShowGrid",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

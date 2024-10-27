@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4598580287038063534}
   - component: {fileID: 1363283765058682645}
   - component: {fileID: 3749050159331979676}
+  - component: {fileID: 7682067934827294367}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -46,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c43c1a2570c6434294958604f9a2d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowplayerCanInput: 0
 --- !u!114 &1363283765058682645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,6 +60,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6e64f7863fe62468c4853a1da570f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WinGamePanel: {fileID: 0}
+  TipPanel: {fileID: 0}
+  mapFileNameText: {fileID: 0}
+  gridMat: {fileID: 2100000, guid: 8770ac2b19e16dd4babae846fe093796, type: 2}
 --- !u!114 &3749050159331979676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,3 +77,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabList: {fileID: 11400000, guid: fcfa45e156cdc9046905bcb7a593dacf, type: 2}
+--- !u!114 &7682067934827294367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8719454752917569170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55dc330f3fa98374d8772704d226bd74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  removeDelta: 0.17

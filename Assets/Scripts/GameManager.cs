@@ -1,4 +1,6 @@
+using MyInputSystem;
 using MyTools.MyCoroutines;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -15,12 +17,26 @@ public class GameManager : MonoBehaviour
     public string StartSceneName;
 
     private string loadMapFile;
-    private List<string> mapFiles = new List<string>();
+    private string currentMapName;
+    private List<MapFiles> allMapFiles = new List<MapFiles>();
 
-    public List<string> MapFiles
+    /// <summary>
+    /// 当前关卡
+    /// </summary>
+    public int currentLevel { get; private set; }
+    /// <summary>
+    /// 当前大关卡
+    /// </summary>
+    public int currentMapLevel {  get; private set; }
+
+    public bool isAnimMoving = false;
+
+    public List<MapFiles> AllMapFiles
     {
-        get => mapFiles;
+        get => allMapFiles;
     }
+    public bool isGameWin;
+
     private void Awake()
     {
         if (instance == null)
@@ -37,22 +53,49 @@ public class GameManager : MonoBehaviour
     }
     private void GetAllLevels()
     {
-        string[] files = Directory.GetFiles(path);
-        foreach (string file in files)
+        try
         {
-            if (file.EndsWith("json"))
+            string[] dirs = Directory.GetDirectories(path);
+            foreach (string dir in dirs)
             {
-                mapFiles.Add(file);
+                //Debug.Log(dir);
+                string[] files = Directory.GetFiles(dir);
+                List<string> jsonFiles = new List<string>();
+                foreach (var file in files)
+                {
+                    if (file.EndsWith("json"))
+                    {
+                        jsonFiles.Add(file);
+                    }
+                }
+                var dirsplit = Path.GetFileName(dir).Split(' ', 2);
+                //Debug.Log($"{dirsplit[0]}");
+                var dirname = dir;
+                if (dirsplit.Length == 2)
+                {
+                    dirname = dirsplit[1];
+                }
+                //Debug.Log($"{dirname}:{dirsplit[0]}");
+                allMapFiles.Add(new MapFiles(dirsplit[0], dirname, jsonFiles));
             }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("GetAllLevels err" + e.ToString());
         }
     }
     private void OnEnable()
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent += OnAfterLoadScene;
+        TransitionManager.Instance.OnStartLoadSceneEvent += OnStartLoadScene;
     }
+
+
+
     private void OnDisable()
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent -= OnAfterLoadScene;
+        TransitionManager.Instance.OnStartLoadSceneEvent -= OnStartLoadScene;
     }
 
     void Update()
@@ -62,7 +105,10 @@ public class GameManager : MonoBehaviour
 
     public void LoadMap(string file)
     {
+        isGameWin = false;
+        currentLevel = allMapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
         loadMapFile = file;
+        currentMapName = allMapFiles[currentMapLevel].LevelFile[currentLevel].showLevelName;
         TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Play");
     }
 
@@ -71,12 +117,66 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Play")
         {
-            MapManager.Instance.LoadMapFromFile(loadMapFile);
+            MapManager.Instance.LoadMapFromFile(loadMapFile, currentMapName);
+            if (currentMapLevel == 0 && currentLevel < 3)
+            {
+                MapManager.Instance.ShowTip(true);
+            }
+            else
+            {
+                MapManager.Instance.ShowTip(false);
+            }
+        }
+        else if (SceneManager.GetActiveScene().name == "Choose")
+        {
+            ChooseUI chooseUI = transform.Find("Canvas/Panel")?.GetComponent<ChooseUI>();
+            if (chooseUI != null)
+            {
+                chooseUI.CurrentMapLevel = currentMapLevel;
+            }
         }
     }
-
+    private void OnStartLoadScene()
+    {
+        Player.Instance.transform.position = MapObject.hiddenPos;
+    }
     public void WinGame()
     {
-        MapManager.Instance.WinGame();
+        MyCoroutines.StartCoroutine(MapManager.Instance.WinGame());
+    }
+
+    public bool HasNextLevel()
+    {
+        if (allMapFiles[currentMapLevel].LevelFile.Count > currentLevel + 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool HasNextBigLevel()
+    {
+        if (allMapFiles.Count > currentMapLevel + 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    public void SetMapLevel(int maplevel)
+    {
+        currentMapLevel = maplevel;
+        //MyLog.Log("SetMapLevel:" + currentMapLevel);
+    }
+
+    public void NextLevel()
+    {
+        currentLevel++;
+        Debug.Log($"{currentLevel}:{allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir}");
+        LoadMap(allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir);
+    }
+
+    public void ShowGrid()
+    {
+        MapManager.Instance.ShowGrid();
     }
 }

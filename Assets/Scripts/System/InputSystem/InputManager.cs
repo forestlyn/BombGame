@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace MyInputSystem
 {
@@ -10,17 +11,30 @@ namespace MyInputSystem
         private PlayerAction playerAction;
         private GameAction gameAction;
 
+        public bool ShowplayerCanInput = true;
+        [SerializeField]
         private static bool playerCanInput = true;
 
         public static bool PlayerCanInput
         {
             get { return playerCanInput; }
-            set {
+            set
+            {
                 //Debug.LogWarning("playerCanInput:" + playerCanInput);
-                playerCanInput = value; 
+                if(playerCanInput != value)
+                {
+                    playerCanInput = value;
+                    if (playerCanInput)
+                    {
+                        MapManager.Instance.CheckGameState();
+                    }
+                }
             }
         }
-
+        private void Update()
+        {
+            ShowplayerCanInput = playerCanInput;
+        }
 
 
         private void Awake()
@@ -46,28 +60,50 @@ namespace MyInputSystem
             BindPlayerInput();
             BindGameInput();
         }
+
         private void BindGameInput()
         {
             pcInputActions.Game.Redo.performed += cbContext =>
             {
-                RedoManager.Instance.Redo();
+                gameAction.Redo();
+            };
+            pcInputActions.Game.Undo.started += cbContext =>
+            {
+                gameAction.Undo();
             };
             pcInputActions.Game.Undo.performed += cbContext =>
             {
-                RedoManager.Instance.Undo();
+                gameAction.Undo(cbContext);
+            };
+            pcInputActions.Game.Undo.canceled += cbContext =>
+            {
+                gameAction.StopUndo(cbContext);
             };
             pcInputActions.Game.ReStart.performed += cbContext =>
             {
                 gameAction.Restart();
             };
+            pcInputActions.Game.ShowGrid.performed += cbContext =>
+            {
+                gameAction.ShowGrid();
+            };
         }
         private void BindPlayerInput()
         {
             //player move
+            pcInputActions.Player.MoveUp.started += ctx =>
+            {
+                if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.up);
+                }
+            };
             pcInputActions.Player.MoveUp.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.up, cbContext);
+                }
             };
             pcInputActions.Player.MoveUp.canceled += cbContext =>
             {
@@ -75,10 +111,19 @@ namespace MyInputSystem
                     playerAction.StopMove(Vector2.up, cbContext);
             };
 
+            pcInputActions.Player.MoveDown.started += ctx =>
+            {
+                if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.down);
+                }
+            };
             pcInputActions.Player.MoveDown.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.down, cbContext);
+                }
             };
             pcInputActions.Player.MoveDown.canceled += cbContext =>
             {
@@ -86,21 +131,41 @@ namespace MyInputSystem
                     playerAction.StopMove(Vector2.down, cbContext);
             };
 
+            pcInputActions.Player.MoveLeft.started += ctx =>
+            {
+                if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.left);
+                }
+            };
             pcInputActions.Player.MoveLeft.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.left, cbContext);
+                }
             };
             pcInputActions.Player.MoveLeft.canceled += cbContext =>
             {
                 if (PlayerCanInput)
+                {
                     playerAction.StopMove(Vector2.left, cbContext);
+                }
             };
 
+            pcInputActions.Player.MoveRight.started += ctx =>
+            {
+                if (PlayerCanInput)
+                {
+                    playerAction.Move(Vector2.right);
+                }
+            };
             pcInputActions.Player.MoveRight.performed += cbContext =>
             {
                 if (PlayerCanInput)
+                {
                     playerAction.Move(Vector2.right, cbContext);
+                }
             };
             pcInputActions.Player.MoveRight.canceled += cbContext =>
             {
@@ -110,7 +175,7 @@ namespace MyInputSystem
 
             pcInputActions.Player.Bomb.performed += cbContext =>
             {
-                Debug.Log("Bomb PlayerCanInput" + PlayerCanInput);
+                //Debug.Log("Bomb PlayerCanInput" + PlayerCanInput);
                 if (PlayerCanInput)
                     playerAction.Bomb();
             };
