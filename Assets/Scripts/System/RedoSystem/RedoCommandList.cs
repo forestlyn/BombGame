@@ -52,12 +52,15 @@ public class RedoCommandList
         if (undoList.Count != 0)
         {
             flag = true;
-            t = undoList[undoList.Count - 1];
+            t = undoList[
+                undoList.Count - 1];
             undoList.RemoveAt(undoList.Count - 1);
         }
         else
             flag = false;
         return t;
+
+
     }
     /// <summary>
     /// 获得已经做了的事件，并移除

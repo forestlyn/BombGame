@@ -42,7 +42,7 @@ public class MapManager : MonoBehaviour
     }
     private void Start()
     {
-        LoadMapFromFile("F:\\GameProject\\BombGame\\Assets\\Scripts\\Map\\Map.json");
+        LoadMapFromFile("D:\\Bomb\\BombGame\\Assets\\Scripts\\Map\\map.json");
         //CreateMap(mapState);
     }
     internal bool PlayerCanMove(Vector2 playerPos,Vector2 dir, int height)

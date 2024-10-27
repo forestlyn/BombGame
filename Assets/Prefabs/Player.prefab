@@ -98,14 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Height: 0
-<<<<<<< HEAD
   HoldBombNum: 0
-  HoldBombMaxNum: 0
+  HoldBombMaxNum: 1
   moveTimeInterval: 0.2
   bomb: {fileID: 0}
-=======
-  HoldBombNum: 1
-  HoldBombMaxNum: 3
-  moveTimeInterval: 0.2
-  bomb: {fileID: 911123323772480182, guid: 651aae02cefe5c743a539e1417e14411, type: 3}
->>>>>>> 27731c13b6956ecf09274e0ed9f12e2033b1c275
