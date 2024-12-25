@@ -13,7 +13,6 @@ public class WinGameUI : MonoBehaviour
     {
         returnMenuBtn.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
             TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Start");
         });
         nextLevelBtn.onClick.AddListener(() =>
@@ -34,13 +33,21 @@ public class WinGameUI : MonoBehaviour
         {
             nextLevelBtn.gameObject.SetActive(true);
             tipText.gameObject.SetActive(true);
-            tipText.text = "°´ÈÎÒâ¼ü½øÈëÏÂÒ»¹Ø";
+#if UNITY_ANDROID
+            tipText.text = "";
+#else
+            tipText.text = "æŒ‰ä»»æ„é”®è¿›å…¥ä¸‹ä¸€å…³";
+#endif
         }
         else if (GameManager.Instance.HasNextBigLevel())
         {
             nextLevelBtn.gameObject.SetActive(true);
             tipText.gameObject.SetActive(true);
-            tipText.text = "°´ÈÎÒâ¼ü½øÈëÏÂÒ»´ó¹Ø";
+#if UNITY_ANDROID
+            tipText.text = "";
+#else
+            tipText.text = "æŒ‰ä»»æ„é”®è¿›å…¥ä¸‹ä¸€å¤§å…³";
+#endif
         }
         else
         {

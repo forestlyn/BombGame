@@ -14,7 +14,7 @@ public class TransitionManager : MonoBehaviour
     private CanvasGroup fadeCanvasGroup;
     private bool isFade;
     [SerializeField]
-    private float fadeDuration = 1;
+    private float fadeDuration = 0.1f;
 
     public static TransitionManager Instance
     {
@@ -47,7 +47,7 @@ public class TransitionManager : MonoBehaviour
     private IEnumerator TransitionToScene(string from, string to)
     {
         isLoading = true;
-        //yield return Fade(1);
+        yield return Fade(1);
         if (from != string.Empty)
         {
             OnStartLoadSceneEvent?.Invoke();
@@ -57,7 +57,7 @@ public class TransitionManager : MonoBehaviour
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);
         OnAfterLoadSceneEvent?.Invoke();
-        //yield return Fade(0);
+        yield return Fade(0);
         isLoading = false;
     }
 

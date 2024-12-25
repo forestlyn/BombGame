@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace MyInputSystem
 {
     public class InputManager : MonoBehaviour
     {
-        private PCInputActions pcInputActions;
+        private IInputAction inputActions;
         private PlayerAction playerAction;
         private GameAction gameAction;
 
@@ -39,7 +40,7 @@ namespace MyInputSystem
 
         private void Awake()
         {
-            pcInputActions = new PCInputActions();
+            inputActions = new UnityInputAction();
         }
         void Start()
         {
@@ -49,11 +50,11 @@ namespace MyInputSystem
         }
         private void OnEnable()
         {
-            pcInputActions.Enable();
+            inputActions.Enable();
         }
         private void OnDisable()
         {
-            pcInputActions.Disable();
+            inputActions.Disable();
         }
         private void BindActionFunc()
         {
@@ -63,27 +64,27 @@ namespace MyInputSystem
 
         private void BindGameInput()
         {
-            pcInputActions.Game.Redo.performed += cbContext =>
+            inputActions.Redo.performed += cbContext =>
             {
                 gameAction.Redo();
             };
-            pcInputActions.Game.Undo.started += cbContext =>
+            inputActions.Undo.started += cbContext =>
             {
                 gameAction.Undo();
             };
-            pcInputActions.Game.Undo.performed += cbContext =>
+            inputActions.Undo.performed += cbContext =>
             {
                 gameAction.Undo(cbContext);
             };
-            pcInputActions.Game.Undo.canceled += cbContext =>
+            inputActions.Undo.canceled += cbContext =>
             {
                 gameAction.StopUndo(cbContext);
             };
-            pcInputActions.Game.ReStart.performed += cbContext =>
+            inputActions.ReStart.performed += cbContext =>
             {
                 gameAction.Restart();
             };
-            pcInputActions.Game.ShowGrid.performed += cbContext =>
+            inputActions.ShowGrid.performed += cbContext =>
             {
                 gameAction.ShowGrid();
             };
@@ -91,61 +92,61 @@ namespace MyInputSystem
         private void BindPlayerInput()
         {
             //player move
-            pcInputActions.Player.MoveUp.started += ctx =>
+            inputActions.MoveUp.started += cbContext =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.up);
                 }
             };
-            pcInputActions.Player.MoveUp.performed += cbContext =>
+            inputActions.MoveUp.performed += cbContext =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.up, cbContext);
                 }
             };
-            pcInputActions.Player.MoveUp.canceled += cbContext =>
+            inputActions.MoveUp.canceled += cbContext =>
             {
                 if (PlayerCanInput)
                     playerAction.StopMove(Vector2.up, cbContext);
             };
 
-            pcInputActions.Player.MoveDown.started += ctx =>
+            inputActions.MoveDown.started += ctx =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.down);
                 }
             };
-            pcInputActions.Player.MoveDown.performed += cbContext =>
+            inputActions.MoveDown.performed += cbContext =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.down, cbContext);
                 }
             };
-            pcInputActions.Player.MoveDown.canceled += cbContext =>
+            inputActions.MoveDown.canceled += cbContext =>
             {
                 if (PlayerCanInput)
                     playerAction.StopMove(Vector2.down, cbContext);
             };
 
-            pcInputActions.Player.MoveLeft.started += ctx =>
+            inputActions.MoveLeft.started += ctx =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.left);
                 }
             };
-            pcInputActions.Player.MoveLeft.performed += cbContext =>
+            inputActions.MoveLeft.performed += cbContext =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.left, cbContext);
                 }
             };
-            pcInputActions.Player.MoveLeft.canceled += cbContext =>
+            inputActions.MoveLeft.canceled += cbContext =>
             {
                 if (PlayerCanInput)
                 {
@@ -153,27 +154,27 @@ namespace MyInputSystem
                 }
             };
 
-            pcInputActions.Player.MoveRight.started += ctx =>
+            inputActions.MoveRight.started += ctx =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.right);
                 }
             };
-            pcInputActions.Player.MoveRight.performed += cbContext =>
+            inputActions.MoveRight.performed += cbContext =>
             {
                 if (PlayerCanInput)
                 {
                     playerAction.Move(Vector2.right, cbContext);
                 }
             };
-            pcInputActions.Player.MoveRight.canceled += cbContext =>
+            inputActions.MoveRight.canceled += cbContext =>
             {
                 if (PlayerCanInput)
                     playerAction.StopMove(Vector2.right, cbContext);
             };
 
-            pcInputActions.Player.Bomb.performed += cbContext =>
+            inputActions.Bomb.performed += cbContext =>
             {
                 //Debug.Log("Bomb PlayerCanInput" + PlayerCanInput);
                 if (PlayerCanInput)

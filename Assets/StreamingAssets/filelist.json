@@ -1,0 +1,102 @@
+{
+    "name": "StreamingAssets",
+    "files": [
+        "filelist.json"
+    ],
+    "subfolders": [
+        {
+            "name": "Levels",
+            "files": [],
+            "subfolders": [
+                {
+                    "name": "1 Momentum 动量",
+                    "files": [
+                        "1 引入拯救.json",
+                        "2 先推后炸.json",
+                        "3 连续两次拯救.json",
+                        "4 引入石头.json",
+                        "5 引入必经之路.json",
+                        "6 两个箱子的必经之路.json",
+                        "7 引入水.json"
+                    ],
+                    "subfolders": []
+                },
+                {
+                    "name": "2 Conservation 守恒",
+                    "files": [
+                        "1 引入传递.json",
+                        "10 另一个玩家抵挡，用于提示玩家传递.json",
+                        "11 引入玩家传递.json",
+                        "2 传递用于分离.json",
+                        "3 利用传递处理无法触及的箱子.json",
+                        "4 两个纠缠的石头.json",
+                        "5 传递必经之路.json",
+                        "6 利用传递延长炸弹范围.json",
+                        "7 利用传递延长炸弹范围，防止误伤.json",
+                        "8 利用传递来阻挡.json",
+                        "9 引入玩家抵挡.json"
+                    ],
+                    "subfolders": []
+                },
+                {
+                    "name": "3 Norm 模",
+                    "files": [
+                        "1 引入运算箱.json",
+                        "2 奇偶性的考验.json",
+                        "3 运算箱的拯救.json",
+                        "4 运算箱必经之路.json",
+                        "5 同时炸运算箱和普通箱.json",
+                        "6 运算箱传递.json",
+                        "7 引入过河.json",
+                        "8 过河变体.json",
+                        "9 引入牺牲.json"
+                    ],
+                    "subfolders": []
+                },
+                {
+                    "name": "4 Direction 方向",
+                    "files": [
+                        "1 引入箭头箱.json",
+                        "10 箭头箱必经之路传递2.json",
+                        "11 箭头箱必经之路传递3.json",
+                        "12 箭头箱必经之路传递4.json",
+                        "2 箭头箱过拐角.json",
+                        "3 箭头箱电路.json",
+                        "4 箭头箱必经之路.json",
+                        "5 箭头箱必经之路2.json",
+                        "6 箭头箱必经之路3.json",
+                        "7 箭头箱必经之路：炸两个箱子中间.json",
+                        "8 箭头箱必经之路：炸两个箱子中间2..json",
+                        "9 箭头箱必经之路传递.json"
+                    ],
+                    "subfolders": []
+                },
+                {
+                    "name": "5 Overall 综合",
+                    "files": [
+                        "1 同时炸运算箱和箭头箱.json",
+                        "2 运算箱的动量一半运动，一半传递.json",
+                        "3 大炮过河.json",
+                        "4 提示反射.json",
+                        "5 引入反射.json",
+                        "6 反射过河.json",
+                        "7 玩家传递反射.json",
+                        "8 牺牲正确的箱子.json"
+                    ],
+                    "subfolders": []
+                },
+                {
+                    "name": "6 Challenge 挑战",
+                    "files": [
+                        "1 中字地形腾挪.json",
+                        "2 大风车.json",
+                        "3 同时炸4个箱子.json",
+                        "4 同时反射和另一个必经之路.json",
+                        "5 二次碰撞.json"
+                    ],
+                    "subfolders": []
+                }
+            ]
+        }
+    ]
+}

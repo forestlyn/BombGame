@@ -31,24 +31,24 @@ namespace MyInputSystem
             GameManager.Instance.ShowGrid();
         }
 
-        internal void Undo(InputAction.CallbackContext cbContext)
+        internal void Undo(MyInputCallbackContext cbContext)
         {
             //Debug.Log(cbContext.interaction is HoldInteraction);
-            if (cbContext.interaction is HoldInteraction)
+            if (cbContext.interaction is MyInputInteraction.Hold)
             {
                 StopUndo();
                 undo = MyCoroutines.StartCoroutine(StartContinuousRedo());
             }
-            if (cbContext.interaction is TapInteraction)
+            if (cbContext.interaction is MyInputInteraction.Tap)
             {
                 StopUndo();
             }
         }
 
 
-        internal void StopUndo(InputAction.CallbackContext cbContext)
+        internal void StopUndo(MyInputCallbackContext cbContext)
         {
-            if (cbContext.interaction is HoldInteraction)
+            if (cbContext.interaction is MyInputInteraction.Hold)
             {
                 StopUndo();
             }

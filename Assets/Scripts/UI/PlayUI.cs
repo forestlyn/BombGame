@@ -11,6 +11,7 @@ public class PlayUI : MonoBehaviour
     public Button backToGameButton;
     public Button backToChooseButton;
     public Button backToMenuButton;
+    public Button gridOnOffButton;
 
     public GameObject settingPanel;
     private void Start()
@@ -23,11 +24,23 @@ public class PlayUI : MonoBehaviour
         });
         backToChooseButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
             TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Choose");
         });
+        gridOnOffButton.onClick.AddListener(() =>
+        {
+            GameManager.Instance.ShowGrid();
+            bool gridOn = GameManager.Instance.GridOn;
+            gridOnOffButton.GetComponentInChildren<Text>().text = gridOn ? "网格：开" : "网格：关";
+        });
+        Init();
     }
 
+
+    private void Init()
+    {
+        bool gridOn = GameManager.Instance.GridOn;
+        gridOnOffButton.GetComponentInChildren<Text>().text = gridOn ? "网格：开" : "网格：关";
+    }
     private void Update()
     {
         if (!GameManager.Instance.isGameWin && Input.GetKeyDown(KeyCode.Escape))

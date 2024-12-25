@@ -5,10 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
@@ -21,6 +19,7 @@ public class MapManager : MonoBehaviour
 
     public GameObject WinGamePanel;
     public GameObject TipPanel;
+    public GameObject InputPanel;
     public Text mapFileNameText;
     public Material gridMat;
     private bool InMap(Vector2 arrayPos)
@@ -195,19 +194,46 @@ public class MapManager : MonoBehaviour
     {
         LoadMapFromFile(mapFilePath,mapName);
     }
-    public void LoadMapFromFile(string path,string name)
+    public void LoadMapFromFile(string path, string name)
     {
         DeleteMap();
-        //Debug.Log(path);
+        Debug.Log(path);
         mapFilePath = path;
         mapName = name;
+#if UNITY_ANDROID && !UNITY_EDITOR
+    StartCoroutine(LoadMapAndContinue(path, name));
+#else
         mapState = JsonConvert.DeserializeObject<MapState>(File.ReadAllText(path));
         mapFileNameText.text = name;
-        //Debug.Log("l:" + mapState.length + "w:" + mapState.width);
+        WaitUntil wait = new WaitUntil(() => mapState != null);
+        CreateMap(mapState);
+#endif
+    }
 
+    private IEnumerator LoadMapAndContinue(string path, string name)
+    {
+        yield return StartCoroutine(LoadMapState(path));
+        mapFileNameText.text = name;
+        WaitUntil wait = new WaitUntil(() => mapState != null);
         CreateMap(mapState);
     }
 
+    private IEnumerator LoadMapState(string path)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(path);
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            mapState = JsonConvert.DeserializeObject<MapState>(request.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError("LoadMapState err");
+            Debug.LogError(path);
+            Debug.LogError(request.error);
+        }
+    }
     private void DeleteMap()
     {
         var objs = transform.GetComponentsInChildren<Transform>();
@@ -219,6 +245,7 @@ public class MapManager : MonoBehaviour
             }
             MyGameObjectPool.Instance.Return(obj.gameObject, obj.GetComponent<MapObject>().type);
         }
+        mapState = null;
     }
 
     private void RefreshMap(MapState mapState)
@@ -305,9 +332,9 @@ public class MapManager : MonoBehaviour
     }
     public static Vector2 CalMapPos(Vector2 pos)
     {
-        //·¢ÏÖÒ»¸öÇé¿öÏÂµÄbug,ÔÚÍæ¼ÒÁ¬ĞøÍÆÏä×ÓÇé¿öÏÂ£¬Ïä×ÓÂıÒ»²½µ¼ÖÂarraypos»¹ÔÚÉÏÒ»²½²»Õı³£
-        //µ«ÊÇÏä×ÓÂß¼­ÉÏÒÑ¾­µ½ÁË¶ÔÓ¦Î»ÖÃ£¬µ¼ÖÂmapobjs´íÎó
-        //ÏÖ½«arrayposËÄÉáÎåÈëÒ»ÏÂ£¬µ«Êµ¼ÊÉÏ¸Ğ¾õÓ¦µ±°´ÕÕÂß¼­Î»ÖÃÀ´£¬ÔİÇÒÕâÑù½â¾ö£¬»¹ÊÇÒÆ¶¯ÓĞ¹ı³Ìµ¼ÖÂµÄ°¡~
+        //å‘ç°ä¸€ä¸ªæƒ…å†µä¸‹çš„bug,åœ¨ç©å®¶è¿ç»­æ¨ç®±å­æƒ…å†µä¸‹ï¼Œç®±å­æ…¢ä¸€æ­¥å¯¼è‡´arrayposè¿˜åœ¨ä¸Šä¸€æ­¥ä¸æ­£å¸¸
+        //ä½†æ˜¯ç®±å­é€»è¾‘ä¸Šå·²ç»åˆ°äº†å¯¹åº”ä½ç½®ï¼Œå¯¼è‡´mapobjsé”™è¯¯
+        //ç°å°†arrayposå››èˆäº”å…¥ä¸€ä¸‹ï¼Œä½†å®é™…ä¸Šæ„Ÿè§‰åº”å½“æŒ‰ç…§é€»è¾‘ä½ç½®æ¥ï¼Œæš‚ä¸”è¿™æ ·è§£å†³ï¼Œè¿˜æ˜¯ç§»åŠ¨æœ‰è¿‡ç¨‹å¯¼è‡´çš„å•Š~
         //return new Vector2(pos.x - offset_x, pos.y - offset_y);
         return new Vector2((float)Math.Round(pos.x - offset_x), (float)Math.Round(pos.y - offset_y));
     }
@@ -352,11 +379,11 @@ public class MapManager : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// ·¢ËÍÊÂ¼ş¸ømap[ArrayPos]
+    /// å‘é€äº‹ä»¶ç»™map[ArrayPos]
     /// </summary>
-    /// <param name="mapEvent">ÊÂ¼şÀàĞÍ</param>
-    /// <param name="arrayPos">·¢ËÍÎïÌåËùÔÚÊı×éÎ»ÖÃ</param>
-    /// <param name="worldPos">ÊÂ¼ş·¢ÉúÎ»ÖÃ</param>
+    /// <param name="mapEvent">äº‹ä»¶ç±»å‹</param>
+    /// <param name="arrayPos">å‘é€ç‰©ä½“æ‰€åœ¨æ•°ç»„ä½ç½®</param>
+    /// <param name="worldPos">äº‹ä»¶å‘ç”Ÿä½ç½®</param>
     /// <param name="command"></param>
     public void InvokeEvent(MapEventType mapEvent, Vector2 arrayPos, Vector2 worldPos, Command command)
     {
@@ -465,6 +492,12 @@ public class MapManager : MonoBehaviour
     public void ShowGrid()
     {
         float offset = gridMat.GetFloat("_IsShow");
-        gridMat.SetFloat("_IsShow", offset == 1 ? 0 : 1);    
+        gridMat.SetFloat("_IsShow", offset == 1 ? 0 : 1);
+        GameManager.Instance.GridOn = offset == 1 ? false : true;
+    }
+
+    internal void ShowInput(bool v)
+    {
+        InputPanel.SetActive(v);
     }
 }

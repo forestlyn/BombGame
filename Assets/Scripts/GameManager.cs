@@ -5,7 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+
+
 
 public class GameManager : MonoBehaviour
 {
@@ -14,28 +17,15 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
+    public List<MapFiles> AllMapFiles { get=>levelManager.AllMapFiles; }
+
     public string StartSceneName;
 
-    private string loadMapFile;
-    private string currentMapName;
-    private List<MapFiles> allMapFiles = new List<MapFiles>();
+    private LevelManager levelManager;
 
-    /// <summary>
-    /// 当前关卡
-    /// </summary>
-    public int currentLevel { get; private set; }
-    /// <summary>
-    /// 当前大关卡
-    /// </summary>
-    public int currentMapLevel {  get; private set; }
-
-    public bool isAnimMoving = false;
-
-    public List<MapFiles> AllMapFiles
-    {
-        get => allMapFiles;
-    }
     public bool isGameWin;
+    public int currentMapLevel { get => levelManager.currentMapLevel; }
+    public bool GridOn { get; set; }
 
     private void Awake()
     {
@@ -46,44 +36,26 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        path = Application.streamingAssetsPath;
-        GetAllLevels();
+#if UNITY_ANDROID && !UNITY_EDITOR
+        string androidPath = Application.streamingAssetsPath;
+        path = androidPath;
+        levelManager = new LevelManager(path);
+        Debug.Log(path);
+        //path = Application.streamingAssetsPath;
+        //GetAllLevelsInPC();
+        StartCoroutine(levelManager.GetAllLevelsInAndroid(path));
+#else
+        path = Path.Combine(Application.streamingAssetsPath, "Levels");
+        Debug.Log(path);
+        levelManager = new LevelManager(path);
+        levelManager.GetAllLevelsInPC();
+#endif
 
         TransitionManager.Instance.Transition("", StartSceneName);
     }
-    private void GetAllLevels()
-    {
-        try
-        {
-            string[] dirs = Directory.GetDirectories(path);
-            foreach (string dir in dirs)
-            {
-                //Debug.Log(dir);
-                string[] files = Directory.GetFiles(dir);
-                List<string> jsonFiles = new List<string>();
-                foreach (var file in files)
-                {
-                    if (file.EndsWith("json"))
-                    {
-                        jsonFiles.Add(file);
-                    }
-                }
-                var dirsplit = Path.GetFileName(dir).Split(' ', 2);
-                //Debug.Log($"{dirsplit[0]}");
-                var dirname = dir;
-                if (dirsplit.Length == 2)
-                {
-                    dirname = dirsplit[1];
-                }
-                //Debug.Log($"{dirname}:{dirsplit[0]}");
-                allMapFiles.Add(new MapFiles(dirsplit[0], dirname, jsonFiles));
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("GetAllLevels err" + e.ToString());
-        }
-    }
+
+
+
     private void OnEnable()
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent += OnAfterLoadScene;
@@ -106,9 +78,11 @@ public class GameManager : MonoBehaviour
     public void LoadMap(string file)
     {
         isGameWin = false;
-        currentLevel = allMapFiles[currentMapLevel].LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
-        loadMapFile = file;
-        currentMapName = allMapFiles[currentMapLevel].LevelFile[currentLevel].showLevelName;
+        levelManager.currentLevel = levelManager.AllMapFiles[levelManager.currentMapLevel].
+            LevelFile.FindIndex(x => string.Equals(file, x.levelDir));
+        levelManager.loadMapFile = file;
+        levelManager.currentMapName = levelManager.AllMapFiles[levelManager.currentMapLevel].
+            LevelFile[levelManager.currentLevel].showLevelName;
         TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Play");
     }
 
@@ -117,22 +91,27 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Play")
         {
-            MapManager.Instance.LoadMapFromFile(loadMapFile, currentMapName);
+            MapManager.Instance.LoadMapFromFile(levelManager.loadMapFile, levelManager.currentMapName);
+#if UNITY_STANDALONE
             if (currentMapLevel == 0 && currentLevel < 3)
             {
                 MapManager.Instance.ShowTip(true);
             }
-            else
+        else
             {
                 MapManager.Instance.ShowTip(false);
             }
+            MapManager.Instance.ShowInput(false);
+#elif UNITY_ANDROID
+            MapManager.Instance.ShowInput(true);
+#endif
         }
         else if (SceneManager.GetActiveScene().name == "Choose")
         {
             ChooseUI chooseUI = transform.Find("Canvas/Panel")?.GetComponent<ChooseUI>();
             if (chooseUI != null)
             {
-                chooseUI.CurrentMapLevel = currentMapLevel;
+                chooseUI.CurrentMapLevel = levelManager.currentMapLevel;
             }
         }
     }
@@ -147,32 +126,23 @@ public class GameManager : MonoBehaviour
 
     public bool HasNextLevel()
     {
-        if (allMapFiles[currentMapLevel].LevelFile.Count > currentLevel + 1)
-        {
-            return true;
-        }
-        return false;
+        return levelManager.HasNextLevel();
     }
 
     public bool HasNextBigLevel()
     {
-        if (allMapFiles.Count > currentMapLevel + 1)
-        {
-            return true;
-        }
-        return false;
+        return levelManager.HasNextBigLevel();
     }
     public void SetMapLevel(int maplevel)
     {
-        currentMapLevel = maplevel;
-        //MyLog.Log("SetMapLevel:" + currentMapLevel);
+         levelManager.SetMapLevel(maplevel);
     }
 
     public void NextLevel()
     {
-        currentLevel++;
-        Debug.Log($"{currentLevel}:{allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir}");
-        LoadMap(allMapFiles[currentMapLevel].LevelFile[currentLevel].levelDir);
+        levelManager.currentLevel++;
+        Debug.Log($"{levelManager.currentLevel}:{levelManager.AllMapFiles[levelManager.currentMapLevel].LevelFile[levelManager.currentLevel].levelDir}");
+        LoadMap(levelManager.AllMapFiles[levelManager.currentMapLevel].LevelFile[levelManager.currentLevel].levelDir);
     }
 
     public void ShowGrid()

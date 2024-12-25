@@ -19,24 +19,24 @@ namespace MyInputSystem
             this.player = player;
         }
 
-        internal void Move(Vector2 dir, InputAction.CallbackContext cbContext)
+        internal void Move(Vector2 dir, MyInputCallbackContext cbContext)
         {
             //Debug.Log(cbContext.interaction is HoldInteraction);
-            if (cbContext.interaction is HoldInteraction)
+            if (cbContext.interaction is MyInputInteraction.Hold)
             {
                 StopMove();
                 move = MyCoroutines.StartCoroutine(StartContinuousMove(dir));
             }
-            if (cbContext.interaction is TapInteraction)
+            if (cbContext.interaction is MyInputInteraction.Tap)
             {
                 StopMove();
             }
         }
 
 
-        internal void StopMove(Vector2 dir, InputAction.CallbackContext cbContext)
+        internal void StopMove(Vector2 dir, MyInputCallbackContext cbContext)
         {
-            if (cbContext.interaction is HoldInteraction)
+            if (cbContext.interaction is MyInputInteraction.Hold)
             {
                 StopMove();
             }

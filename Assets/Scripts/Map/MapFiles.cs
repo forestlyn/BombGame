@@ -45,8 +45,12 @@ public class MapFile : IComparable<MapFile>
     {
         try
         {
-            //MyLog.Log(file);
+            MyLog.Log(file);
+#if UNITY_ANDROID && !UNITY_EDITOR
+            var f1 = file.Split('/');
+#else
             var f1 = file.Split('\\');
+#endif
             var filenames = f1[f1.Length - 2].Split(' ');
             //MyLog.Log(f1[f1.Length - 2]);
             if (filenames.Length == 3)
