@@ -89,6 +89,13 @@ public class MapManager : MonoBehaviour
     {
         //MyEventSystem.Instance.OnBoxTargetStateChange += OnObjStateChange;
         //MyEventSystem.Instance.OnFlagStateChange += OnObjStateChange;
+        Init();
+    }
+
+    void Init()
+    {
+        float offset = gridMat.GetFloat("_IsShow");
+        GameManager.Instance.GridOn = offset == 1 ? true : false;
     }
 
     public void ShowTip(bool show)
@@ -192,7 +199,7 @@ public class MapManager : MonoBehaviour
     }
     public void ReStart()
     {
-        LoadMapFromFile(mapFilePath,mapName);
+        LoadMapFromFile(mapFilePath, mapName);
     }
     public void LoadMapFromFile(string path, string name)
     {

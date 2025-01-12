@@ -9,7 +9,7 @@ Shader "Unlit/Grid"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" "QUEUE"="Transparent" }
         LOD 100
 
         Pass

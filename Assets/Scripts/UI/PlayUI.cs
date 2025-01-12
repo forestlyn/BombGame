@@ -16,7 +16,11 @@ public class PlayUI : MonoBehaviour
     public GameObject settingPanel;
     private void Start()
     {
-        settingButton.onClick.AddListener(() => settingPanel.SetActive(true));
+        settingButton.onClick.AddListener(() =>
+        {
+            settingPanel.SetActive(true);
+            UpdateUI();
+        });
         backToGameButton.onClick.AddListener(() => settingPanel.SetActive(false));
         backToMenuButton.onClick.AddListener(() =>
         {
@@ -30,16 +34,16 @@ public class PlayUI : MonoBehaviour
         {
             GameManager.Instance.ShowGrid();
             bool gridOn = GameManager.Instance.GridOn;
-            gridOnOffButton.GetComponentInChildren<Text>().text = gridOn ? "网格：开" : "网格：关";
+            gridOnOffButton.GetComponentInChildren<Text>().text = gridOn ? "缃戞牸锛氬紑" : "缃戞牸锛氬叧";
         });
-        Init();
+        UpdateUI();
     }
 
 
-    private void Init()
+    private void UpdateUI()
     {
         bool gridOn = GameManager.Instance.GridOn;
-        gridOnOffButton.GetComponentInChildren<Text>().text = gridOn ? "网格：开" : "网格：关";
+        gridOnOffButton.GetComponentInChildren<Text>().text = gridOn ? "缃戞牸锛氬紑" : "缃戞牸锛氬叧";
     }
     private void Update()
     {
