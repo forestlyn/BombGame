@@ -620,6 +620,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BG
       objectReference: {fileID: 0}
+    - target: {fileID: 8078094688708670711, guid: 221dc694959502947bd34b46168379be, type: 3}
+      propertyPath: bombAlpha
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

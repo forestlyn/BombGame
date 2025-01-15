@@ -13,10 +13,9 @@ public class StartOrChooseBG : MonoBehaviour
     public float Speed = 1;
 
     public GameObject bombBg;
-
+    public float bombAlpha = 0.5f;
 
     private bool isRunning = false;
-    [SerializeField]
     private Vector3 Dir;
     private float ResetTime;
     private void Awake()
@@ -28,6 +27,8 @@ public class StartOrChooseBG : MonoBehaviour
             {
                 GameObject bomb = Instantiate(bombBg, new Vector3(i, j, 0), transform.rotation);
                 bomb.transform.SetParent(transform);
+                Color color = bomb.GetComponent<SpriteRenderer>().color;
+                bomb.GetComponent<SpriteRenderer>().color = new Color(color.r, color.g, color.b, bombAlpha);
             }
         }
         transform.rotation = Quaternion.Euler(0, 0, RotateAngle);
