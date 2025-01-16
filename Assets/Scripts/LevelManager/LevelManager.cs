@@ -6,7 +6,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
 
-#if UNITY_ANDROID              
+        
 // 定义文件夹树结构
 [System.Serializable]
 public class FolderNode
@@ -15,7 +15,7 @@ public class FolderNode
     public List<string> files;         // 文件夹下的文件列表
     public List<FolderNode> subfolders; // 子文件夹列表
 }
-#endif
+
 
 public class LevelManager
 {

@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     public bool isGameWin;
     public int currentMapLevel { get => levelManager.currentMapLevel; }
+    public int currentLevel { get => levelManager.currentLevel; }
     public bool GridOn { get; set; }
 
     private void Awake()

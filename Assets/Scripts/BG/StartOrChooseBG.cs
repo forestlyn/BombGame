@@ -61,7 +61,6 @@ public class StartOrChooseBG : MonoBehaviour
 
     private void OnEnable()
     {
-        OnReset();
         isRunning = true;
     }
 
