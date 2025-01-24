@@ -161,7 +161,7 @@ public class MapManager : MonoBehaviour
                         //Debug.Log(obj.mapObject.ArrayPos);
                         return false;
                     case MapObjectType.Bomb:
-                        return BombCanMove(boxPos + dir, dir, true);
+                        return false;
                     default:
                         Debug.LogError(obj.type);
                         return false;
@@ -179,11 +179,9 @@ public class MapManager : MonoBehaviour
             foreach (var obj in MapObjs(pos))
             {
                 if (obj.height == 0) continue;
-                else if (obj.type == MapObjectType.Box &&
-                    obj.boxMaterialType != BoxMaterialType.Stone
-                    && !PushedByBox && BoxCanMove(bombPos + dir, dir))
+                else if (obj.type == MapObjectType.Box)
                 {
-                    continue;
+                    return false;
                 }
                 else
                 {

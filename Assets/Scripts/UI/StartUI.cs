@@ -7,10 +7,16 @@ public class StartUI : MonoBehaviour
 {
     public Button startButton;
     public Button exitButton;
+    public Button fullScreenButton;
     void Start()
     {
         startButton.onClick.AddListener(LoadChooseScene);
         exitButton.onClick.AddListener(ExitGame);
+#if UNITY_ANDROID
+        fullScreenButton.gameObject.SetActive(false);
+#else
+        fullScreenButton.onClick.AddListener(ChangeFullScreen);
+#endif
     }
 
     private void LoadChooseScene()
@@ -25,5 +31,17 @@ public class StartUI : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    private void ChangeFullScreen()
+    {
+        if (Screen.fullScreen)
+        {
+            Screen.SetResolution(1920, 1080, false);
+        }
+        else
+        {
+            Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
+        }
     }
 }

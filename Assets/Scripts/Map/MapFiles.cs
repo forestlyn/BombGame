@@ -45,7 +45,7 @@ public class MapFile : IComparable<MapFile>
     {
         try
         {
-            MyLog.Log(file);
+            //MyLog.Log(file);
 #if UNITY_ANDROID && !UNITY_EDITOR
             var f1 = file.Split('/');
 #else

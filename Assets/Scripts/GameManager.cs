@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
         //GetAllLevelsInPC();
         StartCoroutine(levelManager.GetAllLevelsInAndroid(path));
 #else
+        Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
         path = Path.Combine(Application.streamingAssetsPath, "Levels");
         Debug.Log(path);
         levelManager = new LevelManager(path);
