@@ -31,7 +31,7 @@ namespace MyInputSystem
 
         private void Update()
         {
-            if (Player.Instance.IsMoving || GameManager.Instance.isGameWin
+            if (!InputManager.CanInput || Player.Instance.IsMoving || GameManager.Instance.isGameWin
                 || MyEventSystem.Instance.IsInvokingEvent
                 || BoxManager.HasMoving)
             {
@@ -43,7 +43,7 @@ namespace MyInputSystem
                 TimeSpan timeDifference = DateTime.Now - lastTime;
                 lastTime = DateTime.Now;
                 //Debug.Log(System.DateTime.Now.ToString("HH:mm:ss.fff") +
-                //    ": PlayerÖ´ĞĞ" + playerInput.type + " ¼ä¸ôÉÏÒ»¸ö²Ù×÷:" + timeDifference);
+                //    ": Playeræ‰§è¡Œ" + playerInput.type + " é—´éš”ä¸Šä¸€ä¸ªæ“ä½œ:" + timeDifference);
                 switch (playerInput.type)
                 {
                     case PlayerInputType.Move:

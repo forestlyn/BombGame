@@ -14,6 +14,21 @@ namespace MyInputSystem
 
         public bool ShowplayerCanInput = true;
         [SerializeField]
+        private static bool canInput = true;
+
+        public static bool CanInput
+        {
+            get { return canInput; }
+            set
+            {
+                if (canInput != value)
+                {
+                    canInput = value;
+                }
+            }
+        }
+
+        [SerializeField]
         private static bool playerCanInput = true;
 
         public static bool PlayerCanInput
@@ -22,7 +37,7 @@ namespace MyInputSystem
             set
             {
                 //Debug.LogWarning("playerCanInput:" + playerCanInput);
-                if(playerCanInput != value)
+                if (playerCanInput != value)
                 {
                     playerCanInput = value;
                     if (playerCanInput)
@@ -66,27 +81,33 @@ namespace MyInputSystem
         {
             inputActions.Redo.performed += cbContext =>
             {
-                gameAction.Redo();
+                if (CanInput)
+                    gameAction.Redo();
             };
             inputActions.Undo.started += cbContext =>
             {
-                gameAction.Undo();
+                if (CanInput)
+                    gameAction.Undo();
             };
             inputActions.Undo.performed += cbContext =>
             {
-                gameAction.Undo(cbContext);
+                if (CanInput)
+                    gameAction.Undo(cbContext);
             };
             inputActions.Undo.canceled += cbContext =>
             {
-                gameAction.StopUndo(cbContext);
+                if (CanInput)
+                    gameAction.StopUndo(cbContext);
             };
             inputActions.ReStart.performed += cbContext =>
             {
-                gameAction.Restart();
+                if (CanInput)
+                    gameAction.Restart();
             };
             inputActions.ShowGrid.performed += cbContext =>
             {
-                gameAction.ShowGrid();
+                if (CanInput)
+                    gameAction.ShowGrid();
             };
         }
         private void BindPlayerInput()

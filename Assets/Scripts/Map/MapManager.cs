@@ -213,6 +213,7 @@ public class MapManager : MonoBehaviour
         WaitUntil wait = new WaitUntil(() => mapState != null);
         CreateMap(mapState);
 #endif
+        InputManager.CanInput = true;
     }
 
     private IEnumerator LoadMapAndContinue(string path, string name)
@@ -487,6 +488,8 @@ public class MapManager : MonoBehaviour
     {
         yield return new YieldWaitForSeconds(0.4f);
         WinGamePanel.SetActive(true);
+        PlayerInputManager.Instance.ClearInputList();
+        InputManager.CanInput = false;
     }
 
     public void NextLevel()

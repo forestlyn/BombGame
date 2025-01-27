@@ -41,7 +41,24 @@ public class StartUI : MonoBehaviour
         }
         else
         {
-            Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
+            SetFullScreen();
+        }
+    }
+
+    public static void SetFullScreen()
+    {
+        float width = Screen.currentResolution.width;
+        float height = Screen.currentResolution.height;
+        float m_width = height * 16 / 9;
+        float m_height = width * 9 / 16;
+        Debug.Log("width:" + width + " height:" + height + " m_width:" + m_width + " m_height:" + m_height);
+        if (m_width > width)
+        {
+            Screen.SetResolution((int)width, (int)m_height, true);
+        }
+        else
+        {
+            Screen.SetResolution((int)m_width, (int)height, true);
         }
     }
 }
