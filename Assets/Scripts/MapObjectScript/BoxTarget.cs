@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTool.Music;
 using UnityEngine;
 
 public class BoxTarget : MapObject
@@ -13,6 +14,10 @@ public class BoxTarget : MapObject
             if (open != value)
             {
                 open = value;
+                if (open)
+                {
+                    MusicManager.Instance.PlayEffect(MusicEnum.MoveToTarget);
+                }
                 //MyEventSystem.Instance.InvokeBoxTargetStateChange(value, objectId);
                 //sr.material = materials[open == true ? 1 : 0];
             }

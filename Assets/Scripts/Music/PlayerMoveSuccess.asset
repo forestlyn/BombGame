@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ffa051ab5558ba458993d0c116ec418, type: 3}
+  m_Name: PlayerMoveSuccess
+  m_EditorClassIdentifier: 
+  musicType: 0
+  clips:
+  - {fileID: 8300000, guid: 08b9daaada489f44fa075509ed91f24c, type: 3}
+  - {fileID: 8300000, guid: 533b23729f17fe04d8465999a185051b, type: 3}
+  - {fileID: 8300000, guid: b2fa8fbcdede06549858264546a4fbef, type: 3}
+  - {fileID: 8300000, guid: cacf25b3297e73946b1f0ab39f060cfd, type: 3}
+  - {fileID: 8300000, guid: a3611d63488a4004d8fd17952c175f25, type: 3}
+  - {fileID: 8300000, guid: 48018fd7a7efef64ea83e6f63983696a, type: 3}
+  playDelta: 0.05

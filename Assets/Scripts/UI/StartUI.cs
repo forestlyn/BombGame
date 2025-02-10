@@ -1,3 +1,4 @@
+using MyTool.Music;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,11 +22,13 @@ public class StartUI : MonoBehaviour
 
     private void LoadChooseScene()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
         TransitionManager.Instance.Transition("Start", "Choose");
     }
 
     private void ExitGame()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -35,6 +38,7 @@ public class StartUI : MonoBehaviour
 
     private void ChangeFullScreen()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
         if (Screen.fullScreen)
         {
             Screen.SetResolution(1920, 1080, false);

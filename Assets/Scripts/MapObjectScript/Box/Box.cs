@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTool.Music;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
@@ -334,6 +335,7 @@ public class BoxMove : Command
     }
     public override void Execute()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.BoxMove);
         box.Move(dir, this);
         //Debug.Log("Execute box Dir:" + dir);
     }

@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTool.Music;
 using MyTools.MyCoroutines;
 using System;
 using System.Collections;
@@ -17,7 +18,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
-    public List<MapFiles> AllMapFiles { get=>levelManager.AllMapFiles; }
+    public List<MapFiles> AllMapFiles { get => levelManager.AllMapFiles; }
 
     public string StartSceneName;
 
@@ -89,9 +90,15 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void OnAfterLoadScene()
+    private void OnAfterLoadScene(object sender, EventArgs eventArgs)
     {
-        if (SceneManager.GetActiveScene().name == "Play")
+        TransitionEventArgs myEventArgs = eventArgs as TransitionEventArgs;
+        if (myEventArgs == null)
+        {
+            MyLog.LogError("OnAfterLoadScene :EventArgs is null");
+            return;
+        }
+        if (myEventArgs.to == "Play")
         {
             MapManager.Instance.LoadMapFromFile(levelManager.loadMapFile, levelManager.currentMapName);
 #if UNITY_STANDALONE
@@ -99,7 +106,7 @@ public class GameManager : MonoBehaviour
             {
                 MapManager.Instance.ShowTip(true);
             }
-        else
+            else
             {
                 MapManager.Instance.ShowTip(false);
             }
@@ -108,7 +115,7 @@ public class GameManager : MonoBehaviour
             MapManager.Instance.ShowInput(true);
 #endif
         }
-        else if (SceneManager.GetActiveScene().name == "Choose")
+        else if (myEventArgs.to == "Choose")
         {
             ChooseUI chooseUI = transform.Find("Canvas/Panel")?.GetComponent<ChooseUI>();
             if (chooseUI != null)
@@ -117,12 +124,13 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    private void OnStartLoadScene()
+    private void OnStartLoadScene(object sender, EventArgs eventArgs)
     {
         Player.Instance.transform.position = MapObject.hiddenPos;
     }
     public void WinGame()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.Win);
         MyCoroutines.StartCoroutine(MapManager.Instance.WinGame());
     }
 
@@ -137,7 +145,7 @@ public class GameManager : MonoBehaviour
     }
     public void SetMapLevel(int maplevel)
     {
-         levelManager.SetMapLevel(maplevel);
+        levelManager.SetMapLevel(maplevel);
     }
 
     public void NextLevel()

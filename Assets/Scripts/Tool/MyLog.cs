@@ -13,5 +13,15 @@ public static class MyLog
             System.DateTime.Now.ToString("HH: mm:ss.fff")
             + " " + message);
     }
+
+    public static void LogWarning(string message)
+    {
+        Debug.LogWarning(message);
+    }
+
+    public static void LogError(string message)
+    {
+        Debug.LogError(message);
+    }
 }
 

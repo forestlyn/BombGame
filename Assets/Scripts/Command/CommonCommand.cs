@@ -1,5 +1,6 @@
 
 using MyInputSystem;
+using MyTool.Music;
 using UnityEngine;
 
 public class MapObjIntoWater : Command
@@ -16,6 +17,7 @@ public class MapObjIntoWater : Command
     }
     public override void Execute()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.FallToWater);
         state = mapObj.MyDestory();
         mapObj.transform.position = MapObject.hiddenPos;
     }

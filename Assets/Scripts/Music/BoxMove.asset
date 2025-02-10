@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ffa051ab5558ba458993d0c116ec418, type: 3}
+  m_Name: BoxMove
+  m_EditorClassIdentifier: 
+  musicType: 2
+  clips:
+  - {fileID: 8300000, guid: aabcffaaeae9c0c429a3f160ab203abb, type: 3}
+  - {fileID: 8300000, guid: 5876bf641c31a7840bd4b3f38f0d36d1, type: 3}
+  - {fileID: 8300000, guid: 674c8676c523fac4ca9413dcab782777, type: 3}
+  - {fileID: 8300000, guid: 4667435686e6389499b6cbdc352a6361, type: 3}
+  - {fileID: 8300000, guid: 3bc63b99cb0f51e43a7300faa376a76a, type: 3}
+  - {fileID: 8300000, guid: 6f3645dd3f9e62744b1a6a3be402b82d, type: 3}
+  - {fileID: 8300000, guid: 97b6aaee167bee44c9c719439c289e78, type: 3}
+  - {fileID: 8300000, guid: 90c889bf07be5b24aaa6051384cbf37d, type: 3}
+  - {fileID: 8300000, guid: 21054f08b13c4404d80167869467c529, type: 3}
+  playDelta: 0.05

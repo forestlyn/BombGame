@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTool.Music;
 using UnityEngine;
 
 public class Flag : MapObject
@@ -17,6 +18,10 @@ public class Flag : MapObject
             if (open != value)
             {
                 open = value;
+                if (open)
+                {
+                    MusicManager.Instance.PlayEffect(MusicEnum.MoveToTarget);
+                }
                 //MyEventSystem.Instance.InvokeFlagStateChange(value, objectId);
                 //Debug.Log("flag state becomes " + value);
                 //sr.material = materials[open == true ? 1 : 0];

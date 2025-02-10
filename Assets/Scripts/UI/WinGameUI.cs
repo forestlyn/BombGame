@@ -1,3 +1,4 @@
+using MyTool.Music;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,10 +14,12 @@ public class WinGameUI : MonoBehaviour
     {
         returnMenuBtn.onClick.AddListener(() =>
         {
+            MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
             TransitionManager.Instance.Transition(SceneManager.GetActiveScene().name, "Start");
         });
         nextLevelBtn.onClick.AddListener(() =>
         {
+            MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
             if (GameManager.Instance.HasNextLevel())
                 GameManager.Instance.NextLevel();
             else

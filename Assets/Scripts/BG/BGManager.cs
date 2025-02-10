@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,10 +20,10 @@ public class BGManager : MonoBehaviour
         TransitionManager.Instance.OnAfterLoadSceneEvent -= ChangeBG;
     }
 
-    private void ChangeBG()
+    private void ChangeBG(object sender, EventArgs eventArgs)
     {
         string sceneName = SceneManager.GetActiveScene().name;
-        Debug.Log("SceneName: " + sceneName);
+        //Debug.Log("SceneName: " + sceneName);
         if (sceneName == "Start" || sceneName == "Choose")
         {
             StartOrChooseBG.SetActive(true);

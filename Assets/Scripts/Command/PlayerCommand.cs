@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTool.Music;
 using System.Collections.Generic;
 using UnityEngine;
 using static Unity.Burst.Intrinsics.X86.Avx;
@@ -29,6 +30,18 @@ namespace MyInputSystem
 
         public override void Execute()
         {
+            bool isInWater = MapManager.Instance.MapObjs(Player.Instance.ArrayPos + dir)
+                .Find(x => x.type == MapObjectType.Water) != null;
+            if (isInWater)
+            {
+                //Debug.Log("PlayerMoveFail");
+                MusicManager.Instance.PlayEffect(MusicEnum.PlayerMoveFail);
+            }
+            else
+            {
+                //Debug.Log("PlayerMoveSuccess");
+                MusicManager.Instance.PlayEffect(MusicEnum.PlayerMoveSuccess);
+            }
             player.Move(dir, this);
         }
 
@@ -51,6 +64,7 @@ namespace MyInputSystem
             var bombState = new BaseMapObjectState(MapObjectType.Bomb, 0);
             bombState.mapObject = bomb;
             MapManager.Instance.AddNewObj(bomb.ArrayPos, bombState);
+            MusicManager.Instance.PlayEffect(MusicEnum.PutBomb);
             //Debug.Log(bomb.ArrayPos);
         }
 
@@ -81,6 +95,7 @@ namespace MyInputSystem
         public override void Execute()
         {
             bombPos = player.InvokeBomb();
+            MusicManager.Instance.PlayEffect(MusicEnum.BombExplode);
         }
 
         public override void Undo()
@@ -161,7 +176,6 @@ public class PlayerDestory : PlayerCommand
     {
         state = player.MyDestory();
         player.transform.position = MapObject.hiddenPos;
-
     }
 
     public override void Undo()

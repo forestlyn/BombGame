@@ -1,4 +1,5 @@
 using MyInputSystem;
+using MyTool.Music;
 using UnityEngine;
 
 public abstract class MapObject : MonoBehaviour, IMapObjectPosition, IMapObjectEvent

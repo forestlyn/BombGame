@@ -1,3 +1,4 @@
+using MyTool.Music;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,8 +31,18 @@ public class ChooseUI : MonoBehaviour
     }
     void Start()
     {
-        leftBtn.onClick.AddListener(delegate { ChangeMapLevel(-1); });
-        rightBtn.onClick.AddListener(delegate { ChangeMapLevel(1); });
+        leftBtn.onClick.AddListener(delegate
+            {
+                ChangeMapLevel(-1);
+                MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
+                MusicManager.Instance.PlayEffect(MusicEnum.ChangeLevel);
+            });
+        rightBtn.onClick.AddListener(delegate
+        {
+            ChangeMapLevel(1);
+            MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
+            MusicManager.Instance.PlayEffect(MusicEnum.ChangeLevel);
+        });
         SetMapLevel(CurrentMapLevel);
     }
 
@@ -51,7 +62,11 @@ public class ChooseUI : MonoBehaviour
             //Debug.Log(file);
             GameObject gb = Instantiate(levelPrefab, transform);
             Button b = gb.GetComponent<Button>();
-            b.onClick.AddListener(delegate { ChooseLevel(file.levelDir); });
+            b.onClick.AddListener(delegate
+            {
+                MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
+                ChooseLevel(file.levelDir);
+            });
             Text t = b.GetComponentInChildren<Text>();
             if (t == null)
             {
@@ -71,6 +86,7 @@ public class ChooseUI : MonoBehaviour
 
     private void ChooseLevel(string levelPath)
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.ButtonClick);
         GameManager.Instance.LoadMap(levelPath);
     }
 

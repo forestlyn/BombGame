@@ -1,3 +1,4 @@
+using MyTools.MyEventSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,18 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+
+public class TransitionEventArgs : EventArgs
+{
+    public string from;
+    public string to;
+
+    public TransitionEventArgs(string from, string to)
+    {
+        this.from = from;
+        this.to = to;
+    }
+}
 
 public class TransitionManager : MonoBehaviour
 {
@@ -21,8 +34,8 @@ public class TransitionManager : MonoBehaviour
         get => instance;
     }
 
-    public event UnityAction OnStartLoadSceneEvent;
-    public event UnityAction OnAfterLoadSceneEvent;
+    public MyEvent OnStartLoadSceneEvent = MyEvent.CreateEvent((int)EventTypeEnum.TransitionStart);
+    public MyEvent OnAfterLoadSceneEvent = MyEvent.CreateEvent((int)EventTypeEnum.TransitionEnd);
 
     void Awake()
     {
@@ -50,13 +63,13 @@ public class TransitionManager : MonoBehaviour
         yield return Fade(1);
         if (from != string.Empty)
         {
-            OnStartLoadSceneEvent?.Invoke();
+            OnStartLoadSceneEvent?.Invoke(this, new TransitionEventArgs(from, to));
             yield return SceneManager.UnloadSceneAsync(from);
         }
         yield return SceneManager.LoadSceneAsync(to, LoadSceneMode.Additive);
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);
-        OnAfterLoadSceneEvent?.Invoke();
+        OnAfterLoadSceneEvent?.Invoke(this, new TransitionEventArgs(from, to));
         yield return Fade(0);
         isLoading = false;
     }
