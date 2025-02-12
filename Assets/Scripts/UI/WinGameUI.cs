@@ -32,6 +32,7 @@ public class WinGameUI : MonoBehaviour
 
     private void OnEnable()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.Win);
         if (GameManager.Instance.HasNextLevel())
         {
             nextLevelBtn.gameObject.SetActive(true);

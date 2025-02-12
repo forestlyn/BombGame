@@ -1,3 +1,4 @@
+using MyTool.Music;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -101,10 +102,15 @@ namespace MyInputSystem
         private void Move(Vector2 dir)
         {
             if (!MapManager.Instance.PlayerCanMove(player.WorldPos, dir))
+            {
+                MusicManager.Instance.PlayEffect(MusicEnum.PlayerMoveFail);
                 return;
+            }
             if (MapManager.Instance.CheckType(MapManager.CalMapPos(player.WorldPos + dir), MapObjectType.Water))
+            {
+                MusicManager.Instance.PlayEffect(MusicEnum.PlayerMoveFail);
                 return;
-
+            }
             Command cmd = new PlayerMove(player, dir, false);
             Vector2 pos = player.WorldPos;
             cmd.Execute();

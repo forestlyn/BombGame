@@ -130,7 +130,6 @@ public class GameManager : MonoBehaviour
     }
     public void WinGame()
     {
-        MusicManager.Instance.PlayEffect(MusicEnum.Win);
         MyCoroutines.StartCoroutine(MapManager.Instance.WinGame());
     }
 
