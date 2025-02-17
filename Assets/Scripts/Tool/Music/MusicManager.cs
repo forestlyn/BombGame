@@ -45,6 +45,7 @@ namespace MyTool.Music
             AudioClip clip = musicList.GetClip(musicType);
             if (clip != null)
             {
+                //Debug.Log("播放音效" + musicType);
                 var audioSource = _audioSourcePool.GetAudioSource(AudioSourceType.Effect);
                 audioSource.clip = clip;
                 audioSource.Play();

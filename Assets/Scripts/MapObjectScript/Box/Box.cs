@@ -92,7 +92,7 @@ public class Box : MapObject
         }
     }
 
-    //ĞèÒªhitºó¹Ø±ÕÒ»ÏÂ£¬ÓĞÊ±ºò»á¿ªÆôÁ½¸öCoroutine
+    //éœ€è¦hitåå…³é—­ä¸€ä¸‹ï¼Œæœ‰æ—¶å€™ä¼šå¼€å¯ä¸¤ä¸ªCoroutine
     public IEnumerator Move(Vector2 dir, Command command, bool isHit, float delta)
     {
         //Debug.Log(objectId + "start a coroutine" + System.DateTime.Now.ToString("HH:mm:ss.fff"));
@@ -232,7 +232,7 @@ public class Box : MapObject
         HitedHandle(command, dir, isBomb);
     }
     /// <summary>
-    /// ±»×²Ö®ºóµÄ´¦Àí
+    /// è¢«æ’ä¹‹åçš„å¤„ç†
     /// </summary>
     /// <param name="command"></param>
     /// <param name="isBomb"></param>
@@ -259,9 +259,9 @@ public class Box : MapObject
         }
     }
     /// <summary>
-    /// ÒÆ¶¯×²µ½ÆäËûÎïÆ·µÄ´¦Àí
+    /// ç§»åŠ¨æ’åˆ°å…¶ä»–ç‰©å“çš„å¤„ç†
     /// </summary>
-    /// <param name="dir">ÒÆ¶¯·½Ïò</param>
+    /// <param name="dir">ç§»åŠ¨æ–¹å‘</param>
     /// <param name="command"></param>
     /// <param name="isHit"></param>
     public void HitHandle(Vector2 dir, Command command, bool isHit)
@@ -367,6 +367,7 @@ public class BoxHit : Command, IHitCommand
 
     public override void Execute()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.Collision);
         box.kESimu.ClearEnerge();
     }
 

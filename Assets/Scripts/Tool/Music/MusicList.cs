@@ -18,6 +18,7 @@ namespace MyTool.Music
                     return item.clips[Random.Range(0, item.clips.Length)];
                 }
             }
+            Debug.LogError("音效" + musicType + "不存在");
             return null;
         }
     }

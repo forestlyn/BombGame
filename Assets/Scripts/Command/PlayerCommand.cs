@@ -129,6 +129,7 @@ public class PlayerHit : PlayerCommand, IHitCommand
 
     public override void Execute()
     {
+        MusicManager.Instance.PlayEffect(MusicEnum.Collision);
         player.kESimu.ClearEnerge();
     }
 
