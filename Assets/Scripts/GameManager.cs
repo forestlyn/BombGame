@@ -27,6 +27,26 @@ public class GameManager : MonoBehaviour
     public bool isGameWin;
     public int currentMapLevel { get => levelManager.currentMapLevel; }
     public int currentLevel { get => levelManager.currentLevel; }
+    public SceneEnum currentSceneEnum { get => GetCurrentSceneEnum(); }
+
+    private SceneEnum GetCurrentSceneEnum()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        switch (sceneName)
+        {
+            case "Permanent":
+                return SceneEnum.None;
+            case "Start":
+                return SceneEnum.MainScene;
+            case "Choose":
+            case "Play":
+                return (SceneEnum)currentMapLevel;
+            default:
+                MyLog.LogError("unhandle scene");
+                return SceneEnum.None;
+        }
+    }
+
     public bool GridOn { get; set; }
 
     private void Awake()

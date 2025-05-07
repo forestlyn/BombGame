@@ -90,14 +90,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88796f840956f24093cb0f7055fcf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Horizontal: 3
-  Vertical: 2
+  Horizontal: 4
+  Vertical: 3
   X: 30
   Y: 70
   RotateAngle: 30
-  Speed: 1
+  Speed: 0.5
   bombBg: {fileID: 6979946171977555978, guid: ff51229373745604d875fe0e5e22dafa, type: 3}
-  Dir: {x: 0, y: 0, z: 0}
+  bombAlpha: 0.4
 --- !u!1 &7836586852486850307
 GameObject:
   m_ObjectHideFlags: 0

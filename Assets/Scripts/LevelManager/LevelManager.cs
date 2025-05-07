@@ -5,8 +5,10 @@ using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
+using MyTools.MyEventSystem;
+using MyTool.Music;
 
-        
+
 // 定义文件夹树结构
 [System.Serializable]
 public class FolderNode
@@ -15,10 +17,24 @@ public class FolderNode
     public List<string> files;         // 文件夹下的文件列表
     public List<FolderNode> subfolders; // 子文件夹列表
 }
-
+/// <summary>
+/// 关卡对应编号相对应levelIdx
+/// </summary>
+public enum SceneEnum
+{
+    Momentum,
+    Conservation,
+    Norm,
+    Direction,
+    Overall,
+    Challenge,
+    MainScene,
+    None,
+}
 
 public class LevelManager
 {
+
     public string loadMapFile;
     public string currentMapName;
     private List<MapFiles> allMapFiles = new List<MapFiles>();
@@ -30,14 +46,23 @@ public class LevelManager
     /// <summary>
     /// 当前大关卡
     /// </summary>
-    public int currentMapLevel { get; set; }
+    public int currentMapLevel
+    {
+        get => _currentMapLevel;
+        set
+        {
+            _currentMapLevel = value;
+            MusicManager.Instance.OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum));
+        }
+    }
 
+    private int _currentMapLevel = 0;
     public bool isAnimMoving = false;
 
     private string path;
 
     public LevelManager(string path)
-    { 
+    {
         this.path = path;
     }
 
@@ -89,7 +114,7 @@ public class LevelManager
                     if (file.EndsWith("json"))
                     {
                         jsonFiles.Add(Path.Combine(prefixDir, file));
-                        Debug.Log("Path:"+Path.Combine(prefixDir, file));
+                        Debug.Log("Path:" + Path.Combine(prefixDir, file));
                     }
                 }
                 string dirname = node.name;
@@ -162,7 +187,7 @@ public class LevelManager
     public void SetMapLevel(int maplevel)
     {
         currentMapLevel = maplevel;
-        //MyLog.Log("SetMapLevel:" + currentMapLevel);
+        MyLog.Log("SetMapLevel:" + currentMapLevel);
     }
 }
 

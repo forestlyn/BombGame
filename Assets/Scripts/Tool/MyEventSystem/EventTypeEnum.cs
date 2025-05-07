@@ -4,5 +4,6 @@
     {
         TransitionStart,
         TransitionEnd,
+        BGMChange,
     }
 }
