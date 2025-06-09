@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5fda985954ce94c825c231cc1b2bee, type: 3}
   m_Name: Momentum
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: 039ace8c4c1937a418b983fdcbe2629a, type: 3}
+  beginClip: {fileID: 8300000, guid: 3c14b57169a2d884cbb07d7c07c71467, type: 3}
+  loopClip: {fileID: 8300000, guid: 3c14b57169a2d884cbb07d7c07c71467, type: 3}
   musicType: 0

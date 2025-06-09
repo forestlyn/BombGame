@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5fda985954ce94c825c231cc1b2bee, type: 3}
   m_Name: Challenge
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: 17173f98df70ffc4e90fdd9193156981, type: 3}
+  beginClip: {fileID: 8300000, guid: 42bec12d98563f64199f1032ea496a83, type: 3}
+  loopClip: {fileID: 8300000, guid: 42bec12d98563f64199f1032ea496a83, type: 3}
   musicType: 5

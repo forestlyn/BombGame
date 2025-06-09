@@ -52,7 +52,7 @@ public class LevelManager
         set
         {
             _currentMapLevel = value;
-            MusicManager.Instance.OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum));
+            MusicManager.Instance.OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum, true));
         }
     }
 

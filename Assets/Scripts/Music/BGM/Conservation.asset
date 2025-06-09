@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5fda985954ce94c825c231cc1b2bee, type: 3}
   m_Name: Conservation
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: ad439a40d35bf2445a9404e633c72350, type: 3}
+  beginClip: {fileID: 8300000, guid: 21ac18787ce19e44f9fc33a6f30c7490, type: 3}
+  loopClip: {fileID: 8300000, guid: 689cb8e58a7af24408cdd1a31b2fd128, type: 3}
   musicType: 1

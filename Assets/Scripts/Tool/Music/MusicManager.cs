@@ -1,9 +1,5 @@
 ﻿using MyTools.MyEventSystem;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MyTool.Music
@@ -11,9 +7,11 @@ namespace MyTool.Music
     public class BGMChangeEventArgs : EventArgs
     {
         public SceneEnum BGMType { get; set; }
-        public BGMChangeEventArgs(SceneEnum bgmType)
+        public bool IsFirst { get; set; }
+        public BGMChangeEventArgs(SceneEnum bgmType, bool is_first = false)
         {
             BGMType = bgmType;
+            IsFirst = is_first;
         }
     }
 
@@ -43,6 +41,11 @@ namespace MyTool.Music
                     _audioSourcePool = new AudioSourcePool(_audioSourcePrefab, this.gameObject);
                 if(_BGMAudioSource == null)
                     _BGMAudioSource = gameObject.AddComponent<AudioSource>();
+
+                if (musicList != null)
+                {
+                    musicList.PreloadBGM();
+                }
             }
             else
             {
@@ -66,13 +69,13 @@ namespace MyTool.Music
         {
             if (e is BGMChangeEventArgs bgmChangeEventArgs)
             {
-                PlayBGM(bgmChangeEventArgs.BGMType);
+                PlayBGM(bgmChangeEventArgs.BGMType, bgmChangeEventArgs.IsFirst);
             }
         }
 
         private void OnAfterLoadScene(object sender, EventArgs e)
         {
-            OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum));
+            OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum, true));
         }
 
         private void FixedUpdate()
@@ -94,10 +97,10 @@ namespace MyTool.Music
         }
 
         private AudioClip lastAudioClip;
-        public void PlayBGM(SceneEnum BGMIdx)
+        public void PlayBGM(SceneEnum BGMIdx,bool is_first = false)
         {
             Debug.Log("播放BGM" + BGMIdx);
-            AudioClip audioClip = musicList.GetClip(BGMIdx);
+            AudioClip audioClip = musicList.GetClip(BGMIdx, is_first);
             if (audioClip != null)
             {
                 if(lastAudioClip != null && lastAudioClip == audioClip)
@@ -106,12 +109,17 @@ namespace MyTool.Music
                 }
                 //Debug.Log("播放BGM" + BGMIdx);
                 _BGMAudioSource.clip = audioClip;
-                _BGMAudioSource.loop = true;
+                _BGMAudioSource.loop = !is_first;
                 _BGMAudioSource.Play();
                 lastAudioClip = audioClip;
+                StartCoroutine(_BGMAudioSource.OnComplete(() =>
+                {
+                    OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum, false));
+                }));
             }
             else
             {
+                lastAudioClip = null;
                 _BGMAudioSource.Stop();
             }
         }

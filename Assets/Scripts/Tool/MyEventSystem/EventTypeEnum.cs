@@ -5,5 +5,6 @@
         TransitionStart,
         TransitionEnd,
         BGMChange,
+        LoadResources,
     }
 }

@@ -1,10 +1,12 @@
 using MyInputSystem;
 using MyTool.Music;
 using MyTools.MyCoroutines;
+using MyTools.MyEventSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour
     public int currentMapLevel { get => levelManager.currentMapLevel; }
     public int currentLevel { get => levelManager.currentLevel; }
     public SceneEnum currentSceneEnum { get => GetCurrentSceneEnum(); }
+
+    public MyEvent LoadedResourcesEvent = MyEvent.CreateEvent((int)EventTypeEnum.LoadResources);
 
     private SceneEnum GetCurrentSceneEnum()
     {
@@ -56,6 +60,19 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
     }
+
+
+
+    /// <summary>
+    /// 等待资源加载完成后，切换到开始场景
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnLoadedResources(object sender, EventArgs e)
+    {
+        TransitionManager.Instance.Transition("", StartSceneName);
+    }
+
     void Start()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -73,8 +90,6 @@ public class GameManager : MonoBehaviour
         levelManager = new LevelManager(path);
         levelManager.GetAllLevelsInPC();
 #endif
-
-        TransitionManager.Instance.Transition("", StartSceneName);
     }
 
 
@@ -83,6 +98,7 @@ public class GameManager : MonoBehaviour
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent += OnAfterLoadScene;
         TransitionManager.Instance.OnStartLoadSceneEvent += OnStartLoadScene;
+        LoadedResourcesEvent += OnLoadedResources;
     }
 
 
@@ -91,6 +107,7 @@ public class GameManager : MonoBehaviour
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent -= OnAfterLoadScene;
         TransitionManager.Instance.OnStartLoadSceneEvent -= OnStartLoadScene;
+        LoadedResourcesEvent -= OnLoadedResources;
     }
 
     void Update()

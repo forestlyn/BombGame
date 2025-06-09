@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5fda985954ce94c825c231cc1b2bee, type: 3}
   m_Name: Norm
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: 669e7726c456cba4a900a95520e86b26, type: 3}
+  beginClip: {fileID: 8300000, guid: e25d69e3bbe1f3c4091c5c4732639385, type: 3}
+  loopClip: {fileID: 8300000, guid: 5385f565954252d42aa536ff9dc81bc3, type: 3}
   musicType: 2
