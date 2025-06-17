@@ -14,13 +14,32 @@ namespace MyTool.Music
 
         public IEnumerator AsyncPreloadBGMProgressive()
         {
+            float count = 0;
             foreach (var item in bgmSOs)
             {
-                Debug.Log($"开始预加载BGM {item.musicType}");
-                Debug.Log($"{item.beginClip != null} {item.beginClipLoaded}");
                 if (item.beginClip != null && !item.beginClipLoaded)
                 {
-                    Debug.Log($"开始预加载BGM {item.musicType} 的 beginClip");
+                    count++;
+                }
+                if (item.loopClip != null && !item.loopClipLoaded)
+                {
+                    count++;
+                }
+            }
+            if (count == 0)
+            {
+                Debug.LogWarning("没有需要预加载的BGM");
+                LoadResourcesManager.Instance.LoadProgress = 1f;
+                yield break;
+            }
+            float percentPerClip = 1f / count;
+            foreach (var item in bgmSOs)
+            {
+                //Debug.Log($"开始预加载BGM {item.musicType}");
+                //Debug.Log($"{item.beginClip != null} {item.beginClipLoaded}");
+                if (item.beginClip != null && !item.beginClipLoaded)
+                {
+                    //Debug.Log($"开始预加载BGM {item.musicType} 的 beginClip");
                     // 分帧加载beginClip
                     var beginRequest = item.beginClip.LoadAudioData();
                     while (!beginRequest)
@@ -28,6 +47,7 @@ namespace MyTool.Music
                         yield return null; // 每帧检查一次
                     }
                     item.beginClipLoaded = true;
+                    LoadResourcesManager.Instance.LoadProgress += percentPerClip;
                 }
 
                 // 下一帧再加载loopClip
@@ -35,21 +55,19 @@ namespace MyTool.Music
 
                 if (item.loopClip != null && !item.loopClipLoaded)
                 {
-                    Debug.Log($"开始预加载BGM {item.musicType} 的 loopClip");
+                    //Debug.Log($"开始预加载BGM {item.musicType} 的 loopClip");
                     var loopRequest = item.loopClip.LoadAudioData();
                     while (!loopRequest)
                     {
                         yield return null;
                     }
                     item.loopClipLoaded = true;
-
-                    // 每加载完一个完整的BGM后等待一帧
+                    LoadResourcesManager.Instance.LoadProgress += percentPerClip;
                     yield return null;
                 }
-                Debug.Log($"BGM {item.musicType} 预加载完成");
             }
-            Debug.Log("BGM预加载完成");
-            GameManager.Instance.LoadedResourcesEvent.Invoke(this, new EventArgs());
+            if (LoadResourcesManager.Instance.LoadProgress <= 1f)
+                LoadResourcesManager.Instance.LoadProgress += 1f;
         }
         public void PreloadBGM()
         {

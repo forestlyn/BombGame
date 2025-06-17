@@ -13,8 +13,12 @@ namespace MyTool.Music
     {
         public static IEnumerator OnComplete(this AudioSource audioSource, System.Action callback)
         {
-            yield return new WaitWhile(() => audioSource.isPlaying);
-            callback?.Invoke();
+            yield return new WaitWhile(() => audioSource.isPlaying && audioSource.time > 0);
+
+            if (audioSource.time >= audioSource.clip.length - 0.01f)
+            {
+                callback?.Invoke();
+            }
         }
     }
 }

@@ -103,7 +103,7 @@ namespace MyTool.Music
             AudioClip audioClip = musicList.GetClip(BGMIdx, is_first);
             if (audioClip != null)
             {
-                if(lastAudioClip != null && lastAudioClip == audioClip)
+                if(lastAudioClip != null && (lastAudioClip == audioClip && _BGMAudioSource.isPlaying))
                 {
                     return;
                 }

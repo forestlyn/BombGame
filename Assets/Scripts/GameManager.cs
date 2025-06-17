@@ -31,8 +31,7 @@ public class GameManager : MonoBehaviour
     public int currentLevel { get => levelManager.currentLevel; }
     public SceneEnum currentSceneEnum { get => GetCurrentSceneEnum(); }
 
-    public MyEvent LoadedResourcesEvent = MyEvent.CreateEvent((int)EventTypeEnum.LoadResources);
-
+    
     private SceneEnum GetCurrentSceneEnum()
     {
         string sceneName = SceneManager.GetActiveScene().name;
@@ -98,7 +97,7 @@ public class GameManager : MonoBehaviour
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent += OnAfterLoadScene;
         TransitionManager.Instance.OnStartLoadSceneEvent += OnStartLoadScene;
-        LoadedResourcesEvent += OnLoadedResources;
+        LoadResourcesManager.Instance.LoadedResourcesEvent += OnLoadedResources;
     }
 
 
@@ -107,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent -= OnAfterLoadScene;
         TransitionManager.Instance.OnStartLoadSceneEvent -= OnStartLoadScene;
-        LoadedResourcesEvent -= OnLoadedResources;
+        LoadResourcesManager.Instance.LoadedResourcesEvent -= OnLoadedResources;
     }
 
     void Update()
