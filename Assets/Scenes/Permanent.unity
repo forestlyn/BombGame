@@ -656,6 +656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1994356764}
   animGO: {fileID: 711657764}
+  smoothTime: 0.5
 --- !u!1 &2008402854
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,8 +948,8 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1980238833}
   - {fileID: 1994356763}
+  - {fileID: 1980238833}
   - {fileID: 169680359}
   - {fileID: 2072344981}
   - {fileID: 959498432714041001}

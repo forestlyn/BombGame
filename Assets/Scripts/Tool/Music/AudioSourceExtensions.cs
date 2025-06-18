@@ -1,24 +1,30 @@
-﻿using MyTools.MyEventSystem;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace MyTool.Music
 {
     public static class AudioSourceExtensions
     {
+        private const float ClipDelta = 0.01f; // A small value to check if the audio is almost finished
         public static IEnumerator OnComplete(this AudioSource audioSource, System.Action callback)
         {
-            yield return new WaitWhile(() => audioSource.isPlaying && audioSource.time > 0);
+            float clipLength = audioSource.clip.length;
 
-            if (audioSource.time >= audioSource.clip.length - 0.01f)
+            while (audioSource.IsPlaying())
+            {
+                yield return null;
+            }
+
+            if (audioSource.time >= clipLength - ClipDelta)
             {
                 callback?.Invoke();
             }
+        }
+
+        public static bool IsPlaying(this AudioSource audioSource)
+        {
+            float clipLength = audioSource.clip.length;
+            return audioSource != null && (audioSource.isPlaying && audioSource.time < clipLength - ClipDelta);
         }
     }
 }

@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginClip: {fileID: 8300000, guid: 02ee282c8b871ca43a19f027ad292e2f, type: 3}
   loopClip: {fileID: 8300000, guid: 02ee282c8b871ca43a19f027ad292e2f, type: 3}
+  beginClipLoaded: 1
+  loopClipLoaded: 1
   musicType: 6

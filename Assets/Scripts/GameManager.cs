@@ -89,6 +89,8 @@ public class GameManager : MonoBehaviour
         levelManager = new LevelManager(path);
         levelManager.GetAllLevelsInPC();
 #endif
+        LoadResourcesManager.Instance.LoadedResourcesEvent += OnLoadedResources;
+        AudioListener.pause = false;
     }
 
 
@@ -97,7 +99,6 @@ public class GameManager : MonoBehaviour
     {
         TransitionManager.Instance.OnAfterLoadSceneEvent += OnAfterLoadScene;
         TransitionManager.Instance.OnStartLoadSceneEvent += OnStartLoadScene;
-        LoadResourcesManager.Instance.LoadedResourcesEvent += OnLoadedResources;
     }
 
 

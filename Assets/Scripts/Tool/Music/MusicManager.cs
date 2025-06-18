@@ -57,6 +57,7 @@ namespace MyTool.Music
         {
             OnBGMChange.AddListener(OnBGMChangeHandler);
             TransitionManager.Instance.OnAfterLoadSceneEvent.AddListener(OnAfterLoadScene);
+            _BGMAudioSource.ignoreListenerPause = true; // 忽略暂停事件
         }
 
 
@@ -67,6 +68,7 @@ namespace MyTool.Music
         }
         private void OnBGMChangeHandler(object sender, EventArgs e)
         {
+            Debug.Log("BGMChangeHandler");
             if (e is BGMChangeEventArgs bgmChangeEventArgs)
             {
                 PlayBGM(bgmChangeEventArgs.BGMType, bgmChangeEventArgs.IsFirst);
@@ -103,19 +105,19 @@ namespace MyTool.Music
             AudioClip audioClip = musicList.GetClip(BGMIdx, is_first);
             if (audioClip != null)
             {
-                if(lastAudioClip != null && (lastAudioClip == audioClip && _BGMAudioSource.isPlaying))
+                if(lastAudioClip != null && (lastAudioClip == audioClip && _BGMAudioSource.IsPlaying()))
                 {
                     return;
                 }
                 //Debug.Log("播放BGM" + BGMIdx);
                 _BGMAudioSource.clip = audioClip;
-                _BGMAudioSource.loop = !is_first;
+                _BGMAudioSource.loop = false;
                 _BGMAudioSource.Play();
-                lastAudioClip = audioClip;
                 StartCoroutine(_BGMAudioSource.OnComplete(() =>
                 {
                     OnBGMChange.Invoke(this, new BGMChangeEventArgs(GameManager.Instance.currentSceneEnum, false));
                 }));
+                lastAudioClip = audioClip;
             }
             else
             {
